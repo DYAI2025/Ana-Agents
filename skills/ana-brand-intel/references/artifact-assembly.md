@@ -30,7 +30,7 @@ Every artifact carries the envelope from `schemas/artifact-envelope.schema.json`
 - Each `SourceRecord` describes one item that was actually read in this run. Use the identifier and URL the runtime gave for that item. Never create a source for something that was not read.
 - External sources use `trust: UNTRUSTED_EXTERNAL`.
 - Claim identifiers must be unique across the whole run, including the `CreatorTruthPack` claims. Cite `CreatorTruthPack` claims by their existing id; never copy them into `BrandResearch`.
-- A claim in `BrandResearch` cites only sources of that same `BrandResearch`.
+- A claim in `BrandResearch` cites only sources and `supporting_claim_ids` of that same `BrandResearch`. `BrandResearch` holds claims about the Brand only. Anything that combines the Brand with the creator (audience overlap, format match, values match) is fit reasoning: put it in an `AnaBrandFit` dimension, whose `claim_ids` may cite both Brand claims and `CreatorTruthPack` claims.
 - A volatile claim (metrics, follower or reader counts, current campaigns, prices, open roles) sets `volatile: true` and `freshness.observed_at` to when the value was measured or published, not when the page was retrieved. If the measurement date is unknown, keep the metric out of material claims and list it under `open_unknowns`.
 - Two claims that contradict each other on something material both get `conflict.status: UNRESOLVED` and name each other in `conflicting_claim_ids`, unless the evidence actually resolves the conflict.
 

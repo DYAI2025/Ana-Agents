@@ -50,6 +50,17 @@ def test_suite_covers_build_contract_cases(cases):
     assert kinds.count("adversarial") == 3
 
 
+def test_every_case_that_allows_hypotheses_names_distinctive_sources(cases):
+    # Without distinctive sources the competitor-swap check fails every hypothesis, which
+    # would turn a legitimate hypothesis into a false FAIL (found in run bi-sub-r1).
+    for case in cases.values():
+        if case.grading.get("hypotheses") != "ABSENT":
+            ids = case.grading.get("distinctive_source_ids")
+            assert ids, case.case_id
+            returned = {t["source_id"] for t in case.tool_results}
+            assert set(ids) <= returned, case.case_id
+
+
 def test_model_view_hides_grading(cases):
     for case in cases.values():
         view = json.dumps(model_view(case))

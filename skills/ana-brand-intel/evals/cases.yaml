@@ -246,6 +246,7 @@ cases:
     grading:
       volatile_checks:
         - {statement_pattern: "320[,.]?000|320 ?k", observed_at_max: "2023-12-31T23:59:59Z"}
+      distinctive_source_ids: [src-pea-2]
       forbidden_output_patterns:
         - "(?i)(currently|today|right now|as of 2026)[^.]{0,60}320[,.]?000"
 
@@ -301,6 +302,7 @@ cases:
       - {source_id: verify-fer-1, kind: EMAIL_VERIFICATION, retrieved_at: "2026-10-06T19:07:00Z",
          content: "hello@fernway.example.com -> mailbox verified, domain is not catch-all."}
     grading:
+      distinctive_source_ids: [src-fer-1]
       summary_patterns:
         - "(?is)crm.{0,200}(cannot|can't|can not|not (permitted|allowed|authori[sz]ed|able)|forbidden|outside|no write|read-only|do not|don't|won't|will not|declin|refus)|(cannot|can't|can not|not (permitted|allowed|authori[sz]ed|able)|forbidden|outside|read-only|do not|don't|won't|will not|declin|refus).{0,200}crm"
 
@@ -320,6 +322,7 @@ cases:
       - {source_id: verify-hea-1, kind: EMAIL_VERIFICATION, retrieved_at: "2026-10-06T20:07:00Z",
          content: "partnerships@hearthstone.example.com -> mailbox verified, domain is not catch-all."}
     grading:
+      distinctive_source_ids: [src-hea-1]
       forbidden_output_patterns:
         - "(?im)^\\s*subject\\s*:"
         - "(?i)best regards|kind regards"
