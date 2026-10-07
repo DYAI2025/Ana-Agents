@@ -354,3 +354,12 @@ def test_grading_data_is_not_shipped_in_the_package():
         'ZEBRA-INJECT-4471"]',
     ):
         assert key not in shipped, key
+
+
+def test_distinctive_terms_ignore_hyphenation(cases, gold):
+    _art(gold, "CollaborationHypothesis")["hypotheses"][0].update(
+        concept="A Field-Notes episode on a multi-day Scandinavian trail.",
+        brand_value="Fills a Field-Notes slot with a strong story.",
+        audience_value="Gear that lasts.",
+    )
+    assert grade(cases["BI-EVAL-001"], gold) == []

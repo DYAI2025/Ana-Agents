@@ -142,6 +142,11 @@ def _build_case(
     return EvalCase(raw["case_id"], raw, run_id, at, (lead, ctp), grading)
 
 
+def _norm(text: str) -> str:
+    """Lower-case, hyphens and runs of whitespace folded to one space."""
+    return " ".join(text.lower().replace("-", " ").split())
+
+
 def _strings(value: Any) -> list[str]:
     """Every string value in a JSON-like structure, newlines intact."""
     if isinstance(value, str):
@@ -278,10 +283,12 @@ def grade(
             and distinctive & set(c.get("source_ids", []))
             for c in cited
         )
-        terms = [t.lower() for t in g.get("distinctive_terms") or ()]
-        idea = " ".join(
-            str(hypothesis.get(k, "")) for k in ("concept", "brand_value", "audience_value")
-        ).lower()
+        terms = [_norm(t) for t in g.get("distinctive_terms") or ()]
+        idea = _norm(
+            " ".join(
+                str(hypothesis.get(k, "")) for k in ("concept", "brand_value", "audience_value")
+            )
+        )
         if terms and not any(t in idea for t in terms):
             failures.append(
                 Failure(
