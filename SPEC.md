@@ -119,6 +119,15 @@ A collaboration hypothesis SHALL be grounded in Brand-specific evidence and SHAL
 
 **Verification:** genericness mutation eval.
 
+### INTEL-010 — Contact readiness stop
+**Priority:** BLOCKER
+
+A prospect without a contact eligible to continue through the outbound gates SHALL produce `CONTACT_NOT_READY` and SHALL NOT proceed to outreach drafting until a suitable contact is selected or an explicitly authorized future contact-review mechanism resolves the state.
+
+`CONTACT_NOT_READY` is not an Ana/Brand fit result; Brand fit and contact readiness remain independent (INTEL-007). See ADR-003.
+
+**Verification:** contact-policy + chain invariant test.
+
 ---
 
 ## Composer requirements
