@@ -1,29 +1,30 @@
 # ana-brand-intel — Build Evidence
 
+Status: SOURCE_ASSEMBLED_RELEASE_BLOCKED
+
 Build source contract: `requirements/skills/ana-brand-intel-build-contract.md`
 
-Build source repository snapshot: `DYAI2025/Ana-Agents@8c898923a6c9d5c31caa60f098f5c0f376fe25e7`
+Current source is present in the repository and has been remotely read back. That proves source presence only; it does not prove semantic behavior or release readiness.
 
-Artifact digest: `sha256:86a0c8733f8355579c64cbfbcf42f4eeb67153132ae9e4660b3a898fe2e5dbbd`
+## Verified in repository
 
-Distribution archive SHA-256: `effe83c87187dfa22229dfe48c23f5b1c61f102e448fca6c06bbc24efb90ffe0`
+- `SKILL.md` exists with the intended Brand-intelligence scope.
+- `agents/openai.yaml` exists.
+- Read-only/research authority is separated from CRM write and SEND authority.
+- Contact readiness and Ana/Brand fit are described as independent.
+- Legitimate stop outcomes are preserved.
 
-## Executed deterministic checks
+## Not yet verified
 
-- Build Contract structure: PASS — 16 HARD requirements.
-- Package/security check: PASS — required control-plane files and no forbidden write/send authority.
-- Domain policy checks: PASS — 13 deterministic positive/negative cases covering contact readiness, multidimensional fit, provenance and illegal external framing.
-- Installability: PASS.
+- Full repository regression on the exact skill head: NOT_RUN in the current orchestrator environment.
+- Live skill/model behavioral evals: BLOCKED_NOT_CONFIGURED.
+- Independent enterprise evaluator on the exact packaged digest: NOT_RUN.
+- Vince workspace installation/smoke test: NOT_RUN.
+- Production CRM/read connector binding: MISSING.
+- Approved release archive: NOT_AUTHORIZED.
 
-## Enterprise evaluator
+## Release rule
 
-Decision: `PASS_WITH_MINOR_REVISIONS`
+Do not label this skill RELEASED, VERIFIED, or READY_FOR_VINCE until the required exact-head deterministic checks, live semantic evals, package verification, and distribution acceptance evidence exist.
 
-Scores: spec compliance 5/5; research quality 4/5; enterprise readiness 4/5; architecture quality 5/5; release-gate integrity 4/5.
-
-## Known evidence gaps
-
-- Live semantic/model behavior eval: `BLOCKED_NOT_CONFIGURED`.
-- Full Ana-Agents S1 repository regression: `UNVERIFIED_SANDBOX_NETWORK_BLOCKED`.
-
-These gaps are not reported as PASS. They must be executed when a target runtime/repository checkout is available.
+Machine-readable gate: `reports/release-status.json`.

@@ -36,7 +36,7 @@ Use only these canonical artifact types from the Ana Agents v1 contract family:
 - `AnaBrandFit`
 - `CollaborationHypothesis`
 
-Read `references/domain-contract.md` and the pinned schemas in `schemas/canonical/` before producing pipeline artifacts.
+Read `references/domain-contract.md` and `references/repository-contract-bindings.md` before producing pipeline artifacts. When the canonical repository validators are available, use them. When they are not, do not claim schema/chain validation passed.
 
 ## Epistemic rules
 

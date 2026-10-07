@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0.0",
+  "skill": "ana-brand-intel",
+  "status": "BLOCKED",
+  "release_authorized": false,
+  "checks": {
+    "source_remote_readback": "PASS",
+    "package_structure": "NOT_RUN",
+    "full_repo_regression": "NOT_RUN",
+    "live_semantic_eval": "BLOCKED_NOT_CONFIGURED",
+    "independent_evaluator": "NOT_RUN",
+    "vince_workspace_smoke": "NOT_RUN"
+  },
+  "blockers": [
+    "Exact-head deterministic package/repository validation has not run.",
+    "Live semantic/model skill eval is not configured.",
+    "Independent digest-bound evaluator has not run.",
+    "Vince workspace installation/smoke test has not run."
+  ]
+}

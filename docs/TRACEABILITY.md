@@ -21,7 +21,7 @@ behaviour · **runtime** = deterministic services and adapters · **eval** = liv
 | Requirement | Layer | Contract / policy | Implementation | Test / eval | State |
 |---|---|---|---|---|---|
 | SYS-001 | contract | `artifact-input-graph.yaml`, ADR-003 §5 | `evidence/chain.py` | `contracts/test_input_graph.py`; cases `NEG-GRAPH-001..004` | VERIFIED |
-| SYS-001 | skill | — | — | architecture/eval test | MISSING |
+| SYS-001 | skill | `skills/ana-brand-intel/SKILL.md` | Brand Intel source assembled | live architecture/behavior eval | IMPLEMENTED |
 | SYS-002 | contract | ADR-003 §5 stop outcomes; `evidence-policy.md` | `evidence/chain.py` (`stop_reason`) | chains `valid-no-fit-chain`, `valid-insufficient-evidence-chain`; cases `NEG-STOP-001..003`; `evidence/test_chain_validator.py` | VERIFIED |
 | SYS-002 | eval | — | — | behavioral eval | MISSING |
 | SYS-003 | repo | ADR-003 | `scripts/check_repo_hygiene.py` (`HYG_FORBIDDEN_IMPORT`) | `repo/test_dependency_guard.py` | VERIFIED |
@@ -54,16 +54,16 @@ behaviour · **runtime** = deterministic services and adapters · **eval** = liv
 
 | Requirement | Layer | Contract / policy | Implementation | Test / eval | State |
 |---|---|---|---|---|---|
-| COMP-001 | skill | ADR-001 | — | tool-permission eval | MISSING |
+| COMP-001 | skill | ADR-001, `skills/ana-outreach-compose/SKILL.md` | composer source assembled; Brand research forbidden | tool-permission eval | IMPLEMENTED |
 | COMP-002 | contract | `artifact-input-graph.yaml` | `evidence/chain.py` | cases `NEG-GRAPH-001`, `NEG-GRAPH-007` | VERIFIED |
-| COMP-002 | skill | — | — | missing-input eval | MISSING |
+| COMP-002 | skill | `skills/ana-outreach-compose/SKILL.md` | structured-input preconditions implemented in skill instructions | missing-input eval | IMPLEMENTED |
 | COMP-003 | contract | `evidence-policy.md`, `qa-gate-report.schema.json` | `semantic.py`, `evidence/chain.py` | cases `NEG-EPI-004`, `NEG-EPI-006`, `NEG-QA-001`, `NEG-QA-003`, `NEG-QA-004` | VERIFIED |
 | COMP-003 | runtime | — | claim-coverage validator over draft text | — | MISSING |
 | COMP-004 | contract | `commercial-check.schema.json`, `commercial-policy.example.md` | `semantic.py` | cases `NEG-COM-001`, `NEG-COM-002` | VERIFIED |
 | COMP-004 | eval | commercial values `MISSING` | — | commercial-overreach eval | MISSING |
 | COMP-005 | contract | `eval-case.schema.json` (example `eval-genericness-competitor-swap`) | — | example result `BLOCKED_NOT_CONFIGURED` | DEFINED |
 | COMP-005 | eval | — | — | competitor-swap eval | MISSING |
-| COMP-006 | skill | — | — | follow-up eval | MISSING |
+| COMP-006 | skill | `skills/ana-outreach-compose/SKILL.md` | no-new-signal follow-up rule implemented in skill instructions | follow-up eval | IMPLEMENTED |
 
 ## Operational
 
@@ -94,7 +94,7 @@ behaviour · **runtime** = deterministic services and adapters · **eval** = liv
 | SEC-001 | eval | — | — | prompt-injection eval | MISSING |
 | SEC-002 | contract | `artifact-input-graph.yaml`, ADR-003 §5 | `evidence/chain.py` | `contracts/test_input_graph.py`; cases `NEG-GRAPH-001..004` | VERIFIED |
 | SEC-002 | runtime | — | send adapter path | adversarial test | MISSING |
-| SEC-003 | skill/runtime | — | tool-permission policy | permission-policy test | MISSING |
+| SEC-003 | skill/runtime | `agent/CONNECTOR_AND_PERMISSION_POLICY.md`; skill capability boundaries | skill-side least-privilege rules implemented; runtime enforcement MISSING | permission-policy test | IMPLEMENTED |
 | SEC-004 | repo | `.gitignore` | `scripts/check_repo_hygiene.py` (basic, not a professional secret scanner) | `repo/test_repo_hygiene.py` | VERIFIED |
 
 ## Data
