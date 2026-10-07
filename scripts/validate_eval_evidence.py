@@ -90,6 +90,13 @@ def validate(run_dir: Path, expect_digest: str, min_trials: int, check_commit: b
             source = json.loads(original.read_text(encoding="utf-8"))
             if source["binding"].get("skill_content_digest") != binding.get("skill_content_digest"):
                 findings.append(("EV_REGRADE_ORIGIN", "original run has another skill digest"))
+            origin_head = source["binding"].get("git_head", "")
+            if check_commit and digest_at_commit(origin_head) != binding.get(
+                "skill_content_digest"
+            ):
+                findings.append(
+                    ("EV_REGRADE_ORIGIN", f"skill digest at original head {origin_head!r} differs")
+                )
             hashes = {
                 (r["case_id"], t["trial"]): t.get("raw_sha256")
                 for r in source["results"]
