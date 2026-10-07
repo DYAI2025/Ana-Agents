@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ana-agents.invalid/contracts/v1/collaboration-hypothesis.schema.json",
+  "title": "CollaborationHypothesis",
+  "description": "One to three materially different collaboration ideas, each grounded in Brand-specific evidence and naming Brand value and Audience value (INTEL-009). Do not pad to three. Brand grounding of the cited claims is enforced by the evidence-chain validator.",
+  "x-ana-kind": "pipeline",
+  "type": "object",
+  "allOf": [{ "$ref": "artifact-envelope.schema.json" }],
+  "properties": {
+    "artifact_type": { "const": "CollaborationHypothesis" },
+    "schema_version": { "const": "1.0.0" },
+    "hypotheses": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "properties": {
+          "hypothesis_id": { "$ref": "common.schema.json#/$defs/identifier" },
+          "concept": { "$ref": "common.schema.json#/$defs/non_empty_text" },
+          "brand_value": { "$ref": "common.schema.json#/$defs/non_empty_text" },
+          "audience_value": { "$ref": "common.schema.json#/$defs/non_empty_text" },
+          "claim_ids": {
+            "allOf": [
+              { "$ref": "common.schema.json#/$defs/identifier_list" },
+              { "minItems": 1 }
+            ]
+          },
+          "risks": {
+            "type": "array",
+            "items": { "$ref": "common.schema.json#/$defs/non_empty_text" }
+          },
+          "unknowns": {
+            "type": "array",
+            "items": { "$ref": "common.schema.json#/$defs/non_empty_text" }
+          }
+        },
+        "required": [
+          "hypothesis_id",
+          "concept",
+          "brand_value",
+          "audience_value",
+          "claim_ids",
+          "risks",
+          "unknowns"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["hypotheses"],
+  "unevaluatedProperties": false
+}

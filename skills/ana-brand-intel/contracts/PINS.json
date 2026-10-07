@@ -1,0 +1,91 @@
+{
+  "description": "Byte-identical pins of canonical DYAI2025/Ana-Agents contracts. Not a competing contract family: canonical truth is the repository path in `canonical`.",
+  "pins": [
+    {
+      "canonical": "contracts/artifact-input-graph.yaml",
+      "path": "contracts/artifact-input-graph.yaml",
+      "sha256": "67ef175e6858c11f6cd02e463675853ff670cfac6013586da46ff4ac2267ef61"
+    },
+    {
+      "canonical": "contracts/policies/contact-policy.md",
+      "path": "contracts/policies/contact-policy.md",
+      "sha256": "3d49c713252e66b3d2bf279b6030abd9a112c0c47ff1b42076a99bddb5c65667"
+    },
+    {
+      "canonical": "contracts/policies/contact-policy.yaml",
+      "path": "contracts/policies/contact-policy.yaml",
+      "sha256": "e47233f301332c70df9e4737ae531a01d282537792b9651c9afbb7e4d9748751"
+    },
+    {
+      "canonical": "contracts/policies/evidence-policy.md",
+      "path": "contracts/policies/evidence-policy.md",
+      "sha256": "55cbeecb9759fab6e0b7b43cff8738404822377afa8558b423d6604acfa9a450"
+    },
+    {
+      "canonical": "contracts/policies/freshness-policy.md",
+      "path": "contracts/policies/freshness-policy.md",
+      "sha256": "121fd152d4ec646ecc121d32928d3868809beaaaec51310374d965c042cd7a33"
+    },
+    {
+      "canonical": "contracts/policies/source-policy.md",
+      "path": "contracts/policies/source-policy.md",
+      "sha256": "783a975728f22cd7b29b4b1cd661aaa5174f616eff55b2de359977dad40438fa"
+    },
+    {
+      "canonical": "contracts/policies/untrusted-content-policy.md",
+      "path": "contracts/policies/untrusted-content-policy.md",
+      "sha256": "2953b6888a07b8928fa9b13028c3494607a1cf3cef2a59f9b8f42e1cd40907b1"
+    },
+    {
+      "canonical": "contracts/schemas/ana-brand-fit.schema.json",
+      "path": "schemas/ana-brand-fit.schema.json",
+      "sha256": "abe27aca6dba71b328e943c2d4b6a0af9a6ef5f0bef9cd31ff113df173a38193"
+    },
+    {
+      "canonical": "contracts/schemas/artifact-envelope.schema.json",
+      "path": "schemas/artifact-envelope.schema.json",
+      "sha256": "25a2127398a717251c972339cae4cf1cdbb3a067e4b6967f416b0b074eb63ae5"
+    },
+    {
+      "canonical": "contracts/schemas/brand-research.schema.json",
+      "path": "schemas/brand-research.schema.json",
+      "sha256": "854ccc998ada7144cb7e43e023d23b3a05f71b9e3435b2a236dc442f5e10415a"
+    },
+    {
+      "canonical": "contracts/schemas/collaboration-hypothesis.schema.json",
+      "path": "schemas/collaboration-hypothesis.schema.json",
+      "sha256": "9855f0df401ec35fec41cc15f5ce3e96a7d6292dfc3f4bda4bf1c2c88293956c"
+    },
+    {
+      "canonical": "contracts/schemas/common.schema.json",
+      "path": "schemas/common.schema.json",
+      "sha256": "e9d036b7fa99914b35d72754b2ac47c7b72222d84daabdc2fa46a5ddef5c91f2"
+    },
+    {
+      "canonical": "contracts/schemas/contact-profile.schema.json",
+      "path": "schemas/contact-profile.schema.json",
+      "sha256": "c83215c8826550b67e35129ed223d95933f896f064f36025deaf1d3398ca3b92"
+    },
+    {
+      "canonical": "contracts/schemas/creator-truth-pack.schema.json",
+      "path": "schemas/creator-truth-pack.schema.json",
+      "sha256": "c36ee2de471efde807ecbfc86ba2409495ea56b0c7e94b89e62914c94785ad62"
+    },
+    {
+      "canonical": "contracts/schemas/evidence-claim.schema.json",
+      "path": "schemas/evidence-claim.schema.json",
+      "sha256": "497ba68768891e90809e91fb298c789fa82cd56a3363415b30a47fd2b9941932"
+    },
+    {
+      "canonical": "contracts/schemas/lead-triage.schema.json",
+      "path": "schemas/lead-triage.schema.json",
+      "sha256": "3c48fa34ee899334c373efe077ab3950f25d9e3542e7ee2e2fb7f9d9a3a44ed4"
+    },
+    {
+      "canonical": "contracts/schemas/source-record.schema.json",
+      "path": "schemas/source-record.schema.json",
+      "sha256": "233c684c3ba2db81ce3e311eea63a6cc6658f288834ffaf31286300f05cc786d"
+    }
+  ],
+  "skill": "ana-brand-intel"
+}

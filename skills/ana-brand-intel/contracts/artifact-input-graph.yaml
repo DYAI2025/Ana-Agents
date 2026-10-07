@@ -1,0 +1,74 @@
+# CANONICAL executable artifact input graph (ADR-003). Fail-closed.
+#
+# For each pipeline artifact type:
+#   allowed:  the only artifact types that may appear among input_artifact_ids
+#   required: types that must each appear exactly once
+#   min_inputs: minimum number of inputs (used where `required` cannot express the rule)
+#
+# Any type not listed under `allowed` is illegal as an input. At most one input per type.
+# No type lists OutcomeRecord, so outcomes never feed back into sending.
+# SourceRecord / EvidenceClaim are supporting structures, not artifacts: they can never be
+# an input of anything, in particular not of EmailDraft, SendPermission or SendReceipt.
+# ADR-003 restates this graph as the decision record; tests/contracts/test_input_graph.py
+# fails if the ADR and this file diverge.
+graph_version: "1.0.0"
+types:
+  LeadTriage:
+    allowed: []
+    required: []
+  CreatorTruthPack:
+    allowed: []
+    required: []
+  BrandResearch:
+    allowed: [LeadTriage]
+    required: [LeadTriage]
+  ContactProfile:
+    allowed: [LeadTriage, BrandResearch]
+    required: [LeadTriage, BrandResearch]
+  AnaBrandFit:
+    allowed: [BrandResearch, CreatorTruthPack]
+    required: [BrandResearch, CreatorTruthPack]
+  CollaborationHypothesis:
+    allowed: [AnaBrandFit, BrandResearch, CreatorTruthPack]
+    required: [AnaBrandFit, BrandResearch, CreatorTruthPack]
+  CommercialCheck:
+    allowed: [CollaborationHypothesis]
+    required: [CollaborationHypothesis]
+  OutreachStrategy:
+    allowed: [CollaborationHypothesis, CommercialCheck, ContactProfile]
+    required: [CollaborationHypothesis, CommercialCheck, ContactProfile]
+  EmailDraft:
+    allowed: [OutreachStrategy]
+    required: [OutreachStrategy]
+  QAGateReport:
+    allowed: [EmailDraft]
+    required: [EmailDraft]
+  HumanApproval:
+    allowed: [EmailDraft, QAGateReport]
+    required: [EmailDraft, QAGateReport]
+  SendPermission:
+    allowed: [EmailDraft, HumanApproval, QAGateReport, ContactProfile]
+    required: [EmailDraft, HumanApproval, QAGateReport, ContactProfile]
+  SendReceipt:
+    allowed: [SendPermission]
+    required: [SendPermission]
+  ReplyHandoff:
+    allowed: [SendReceipt]
+    required: [SendReceipt]
+  OutcomeRecord:
+    allowed:
+      - LeadTriage
+      - BrandResearch
+      - ContactProfile
+      - AnaBrandFit
+      - CollaborationHypothesis
+      - CommercialCheck
+      - OutreachStrategy
+      - EmailDraft
+      - QAGateReport
+      - HumanApproval
+      - SendPermission
+      - SendReceipt
+      - ReplyHandoff
+    required: []
+    min_inputs: 1

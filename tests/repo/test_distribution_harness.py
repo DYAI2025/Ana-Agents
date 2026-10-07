@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -11,8 +12,12 @@ def _seed(repo: Path) -> None:
         skill = repo / "skills" / name
         (skill / "agents").mkdir(parents=True)
         (skill / "reports").mkdir(parents=True)
-        (skill / "SKILL.md").write_text("---\nname: test\ndescription: test\n---\n", encoding="utf-8")
-        (skill / "agents" / "openai.yaml").write_text("interface:\n  display_name: Test\n", encoding="utf-8")
+        (skill / "SKILL.md").write_text(
+            "---\nname: test\ndescription: test\n---\n", encoding="utf-8"
+        )
+        (skill / "agents" / "openai.yaml").write_text(
+            "interface:\n  display_name: Test\n", encoding="utf-8"
+        )
         (skill / "reports" / "release-status.json").write_text(
             json.dumps({"skill": name, "status": "BLOCKED", "release_authorized": False}),
             encoding="utf-8",
@@ -53,19 +58,12 @@ def test_candidate_packaging_is_reproducible_and_release_fails_closed(tmp_path: 
     candidate = root / "dist" / "candidate"
     checked = _run(verify, str(candidate))
     assert checked.returncode == 0, checked.stderr
-    first_bytes = {
-        p.name: p.read_bytes()
-        for p in sorted(candidate.glob("*.zip"))
-    }
+    first_bytes = {p.name: p.read_bytes() for p in sorted(candidate.glob("*.zip"))}
 
-    for p in candidate.iterdir():
-        p.unlink()
+    shutil.rmtree(candidate)
     second = _run(package, *args)
     assert second.returncode == 0, second.stderr
-    second_bytes = {
-        p.name: p.read_bytes()
-        for p in sorted(candidate.glob("*.zip"))
-    }
+    second_bytes = {p.name: p.read_bytes() for p in sorted(candidate.glob("*.zip"))}
     assert first_bytes == second_bytes
 
     blocked = _run(
