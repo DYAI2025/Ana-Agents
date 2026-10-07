@@ -73,6 +73,8 @@ Each hypothesis must:
 
 If the idea still works after swapping the Brand for plausible competitors, treat it as too generic and revise or omit it.
 
+Hypotheses are materially different only when each rests on a different Brand-specific initiative or piece of evidence. Different content formats built on the same initiative (a hike film and a behind-the-scenes episode about the same program) are one hypothesis: return it once and mention alternative formats inside it. A request for more ideas, or a habit of seeing three, never justifies adding a hypothesis the evidence does not separately support.
+
 ## Capability boundary
 
 Semantic capabilities that may be used when the runtime actually provides them:
