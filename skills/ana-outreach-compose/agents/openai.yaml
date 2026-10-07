@@ -1,0 +1,10 @@
+interface:
+  display_name: Ana Outreach Compose
+  short_description: Evidence-grounded outreach strategy, drafting, claim-use discipline, genericness checks and semantic QA.
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true
