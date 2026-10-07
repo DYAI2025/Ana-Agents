@@ -276,13 +276,15 @@ def run_live(args: argparse.Namespace) -> int:
         for trial in range(1, args.trials + 1):
             raw_path = raw_dir / f"{case.case_id}.trial{trial}.json"
             exchange = out_dir / "exchange" / f"{case.case_id}.trial{trial}"
+            prompt_file = exchange.parent / f"{exchange.name}.prompt.md"
+            answer_file = exchange.parent / f"{exchange.name}.response.json"
             if args.resume and raw_path.is_file():
                 raw = json.loads(raw_path.read_text(encoding="utf-8"))
             elif args.provider == SUBAGENT:
-                answer = exchange.with_suffix(".response.json")
+                answer = answer_file
                 if not answer.is_file():
                     exchange.parent.mkdir(parents=True, exist_ok=True)
-                    exchange.with_suffix(".prompt.md").write_text(
+                    prompt_file.write_text(
                         f"# SYSTEM\n\n{system}\n\n# USER\n\n{user}\n{SUBAGENT_TOOL_PROTOCOL}",
                         encoding="utf-8",
                     )
