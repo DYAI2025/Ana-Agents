@@ -1,0 +1,10 @@
+interface:
+  display_name: Ana Brand Intel
+  short_description: Evidence-grounded brand research, contact intelligence, Ana/Brand fit, counterarguments and collaboration hypotheses.
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true
