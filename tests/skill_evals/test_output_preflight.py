@@ -19,7 +19,15 @@ from ana_agents import REPO_ROOT
 SKILL = REPO_ROOT / "skills" / "ana-brand-intel"
 SCRIPT = SKILL / "scripts" / "validate_output.py"
 GOLD = Path(__file__).parent / "fixtures" / "gold-bi-eval-001.json"
-R4_MALFORMED = SKILL / "reports" / "evals" / "bi-sub-r4" / "raw" / "BI-EVAL-011.trial1.json"
+R4_MALFORMED = (
+    REPO_ROOT
+    / "evals"
+    / "ana-brand-intel"
+    / "runs"
+    / "bi-sub-r4"
+    / "raw"
+    / "BI-EVAL-011.trial1.json"
+)
 
 sys.path.insert(0, str(SCRIPT.parent))
 import validate_output  # noqa: E402

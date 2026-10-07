@@ -211,3 +211,25 @@ def test_release_mode_binds_authorization_to_digest(repo: Path):
     assert ok.returncode == 0, ok.stderr
     verified = run(SCRIPTS / "verify_release.py", repo / "dist", "--require-release")
     assert verified.returncode == 0, verified.stderr
+
+
+def test_candidate_refuses_stale_release_status(repo: Path):
+    _gate(repo, content_digest="sha256:" + "1" * 64)
+    stale = _package(repo)
+    assert stale.returncode != 0 and "stale evidence" in stale.stderr
+
+
+@pytest.mark.parametrize(
+    "leak",
+    [
+        ("reports/evals/run/report.json", "{}"),
+        ("references/notes.md", "distinctive_terms: [x]"),
+    ],
+)
+def test_candidate_refuses_grading_data(repo: Path, leak):
+    rel, text = leak
+    target = repo / "skills" / "ana-brand-intel" / rel
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(text, encoding="utf-8")
+    leaked = _package(repo)
+    assert leaked.returncode != 0 and "grader-only data" in leaked.stderr

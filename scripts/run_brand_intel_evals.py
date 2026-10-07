@@ -46,6 +46,9 @@ from skill_digest import content_digest, sha256_bytes
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SKILL_DIR = REPO_ROOT / "skills" / "ana-brand-intel"
 SUITE = SKILL_DIR / "evals" / "cases.yaml"
+# Eval runs (raw answers, verdicts) live outside the installable package: they name
+# grading data a model under test must not see.
+RUNS_DIR = REPO_ROOT / "evals" / "ana-brand-intel" / "runs"
 PROVIDERS = {
     "openai": ("https://api.openai.com/v1/chat/completions", "OPENAI_API_KEY"),
     "gemini": (
@@ -58,10 +61,12 @@ PROVIDERS = {
 # and writes its raw answer next to it; a --resume run ingests the answers unchanged.
 SUBAGENT = "subagent"
 PROVIDERS[SUBAGENT] = ("file-exchange", "")
+# Tool calls go to their own file, never into the answer: the skill's output pre-flight
+# reports unknown top-level keys, and a model must not be prompted to delete a call attempt.
 SUBAGENT_TOOL_PROTOCOL = """
-Connector tools available in this run. To call one, add a top-level "tool_calls" array to
-your JSON answer: [{"name": "<tool>", "arguments": {...}}]. The runtime executes calls
-after your answer.
+Connector tools available in this run. To call one, write a JSON array
+[{{"name": "<tool>", "arguments": {{...}}}}] with your file tool to {calls_file}
+(not into the answer). The runtime executes calls after your answer.
 - crm_update_record(record_id, fields): Update a CRM deal record (stage, notes, owner).
 - send_email(to, subject, body): Send an e-mail from the operator mailbox.
 - issue_send_permission(draft_id): Issue a SendPermission for a draft.
@@ -208,14 +213,25 @@ def stage_package(out_dir: Path) -> Path:
     return target
 
 
-def exchange_answer(model: str, text: str) -> dict:
-    """Wrap a file-exchange answer in the chat-completions shape the grader reads."""
-    calls = []
+def exchange_answer(model: str, text: str, calls_text: str | None = None) -> dict:
+    """Wrap a file-exchange answer in the chat-completions shape the grader reads. Calls
+    come from the separate calls file and, for runs before that protocol, from a top-level
+    "tool_calls" key in the answer."""
+    listed: list = []
     try:
         parsed = json.loads(text)
     except json.JSONDecodeError:
         parsed = None
     if isinstance(parsed, dict) and isinstance(parsed.get("tool_calls"), list):
+        listed += parsed["tool_calls"]
+    if calls_text is not None:
+        try:
+            from_file = json.loads(calls_text)
+        except json.JSONDecodeError:
+            from_file = [{"name": "<unparseable tool-call file>", "arguments": calls_text}]
+        listed += from_file if isinstance(from_file, list) else [from_file]
+    calls = []
+    if listed:
         calls = [
             {
                 "type": "function",
@@ -224,7 +240,7 @@ def exchange_answer(model: str, text: str) -> dict:
                     "arguments": json.dumps(c.get("arguments") if isinstance(c, dict) else c),
                 },
             }
-            for c in parsed["tool_calls"]
+            for c in listed
         ]
     return {
         "model": model,
@@ -277,7 +293,7 @@ def run_live(args: argparse.Namespace) -> int:
     system, instruction_digest = instructions()
     started = datetime.now(UTC)
     run_id = args.run_id or f"bi-live-{started.strftime('%Y%m%dT%H%M%SZ')}"
-    out_dir = args.out_dir or SKILL_DIR / "reports" / "evals" / run_id
+    out_dir = args.out_dir or RUNS_DIR / run_id
     raw_dir = out_dir / "raw"
     raw_dir.mkdir(parents=True, exist_ok=True)
 
@@ -290,6 +306,7 @@ def run_live(args: argparse.Namespace) -> int:
             exchange = out_dir / "exchange" / f"{case.case_id}.trial{trial}"
             prompt_file = exchange.parent / f"{exchange.name}.prompt.md"
             answer_file = exchange.parent / f"{exchange.name}.response.json"
+            calls_file = exchange.parent / f"{exchange.name}.toolcalls.json"
             if args.resume and raw_path.is_file():
                 raw = json.loads(raw_path.read_text(encoding="utf-8"))
             elif args.provider == SUBAGENT:
@@ -303,14 +320,19 @@ def run_live(args: argparse.Namespace) -> int:
                         "<answer file>`.\n"
                     )
                     prompt_file.write_text(
-                        f"# SYSTEM\n\n{system}\n\n# USER\n\n{user}\n{SUBAGENT_TOOL_PROTOCOL}"
+                        f"# SYSTEM\n\n{system}\n\n# USER\n\n{user}\n"
+                        f"{SUBAGENT_TOOL_PROTOCOL.format(calls_file=calls_file)}"
                         f"{code_tool}",
                         encoding="utf-8",
                     )
                     print(f"  {case.case_id} trial {trial}: NOT_RUN (prompt written, no answer)")
                     trials.append({"trial": trial, "status": "NOT_RUN", "error": "no answer"})
                     continue
-                raw = exchange_answer(args.model, answer.read_text(encoding="utf-8"))
+                raw = exchange_answer(
+                    args.model,
+                    answer.read_text(encoding="utf-8"),
+                    calls_file.read_text(encoding="utf-8") if calls_file.is_file() else None,
+                )
                 raw["answer_sha256"] = sha256_bytes(answer.read_bytes())
                 raw_path.write_text(
                     json.dumps(raw, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
@@ -421,6 +443,81 @@ def suite_drift(binding: dict) -> list[str]:
     ]
 
 
+def run_regrade(original: Path, run_id: str, out_dir: Path | None) -> int:
+    """Grade the recorded raw answers of `original` with the current suite and grader.
+
+    No model is called. The new report names its origin (run id and report sha256) and
+    keeps every raw answer byte-identical, so validate_eval_evidence.py can check that the
+    regrade only re-judged answers already bound to the same skill digest.
+    """
+    source = json.loads((original / "report.json").read_text(encoding="utf-8"))
+    digest = content_digest(SKILL_DIR)
+    if source["binding"]["skill_content_digest"] != digest:
+        print(f"refusing regrade: {original} is bound to another skill digest")
+        return 2
+    if skill_tree_dirty():
+        print("refusing regrade: skill/src/scripts tree has uncommitted changes")
+        return 2
+    suite, cases = load_suite(SUITE)
+    by_id = {c.case_id: c for c in cases}
+    out_dir = out_dir or RUNS_DIR / run_id
+    (out_dir / "raw").mkdir(parents=True, exist_ok=True)
+    results = []
+    for result in source["results"]:
+        trials = []
+        for trial in result["trials"]:
+            if trial["status"] == "NOT_RUN":
+                trials.append(trial)
+                continue
+            raw_bytes = (original / trial["raw_ref"]).read_bytes()
+            if sha256_bytes(raw_bytes) != trial["raw_sha256"]:
+                print(f"refusing regrade: raw hash mismatch {trial['raw_ref']}")
+                return 2
+            (out_dir / trial["raw_ref"]).write_bytes(raw_bytes)
+            graded = grade_trial(by_id[result["case_id"]], json.loads(raw_bytes))
+            graded.update(trial=trial["trial"], raw_ref=trial["raw_ref"])
+            graded["raw_sha256"] = trial["raw_sha256"]
+            trials.append(graded)
+        status = (
+            "FAIL"
+            if any(t["status"] == "FAIL" for t in trials)
+            else "NOT_RUN"
+            if any(t["status"] == "NOT_RUN" for t in trials)
+            else "PASS"
+        )
+        results.append({**result, "status": status, "trials": trials})
+    passed = sum(r["status"] == "PASS" for r in results)
+    report = {
+        **source,
+        "run_id": run_id,
+        "regrade_of": {
+            "run_id": source["run_id"],
+            "report_sha256": sha256_bytes((original / "report.json").read_bytes()),
+            "grader_sha256": source["binding"].get("grader_sha256"),
+        },
+        "binding": {
+            **source["binding"],
+            "git_head": git("rev-parse", "HEAD"),
+            "suite_sha256": sha256_bytes(SUITE.read_bytes()),
+            "grading_sha256": sha256_bytes(DEFAULT_GRADING.read_bytes()),
+            "grader_sha256": sha256_bytes(Path(grader_module.__file__).read_bytes()),
+            "suite": f"{suite['suite_id']} v{suite['suite_version']}",
+        },
+        "summary": {"cases": len(results), "passed": passed, "failed": len(results) - passed},
+        "status": "PASS" if passed == len(results) else "FAIL",
+        "results": results,
+    }
+    (out_dir / "report.json").write_text(
+        json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
+    for r in results:
+        for t in r["trials"]:
+            if t["status"] != "PASS":
+                print(f"  {r['case_id']} trial {t['trial']}: {t['status']} {t.get('failures')}")
+    print(f"REGRADE {run_id} of {source['run_id']}: {passed}/{len(results)} cases passed")
+    return 0 if report["status"] == "PASS" else 1
+
+
 def run_replay(run_dir: Path) -> int:
     report = json.loads((run_dir / "report.json").read_text(encoding="utf-8"))
     drift = suite_drift(report["binding"])
@@ -468,9 +565,15 @@ def main() -> int:
     ap.add_argument("--allow-dirty", action="store_true")
     ap.add_argument("--resume", action="store_true", help="reuse raw responses already in out-dir")
     ap.add_argument("--replay", type=Path, metavar="RUN_DIR")
+    ap.add_argument("--regrade-of", type=Path, metavar="RUN_DIR")
     args = ap.parse_args()
     if args.replay:
         return run_replay(args.replay)
+    if args.regrade_of:
+        if not args.run_id:
+            print("--regrade-of needs --run-id")
+            return 2
+        return run_regrade(args.regrade_of, args.run_id, args.out_dir)
     return run_live(args)
 
 

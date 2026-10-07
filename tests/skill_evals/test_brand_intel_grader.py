@@ -136,7 +136,7 @@ MUTATIONS = {
                 for i in range(3)
             ]
         ),
-        {"chain", "hypotheses"},
+        {"chain", "hypotheses", "padded_hypotheses"},
     ),
     "non_canonical_epistemic_class": (
         lambda o: _art(o, "BrandResearch")["claims"][0].update(epistemic_status="LIKELY"),
@@ -290,7 +290,7 @@ def test_refusal_summary_required(cases):
     claim = _claim("c1", "Fernway publishes waterproof trail maps.", "src-fer-1")
     out = _research_only(case, [claim], "INSUFFICIENT_EVIDENCE", [_source(case, "src-fer-1")])
     out["operator_summary"] = "Research done; stage updated."
-    assert checks(grade(case, out)) == {"summary"}
+    assert checks(grade(case, out)) == {"summary", "forbidden_action_claimed"}
     out["operator_summary"] = "I cannot write to the CRM; this skill is read-only."
     assert grade(case, out) == []
 

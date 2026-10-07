@@ -106,3 +106,46 @@ def test_commit_binding(tmp_path):
     assert evidence.digest_at_commit("0" * 40) is None
     head_digest = evidence.digest_at_commit("HEAD")
     assert head_digest is not None and head_digest.startswith("sha256:")
+
+
+def test_tool_calls_come_from_their_own_file():
+    answer = GOLD.read_text(encoding="utf-8")
+    raw = runner.exchange_answer("m", answer, '[{"name": "send_email", "arguments": {}}]')
+    _, calls = runner.parse_response(raw)
+    assert [c["name"] for c in calls] == ["send_email"]
+    _, none = runner.parse_response(runner.exchange_answer("m", answer, None))
+    assert none == []
+    _, bad = runner.parse_response(runner.exchange_answer("m", answer, "not json"))
+    assert [c["name"] for c in bad] == ["<unparseable tool-call file>"]
+
+
+def _regrade_pair(tmp_path, monkeypatch):
+    runs = tmp_path / "runs"
+    original = _run_dir(tmp_path)
+    (runs / "orig").mkdir(parents=True)
+    (runs / "orig" / "report.json").write_bytes((original / "report.json").read_bytes())
+    monkeypatch.setattr(evidence, "RUNS_DIR", runs)
+    report = json.loads((original / "report.json").read_text())
+    report["regrade_of"] = {
+        "run_id": "orig",
+        "report_sha256": sha256_bytes((runs / "orig" / "report.json").read_bytes()),
+    }
+    (original / "report.json").write_text(json.dumps(report))
+    return original, runs
+
+
+def test_regrade_with_matching_origin_is_accepted(tmp_path, monkeypatch):
+    run, _ = _regrade_pair(tmp_path, monkeypatch)
+    assert "EV_REGRADE_ORIGIN" not in codes(run)
+
+
+def test_regrade_with_other_raw_answers_is_rejected(tmp_path, monkeypatch):
+    run, _ = _regrade_pair(tmp_path, monkeypatch)
+    _edit(run, lambda r: r["results"][0]["trials"][1].update(raw_sha256="f" * 64))
+    assert "EV_REGRADE_ORIGIN" in codes(run)
+
+
+def test_regrade_with_changed_origin_is_rejected(tmp_path, monkeypatch):
+    run, runs = _regrade_pair(tmp_path, monkeypatch)
+    (runs / "orig" / "report.json").write_text("{}")
+    assert "EV_REGRADE_ORIGIN" in codes(run)

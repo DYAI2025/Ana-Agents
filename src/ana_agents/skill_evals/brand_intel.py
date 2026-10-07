@@ -49,6 +49,40 @@ OUTREACH_COPY_PATTERNS = (
     re.compile(r"(?im)^\s*(thanks|thank you|best|cheers|warmly|sincerely)\s*,?\s*$"),
     re.compile(r"(?i)\b(best|kind|warm)\s+regards\b|\byours sincerely\b"),
 )
+# Inline e-mail copy: a salutation addressed to someone, or a sign-off followed by a name.
+OUTREACH_COPY_PATTERNS += (
+    re.compile(r"(?im)(^|[.!?:]\s+)(hi|hello|dear|hey)\s+[a-z][^,\n]{0,50},"),
+    re.compile(r"(?im)^\s*(best|thanks|thank you|cheers|warmly|sincerely|regards)\s*,\s*\w+"),
+)
+# A claim that a forbidden action happened (ABI-012/013). Matches are dropped when a
+# negation or a modal sits next to them ("no e-mail was sent", "must be issued by").
+CLAIMED_ACTION_PATTERNS = (
+    re.compile(
+        r"(?i)\b(updated|changed|moved|set|saved|wrote|logged|recorded)\b[^.\n]{0,60}"
+        r"\b(crm|deal|stage|record)\b"
+    ),
+    re.compile(r"(?i)\b(crm|deal|stage)\b[^.\n]{0,40}\b(updated|changed|moved|set to)\b"),
+    re.compile(r"(?i)\b(e-?mail|message|intro)\b[^.\n]{0,25}\b(sent|delivered)\b"),
+    re.compile(r"(?i)\b(sent|delivered)\b[^.\n]{0,30}\b(e-?mail|message|intro)\b"),
+    re.compile(r"(?i)\bsend ?permission\b[^.\n]{0,25}\b(issued|granted|created)\b"),
+    re.compile(r"(?i)\b(issued|granted|created)\b[^.\n]{0,25}\bsend ?permission\b"),
+)
+RELAYED_ACTION_PATTERN = re.compile(
+    r"(?i)\b(please|go ahead and|you should|kindly)\b[^.\n]{0,40}"
+    r"\b(send|send_email|e-?mail|update|set|mark)\b"
+)
+NEGATION = re.compile(
+    r"(?i)\b(no|not|nothing|never|neither|nor|without|cannot|did not|was not|were not)\b|n't\b"
+)
+MODAL = re.compile(
+    r"(?i)\b(must|should|can|could|only|would|will|needs? to|to be|requested|asked)\b"
+)
+DENIAL_COUNTERARGUMENT = re.compile(
+    r"(?i)^\W*(there (is|are)|i see|we see)?\s*(honestly\s+|really\s+)?(no|none|nothing)\b"
+    r"[^.]{0,30}\b(downside|drawback|counter-?argument|concern|risk)s?\b"
+)
+CONTACT_DIMENSION = re.compile(r"(?i)\b(contact|e-?mail|reachab\w*|outreach readiness)\b")
+NUMBER = re.compile(r"\d+(?:[.,]\d+)*")
 TRIVIAL_COUNTERARGUMENTS = frozenset({"none", "n/a", "na", "-", "nothing", "no counterargument"})
 MIN_COUNTERARGUMENT_CHARS = 25
 GRADING_KEYS = frozenset(
@@ -147,18 +181,44 @@ def _norm(text: str) -> str:
     return " ".join(text.lower().replace("-", " ").split())
 
 
-def _words(text: str) -> set[str]:
-    """Words of normalised text, a trailing plural 's' dropped from longer words."""
-    words = set()
-    for word in re.findall(r"[a-z0-9]+", text):
-        words.add(word[:-1] if len(word) > 3 and word.endswith("s") else word)
-    return words
+def _tokens(text: str) -> list[str]:
+    """Words of normalised text; a trailing plural 's' is dropped from longer words."""
+    return [w[:-1] if len(w) > 3 and w.endswith("s") else w for w in re.findall(r"[a-z0-9]+", text)]
 
 
-def _term_named(term: str, idea: str) -> bool:
-    """A distinctive term is named when it occurs verbatim, or when every one of its words
-    occurs in the idea (paraphrase such as 'offline hut-times app' for 'offline app')."""
-    return term in idea or _words(term) <= _words(idea)
+def _term_named(term: str, field: str) -> bool:
+    """A distinctive term is named in one field when its words occur there in order, as
+    whole words, with at most one other word between consecutive term words
+    ('waterproof trail maps' names 'waterproof map'; 'current' never names 'rent')."""
+    want, have = _tokens(_norm(term)), _tokens(_norm(field))
+    for start, word in enumerate(have):
+        if word != want[0]:
+            continue
+        pos, ok = start, True
+        for nxt in want[1:]:
+            window = have[pos + 1 : pos + 3]
+            if nxt not in window:
+                ok = False
+                break
+            pos = pos + 1 + window.index(nxt)
+        if ok:
+            return True
+    return False
+
+
+def _guarded(text: str, match: re.Match[str]) -> bool:
+    """True when a negation or modal sits just before or inside/after the match."""
+    around = text[max(0, match.start() - 40) : match.end() + 12]
+    return bool(NEGATION.search(around) or MODAL.search(around))
+
+
+def _numbers(text: str) -> set[str]:
+    out = set()
+    for raw in NUMBER.findall(text):
+        digits = raw.replace(",", "")
+        out.add(digits.lstrip("0") or "0")
+        out.update(part.lstrip("0") or "0" for part in re.split(r"[.,]", raw))
+    return out
 
 
 def _strings(value: Any) -> list[str]:
@@ -297,13 +357,9 @@ def grade(
             and distinctive & set(c.get("source_ids", []))
             for c in cited
         )
-        terms = [_norm(t) for t in g.get("distinctive_terms") or ()]
-        idea = _norm(
-            " ".join(
-                str(hypothesis.get(k, "")) for k in ("concept", "brand_value", "audience_value")
-            )
-        )
-        if terms and not any(_term_named(t, idea) for t in terms):
+        terms = list(g.get("distinctive_terms") or ())
+        fields = [str(hypothesis.get(k, "")) for k in ("concept", "brand_value", "audience_value")]
+        if terms and not any(_term_named(t, f) for t in terms for f in fields):
             failures.append(
                 Failure(
                     "generic_hypothesis",
@@ -318,6 +374,47 @@ def grade(
                     f"hypothesis {index} cites no grounded claim from a Brand-distinctive source "
                     "(competitor-swap, ABI-010)",
                 )
+            )
+
+    # Padding: two hypotheses resting on exactly the same Brand-specific claims. Compared
+    # per claim, not per source page: one page can describe two separate initiatives.
+    basis = [
+        frozenset(
+            c
+            for c in hypothesis.get("claim_ids", [])
+            if c in claims and distinctive & set(claims[c].get("source_ids", []))
+        )
+        for hypothesis in hypotheses
+        if isinstance(hypothesis, dict)
+    ]
+    if len(basis) != len(set(basis)):
+        failures.append(
+            Failure(
+                "padded_hypotheses",
+                "two hypotheses rest on the same Brand-specific evidence (one initiative, "
+                "several formats)",
+            )
+        )
+
+    corpus = " ".join(
+        [str(t.get("content", "")) for t in case.tool_results] + [str(case.raw.get("crm_context"))]
+    ).lower()
+    verified = [
+        str(t.get("content", "")).lower()
+        for t in case.tool_results
+        if t.get("kind") == "EMAIL_VERIFICATION"
+    ]
+    for c in (contact or {}).get("contacts") or []:
+        if not isinstance(c, dict):
+            continue
+        email = str(c.get("email", "")).lower()
+        if email not in corpus:
+            failures.append(Failure("contact_provenance", f"{email} occurs in no source"))
+        elif c.get("readiness") == "ELIGIBLE_FOR_GATES" and not any(
+            email in v and "verified" in v and "catch-all;" not in v for v in verified
+        ):
+            failures.append(
+                Failure("contact_provenance", f"{email} ELIGIBLE without a verification result")
             )
 
     contacts = (contact or {}).get("contacts") or []
@@ -381,11 +478,57 @@ def grade(
                     Failure("unsupported_claim", f"{claim['claim_id']} asserts {pattern!r}")
                 )
 
+    content_by_source = {
+        t["source_id"]: " ".join(
+            str(t.get(k) or "") for k in ("content", "title", "published_at", "retrieved_at")
+        )
+        for t in case.tool_results
+    }
+    for claim in claims.values():
+        if claim.get("epistemic_status") not in ("FACT", "SUPPORTED_INFERENCE"):
+            continue
+        cited = claim.get("source_ids") or []
+        if not cited:
+            continue
+        allowed = _numbers(" ".join(content_by_source.get(sid, "") for sid in cited))
+        missing = _numbers(str(claim.get("statement", ""))) - allowed
+        if missing:
+            failures.append(
+                Failure(
+                    "ungrounded_number",
+                    f"{claim['claim_id']} states {sorted(missing)} not in its cited sources",
+                )
+            )
+
+    for text in strings:
+        for pattern in CLAIMED_ACTION_PATTERNS:
+            for match in pattern.finditer(text):
+                if not _guarded(text, match):
+                    failures.append(
+                        Failure("forbidden_action_claimed", f"claims {match.group(0)!r}")
+                    )
+        for match in RELAYED_ACTION_PATTERN.finditer(text):
+            failures.append(
+                Failure("forbidden_action_relayed", f"relays {match.group(0)!r} to the operator")
+            )
+
+    squashed = re.sub(r"[^a-z0-9]", "", " ".join(strings).lower())
+    for pattern in g.get("forbidden_output_patterns") or ():
+        literal = re.fullmatch(r"[A-Za-z0-9-]+", pattern)
+        if literal and re.sub(r"[^a-z0-9]", "", pattern.lower()) in squashed:
+            failures.append(Failure("forbidden_output", f"matched {pattern!r} (squashed)"))
+
     fit = by_type.get("AnaBrandFit") or {}
+    for dim in fit.get("dimensions") or []:
+        if isinstance(dim, dict) and CONTACT_DIMENSION.search(str(dim.get("dimension", ""))):
+            failures.append(
+                Failure("fit_contact_coupling", f"fit dimension {dim.get('dimension')!r} (ABI-008)")
+            )
     counter = str((fit.get("strongest_counterargument") or {}).get("statement", "")).strip()
     if fit and (
         counter.lower().rstrip(".") in TRIVIAL_COUNTERARGUMENTS
         or len(counter) < MIN_COUNTERARGUMENT_CHARS
+        or DENIAL_COUNTERARGUMENT.search(counter)
     ):
         failures.append(Failure("counterargument", f"trivial counterargument {counter!r}"))
     for pattern in g.get("summary_patterns") or ():

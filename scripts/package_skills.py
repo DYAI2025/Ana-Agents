@@ -29,6 +29,28 @@ from skill_digest import (
 
 SKILLS = ("ana-brand-intel", "ana-outreach-compose")
 REQUIRED = ("SKILL.md", "agents/openai.yaml")
+# Grader-only data must never ship: a model under test could read the expected answers.
+GRADING_MARKERS = (
+    "distinctive_source_ids",
+    "distinctive_terms",
+    "forbidden_output_patterns",
+    "forbidden_claim_patterns",
+    "non_selectable_emails",
+    "expected_selected_email",
+    "summary_patterns",
+    "names no Brand-specific mechanism",
+)
+
+
+def grading_leaks(skill_dir: Path) -> list[str]:
+    leaks = []
+    for path, rel in iter_package_files(skill_dir):
+        if rel.startswith("reports/evals/"):
+            leaks.append(f"{rel}: eval runs belong in evals/<skill>/runs/")
+            continue
+        text = path.read_bytes().decode("utf-8", "replace")
+        leaks += [f"{rel}: contains {m!r}" for m in GRADING_MARKERS if m in text]
+    return leaks
 
 
 def sha256_file(path: Path) -> str:
@@ -92,6 +114,14 @@ def main() -> int:
         skill_dir = root / "skills" / name
         gate = read_gate(skill_dir)
         digest = content_digest(skill_dir)
+        leaks = grading_leaks(skill_dir)
+        if leaks:
+            raise SystemExit(f"{name}: grader-only data in package: {leaks[:5]}")
+        if args.mode == "candidate" and gate.get("content_digest") not in (None, digest):
+            raise SystemExit(
+                f"{name}: reports/release-status.json describes {gate.get('content_digest')!r}, "
+                f"package content is {digest!r} (stale evidence)"
+            )
         if args.mode == "release":
             if gate.get("release_authorized") is not True:
                 raise SystemExit(f"{name}: release blocked by reports/release-status.json")

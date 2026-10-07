@@ -13,6 +13,8 @@ actually executed. This check turns a run directory into evidence or rejects it:
   EV_RAW               a raw response file is missing or its sha256 differs
   EV_REGRADE           re-grading a raw response does not reproduce the recorded verdict
   EV_STATUS            the recorded overall/case status disagrees with the trial verdicts
+  EV_REGRADE_ORIGIN    a regrade's original run is missing, changed, bound to another
+                       digest, or holds different raw answers
   EV_COMMIT            git_head is unknown to this repository, or the skill tree at that
                        commit does not have the bound digest
 
@@ -34,6 +36,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from ana_agents.skill_evals.brand_intel import load_suite
 from run_brand_intel_evals import (
     REPO_ROOT,
+    RUNS_DIR,
     SKILL_DIR,
     SUITE,
     grade_trial,
@@ -75,6 +78,30 @@ def validate(run_dir: Path, expect_digest: str, min_trials: int, check_commit: b
         at_commit = digest_at_commit(head) if head else None
         if at_commit != binding.get("skill_content_digest"):
             findings.append(("EV_COMMIT", f"skill digest at {head!r} is {at_commit}"))
+
+    origin = report.get("regrade_of")
+    if origin is not None:
+        original = RUNS_DIR / origin.get("run_id", "") / "report.json"
+        if not original.is_file() or sha256_bytes(original.read_bytes()) != origin.get(
+            "report_sha256"
+        ):
+            findings.append(("EV_REGRADE_ORIGIN", f"original report {original} missing or changed"))
+        else:
+            source = json.loads(original.read_text(encoding="utf-8"))
+            if source["binding"].get("skill_content_digest") != binding.get("skill_content_digest"):
+                findings.append(("EV_REGRADE_ORIGIN", "original run has another skill digest"))
+            hashes = {
+                (r["case_id"], t["trial"]): t.get("raw_sha256")
+                for r in source["results"]
+                for t in r["trials"]
+            }
+            mine = {
+                (r["case_id"], t["trial"]): t.get("raw_sha256")
+                for r in report.get("results", [])
+                for t in r["trials"]
+            }
+            if mine != hashes:
+                findings.append(("EV_REGRADE_ORIGIN", "raw answers differ from the original run"))
 
     _, cases = load_suite(SUITE)
     by_id = {c.case_id: c for c in cases}

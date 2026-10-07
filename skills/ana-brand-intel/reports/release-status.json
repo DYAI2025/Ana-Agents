@@ -4,8 +4,8 @@
   "status": "BLOCKED",
   "release_authorized": false,
   "content_digest_algorithm": "skill-content-v1",
-  "content_digest": "sha256:249f61691e3de1ed672fb707bab436263f44cecd287149eb0724cf8f97a2bcae",
-  "source_commit": "b1e27e95aa530984e6117a368d3ce25ea9ae8712",
+  "content_digest": "sha256:c08490043895e138500c6d83d6350d17ea3c4f3eea55880263d783a6816334cd",
+  "source_commit": "e3c050c3419c81003df5319dbf33b2df9815d192",
   "evaluated_at": "2026-10-07",
   "checks": {
     "build_contract_package_structure": {
