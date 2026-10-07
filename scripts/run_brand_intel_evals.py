@@ -38,7 +38,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from ana_agents.skill_evals.brand_intel import grade, load_suite, model_view
+from ana_agents.skill_evals import brand_intel as grader_module
+from ana_agents.skill_evals.brand_intel import DEFAULT_GRADING, grade, load_suite, model_view
 from skill_digest import content_digest, sha256_bytes
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -364,6 +365,8 @@ def run_live(args: argparse.Namespace) -> int:
             "skill_tree_dirty": dirty,
             "suite": f"{suite['suite_id']} v{suite['suite_version']}",
             "suite_sha256": sha256_bytes(SUITE.read_bytes()),
+            "grading_sha256": sha256_bytes(DEFAULT_GRADING.read_bytes()),
+            "grader_sha256": sha256_bytes(Path(grader_module.__file__).read_bytes()),
         },
         "trials_per_case": args.trials,
         "summary": {"cases": len(results), "passed": passed, "failed": len(results) - passed},
@@ -383,8 +386,28 @@ def run_live(args: argparse.Namespace) -> int:
     return {"PASS": 0, "FAIL": 1}.get(report["status"], 2)
 
 
+def suite_drift(binding: dict) -> list[str]:
+    """Differences between the suite/grading/grader a run used and the current files."""
+    current = {
+        "suite_sha256": sha256_bytes(SUITE.read_bytes()),
+        "grading_sha256": sha256_bytes(DEFAULT_GRADING.read_bytes()),
+        "grader_sha256": sha256_bytes(Path(grader_module.__file__).read_bytes()),
+    }
+    return [
+        f"{key}: run {binding.get(key)} != current {value}"
+        for key, value in current.items()
+        if binding.get(key) != value
+    ]
+
+
 def run_replay(run_dir: Path) -> int:
     report = json.loads((run_dir / "report.json").read_text(encoding="utf-8"))
+    drift = suite_drift(report["binding"])
+    if drift:
+        for line in drift:
+            print(f"SUITE_DRIFT {line}")
+        print(f"REPLAY {report['run_id']}: not comparable with the current suite/grader")
+        return 1
     _, cases = load_suite(SUITE)
     by_id = {c.case_id: c for c in cases}
     mismatches = 0

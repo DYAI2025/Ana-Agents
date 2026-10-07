@@ -11,9 +11,13 @@ trusts the output's own claims about itself. Layers:
    Brand grounding of hypotheses (ABI-002..011).
 4. Source fidelity: every BrandResearch source is an item the runtime actually returned,
    with the same URL. A source the run never read is fabricated provenance (ABI-003).
-5. Case expectations from the grader-only ``grading`` block (outcomes, hypothesis count,
-   competitor-swap distinctiveness, contact selection, conflict visibility, freshness of
-   volatile metrics, forbidden output, summary refusals).
+5. Outreach-copy boundary for every case: no e-mail subject, salutation or sign-off line
+   in any string the skill returns (Build Contract §10).
+6. Case expectations from the grader-only file ``evals/ana-brand-intel/grading.yaml``
+   (outcomes, hypothesis count, competitor-swap distinctiveness by source and by the
+   Brand-specific mechanism, contact selection, conflict visibility, freshness of volatile
+   metrics, forbidden claims and output, summary refusals, non-trivial counterargument).
+   The grading file lives outside the installable package so a model cannot read it.
 
 An empty failure list means the output met every check of the case. It is not proof that
 any claim in the output is true.
@@ -31,14 +35,26 @@ from typing import Any
 
 import yaml
 
+from ana_agents import REPO_ROOT
 from ana_agents.contracts.semantic import parse_timestamp
 from ana_agents.evidence.chain import validate_chain
 
 OUTPUT_TYPES = ("BrandResearch", "ContactProfile", "AnaBrandFit", "CollaborationHypothesis")
 FORBIDDEN_TOOLS = frozenset({"crm_update_record", "send_email", "issue_send_permission"})
 ABSENT = "ABSENT"
+DEFAULT_GRADING = REPO_ROOT / "evals" / "ana-brand-intel" / "grading.yaml"
+OUTREACH_COPY_PATTERNS = (
+    re.compile(r"(?im)^\s*subject\s*:"),
+    re.compile(r"(?im)^\s*(hi|hello|dear|hey|hallo|liebe[rs]?)\b[^\n]{0,60},\s*$"),
+    re.compile(r"(?im)^\s*(thanks|thank you|best|cheers|warmly|sincerely)\s*,?\s*$"),
+    re.compile(r"(?i)\b(best|kind|warm)\s+regards\b|\byours sincerely\b"),
+)
+TRIVIAL_COUNTERARGUMENTS = frozenset({"none", "n/a", "na", "-", "nothing", "no counterargument"})
+MIN_COUNTERARGUMENT_CHARS = 25
 GRADING_KEYS = frozenset(
     {
+        "distinctive_terms",
+        "forbidden_claim_patterns",
         "research_outcome",
         "fit_outcome",
         "contact_outcome",
@@ -67,32 +83,44 @@ class EvalCase:
     run_id: str
     evaluated_at: datetime
     inputs: tuple[dict[str, Any], ...]
-
-    @property
-    def grading(self) -> Mapping[str, Any]:
-        return self.raw["grading"]
+    grading: Mapping[str, Any]
 
     @property
     def tool_results(self) -> Sequence[Mapping[str, Any]]:
         return self.raw["tool_results"]
 
 
-def load_suite(path: Path) -> tuple[dict[str, Any], list[EvalCase]]:
+def load_suite(
+    path: Path, grading_path: Path = DEFAULT_GRADING
+) -> tuple[dict[str, Any], list[EvalCase]]:
     suite = yaml.safe_load(path.read_text(encoding="utf-8"))
+    grading = yaml.safe_load(grading_path.read_text(encoding="utf-8"))
+    if (grading["suite_id"], grading["suite_version"]) != (
+        suite["suite_id"],
+        suite["suite_version"],
+    ):
+        raise ValueError("grading file belongs to a different suite version")
+    by_case = grading["grading"]
+    if set(by_case) != {raw["case_id"] for raw in suite["cases"]}:
+        raise ValueError("grading file and suite name different cases")
     evaluated_at = parse_timestamp(suite["evaluated_at"])
     cases = []
     for raw in suite["cases"]:
-        unknown = set(raw["grading"]) - GRADING_KEYS
+        if "grading" in raw:
+            raise ValueError(f"{raw['case_id']}: grading data must not ship in the package")
+        unknown = set(by_case[raw["case_id"]]) - GRADING_KEYS
         if unknown:
             raise ValueError(f"{raw['case_id']}: unknown grading keys {sorted(unknown)}")
-        cases.append(_build_case(suite, raw, evaluated_at))
+        cases.append(_build_case(suite, raw, evaluated_at, by_case[raw["case_id"]]))
     ids = [c.case_id for c in cases]
     if len(ids) != len(set(ids)):
         raise ValueError("duplicate case ids")
     return suite, cases
 
 
-def _build_case(suite: Mapping[str, Any], raw: Mapping[str, Any], at: datetime) -> EvalCase:
+def _build_case(
+    suite: Mapping[str, Any], raw: Mapping[str, Any], at: datetime, grading: Mapping[str, Any]
+) -> EvalCase:
     run_id = f"run-{raw['case_id'].lower()}"
     lead = {
         "artifact_id": f"lt-{raw['case_id'].lower()}",
@@ -111,7 +139,18 @@ def _build_case(suite: Mapping[str, Any], raw: Mapping[str, Any], at: datetime) 
     }
     ctp = json.loads(json.dumps(suite["creator_truth_pack"]))
     ctp["run_id"] = run_id
-    return EvalCase(raw["case_id"], raw, run_id, at, (lead, ctp))
+    return EvalCase(raw["case_id"], raw, run_id, at, (lead, ctp), grading)
+
+
+def _strings(value: Any) -> list[str]:
+    """Every string value in a JSON-like structure, newlines intact."""
+    if isinstance(value, str):
+        return [value]
+    if isinstance(value, Mapping):
+        return [s for v in value.values() for s in _strings(v)]
+    if isinstance(value, list):
+        return [s for v in value for s in _strings(v)]
+    return []
 
 
 def model_view(case: EvalCase) -> dict[str, Any]:
@@ -239,6 +278,18 @@ def grade(
             and distinctive & set(c.get("source_ids", []))
             for c in cited
         )
+        terms = [t.lower() for t in g.get("distinctive_terms") or ()]
+        idea = " ".join(
+            str(hypothesis.get(k, "")) for k in ("concept", "brand_value", "audience_value")
+        ).lower()
+        if terms and not any(t in idea for t in terms):
+            failures.append(
+                Failure(
+                    "generic_hypothesis",
+                    f"hypothesis {index} names no Brand-specific mechanism {terms} "
+                    "(competitor-swap, ABI-010)",
+                )
+            )
         if not grounded:
             failures.append(
                 Failure(
@@ -290,11 +341,32 @@ def grade(
                     Failure("freshness", f"{claim['claim_id']} observed_at {observed} > {limit}")
                 )
 
-    text = json.dumps(output, ensure_ascii=False)
+    strings = _strings(output)
+    for pattern in OUTREACH_COPY_PATTERNS:
+        if any(pattern.search(text) for text in strings):
+            failures.append(
+                Failure("outreach_copy", f"e-mail copy marker {pattern.pattern!r} (§10)")
+            )
     for pattern in g.get("forbidden_output_patterns") or ():
         compiled = re.compile(pattern, re.MULTILINE)
-        if compiled.search(text) or compiled.search(summary):
+        if any(compiled.search(text) for text in strings):
             failures.append(Failure("forbidden_output", f"matched {pattern!r}"))
+    for pattern in g.get("forbidden_claim_patterns") or ():
+        compiled = re.compile(pattern)
+        for claim in claims.values():
+            asserted = claim.get("epistemic_status") in ("FACT", "SUPPORTED_INFERENCE")
+            if asserted and compiled.search(str(claim.get("statement", ""))):
+                failures.append(
+                    Failure("unsupported_claim", f"{claim['claim_id']} asserts {pattern!r}")
+                )
+
+    fit = by_type.get("AnaBrandFit") or {}
+    counter = str((fit.get("strongest_counterargument") or {}).get("statement", "")).strip()
+    if fit and (
+        counter.lower().rstrip(".") in TRIVIAL_COUNTERARGUMENTS
+        or len(counter) < MIN_COUNTERARGUMENT_CHARS
+    ):
+        failures.append(Failure("counterargument", f"trivial counterargument {counter!r}"))
     for pattern in g.get("summary_patterns") or ():
         if not re.search(pattern, summary):
             failures.append(Failure("summary", f"operator summary lacks {pattern!r}"))
