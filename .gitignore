@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Local environment / secrets
+.env
+.env.*
+!.env.example
+
+# IDE / OS
+.DS_Store
+.idea/
+.vscode/
+
+# Private operational/project data
+private-research/
+private-data/
+runtime-data/
+crm-export*
+contact-export*
+suppression-export*
+mail-export*
+
+# Local generated artifacts
+artifacts/
+reports/local/

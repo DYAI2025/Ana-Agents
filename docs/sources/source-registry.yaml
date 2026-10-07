@@ -1,0 +1,70 @@
+version: 1
+sources:
+  - id: RES-001
+    title: Initial Ana outbound agent deep research
+    source_class: user_provided_research
+    availability: external_private_source
+    canonical: false
+    status: reviewed
+    supports:
+      - evidence-first outreach architecture
+      - structured intermediate artifacts
+      - quality and evaluation concepts
+    notes: Raw source intentionally not committed to public repository.
+
+  - id: RES-002
+    title: Additional outreach architecture research
+    source_class: user_provided_research
+    availability: external_private_source
+    canonical: false
+    status: reviewed
+    supports:
+      - contact confidence
+      - research tiering
+      - collaboration hypothesis
+      - skill boundaries
+    notes: Raw source intentionally not committed to public repository.
+
+  - id: RES-003
+    title: Extended Ana agentic outreach research
+    source_class: user_provided_research
+    availability: external_private_source
+    canonical: false
+    status: reviewed
+    supports:
+      - deterministic policy and send controls
+      - CRM versus artifact-store separation
+      - eval and learning architecture
+      - permission model
+    notes: Raw source intentionally not committed to public repository.
+
+  - id: SRC-OPENAI
+    title: OpenAI agent and skill documentation
+    source_class: primary_official
+    availability: web
+    canonical: false
+    status: SOURCE_NEEDED_AT_IMPLEMENTATION
+    supports:
+      - agent runtime integration
+      - tool safety and approval patterns
+
+  - id: SRC-ZOHO
+    title: Zoho CRM and Mail developer documentation
+    source_class: primary_official
+    availability: web
+    canonical: false
+    status: SOURCE_NEEDED_AT_IMPLEMENTATION
+    supports:
+      - CRM adapter
+      - mail adapter
+      - OAuth scope behavior
+
+  - id: SRC-LEGAL
+    title: Applicable jurisdiction-specific direct-marketing law and regulator guidance
+    source_class: regulator
+    availability: external
+    canonical: false
+    status: BLOCKER_FOR_PRODUCTION_SEND
+    supports:
+      - compliance policy
+    notes: Requires professional, jurisdiction-specific legal review before production sending.
