@@ -33,13 +33,16 @@ Read in this order before making material changes:
 4. Relevant ADRs under `docs/decisions/`
 5. Relevant contracts, schemas, policies, and tests
 
-## Planned first capabilities
+## Current generative capabilities
+
+Two skill sources are now assembled:
 
 - `ana-brand-intel`
 - `ana-outreach-compose`
-- deterministic state, evidence, policy, duplicate, suppression, and send-permission controls
-- Zoho CRM/Mail adapters behind explicit interfaces
-- behavioral and adversarial evaluations
+
+They are **not yet approved releases**. Their machine-readable release gates remain BLOCKED until exact-head deterministic validation, live semantic/model evals, independent evaluation, and Vince workspace smoke testing are actually executed.
+
+Deterministic state, evidence, policy, duplicate, suppression, send-permission controls and production CRM/mail adapters remain separate runtime work.
 
 ## Data safety
 
@@ -63,10 +66,16 @@ Slice S1 — canonical contracts and validation foundation:
 - synthetic fixtures with valid chains and a negative-case manifest (`contracts/examples/`)
 - requirement mapping in `docs/TRACEABILITY.md`
 
-Not implemented: the `ana-brand-intel` / `ana-outreach-compose` skills, any runtime service
-(state machine, scheduler, suppression, duplicates, SendPermission issuer), Zoho adapters, live
-model evaluations, production commercial/legal policy. **Nothing in this repository grants send
-authority:** a schema-valid `SendPermission` is a data record, not an authorization.
+Skill source exists for `ana-brand-intel` and `ana-outreach-compose`, but live semantic/model evaluations and approved installable releases remain blocked. Runtime services (state machine, scheduler, suppression, duplicates, trusted SendPermission issuer), Zoho adapters, and production commercial/legal policy are still not implemented.
+
+**Nothing in this repository grants send authority:** a draft, a schema-valid `SendPermission`, or a skill output is not authorization.
+
+For Vince/distribution:
+- start with `docs/VINCE_QUICKSTART.md`;
+- normal use: `docs/VINCE_DAILY_USE.md`;
+- architecture in plain language: `docs/ARCHITECTURE_FOR_HUMANS.md`;
+- setup automation prompt: `prompts/CLAUDE_FOR_CHROME_SETUP.md`;
+- release/candidate packaging: `scripts/package_skills.py` and `scripts/verify_release.py`.
 
 See `SPEC.md` for normative requirements and `ARCHITECTURE.md` for the target design.
 

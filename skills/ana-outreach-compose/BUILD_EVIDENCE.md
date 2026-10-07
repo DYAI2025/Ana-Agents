@@ -1,30 +1,30 @@
 # ana-outreach-compose — Build Evidence
 
+Status: SOURCE_ASSEMBLED_RELEASE_BLOCKED
+
 Build source contract: `requirements/skills/ana-outreach-compose-build-contract.md`
 
-Build source repository snapshot: `DYAI2025/Ana-Agents@31580c135fe25852540bb73bed772f3bef5c5b41`
+Current source is present in the repository and has been remotely read back. That proves source presence only; it does not prove semantic behavior or release readiness.
 
-Artifact digest: `sha256:a6e7a4e2419c4508d232db927a2e6607db2e74642282ff91f0f5032deedfc7a7`
+## Verified in repository
 
-Distribution archive SHA-256: `1c67d4084b6512365676251ed5c99a16972b2539f16ba6dee444fdf06869639a`
+- `SKILL.md` exists with the intended composition-only scope.
+- `agents/openai.yaml` exists.
+- Brand SEARCH/WEB_READ is forbidden for composition.
+- CRM write and SEND authority are forbidden.
+- Claim-framing, commercial-boundary, genericness, and follow-up rules are documented.
 
-## Executed deterministic checks
+## Not yet verified
 
-- Build Contract structure: PASS — 12 HARD requirements.
-- Package/security check: PASS — no independent Brand research capability, CRM write, or SEND authority.
-- Domain checks: PASS — 14 deterministic positive/negative cases covering direct input graph, claim framing, commercial boundary, genericness and follow-up behavior.
-- Installability: PASS.
+- Full repository regression on the exact skill head: NOT_RUN in the current orchestrator environment.
+- Live skill/model behavioral evals: BLOCKED_NOT_CONFIGURED.
+- Independent enterprise evaluator on the exact packaged digest: NOT_RUN.
+- Vince workspace installation/smoke test: NOT_RUN.
+- Canonical VoiceProfile/ApprovedExamples artifact schema: MISSING; optional protected knowledge must not be invented.
+- Approved release archive: NOT_AUTHORIZED.
 
-## Enterprise evaluator
+## Release rule
 
-Decision: `PASS_WITH_MINOR_REVISIONS`
+Do not label this skill RELEASED, VERIFIED, or READY_FOR_VINCE until the required exact-head deterministic checks, live semantic evals, package verification, and distribution acceptance evidence exist.
 
-Scores: spec compliance 5/5; research quality 4/5; enterprise readiness 4/5; architecture quality 5/5; release-gate integrity 4/5.
-
-## Known evidence gaps
-
-- Live semantic/model behavior eval: `BLOCKED_NOT_CONFIGURED`.
-- Full Ana-Agents S1 repository regression: `UNVERIFIED_SANDBOX_NETWORK_BLOCKED`.
-- Canonical VoiceProfile/ApprovedExamples artifact schema: `MISSING`; treated as optional protected knowledge rather than invented.
-
-These states are not reported as PASS.
+Machine-readable gate: `reports/release-status.json`.
