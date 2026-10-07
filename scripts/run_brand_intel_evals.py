@@ -29,6 +29,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shutil
 import subprocess
 import sys
 import time
@@ -197,6 +198,16 @@ def call_model(endpoint: str, model: str, system: str, user: str, api_key: str) 
     raise RuntimeError("model call failed after retries")
 
 
+def stage_package(out_dir: Path) -> Path:
+    """Copy the skill package (without reports/) for an agent runtime's code tool."""
+    target = out_dir / "package" / SKILL_DIR.name
+    if not target.is_dir():
+        shutil.copytree(SKILL_DIR, target, ignore=shutil.ignore_patterns("reports", "__pycache__"))
+    if content_digest(target) != content_digest(SKILL_DIR):
+        raise SystemExit(f"staged package {target} differs from {SKILL_DIR}")
+    return target
+
+
 def exchange_answer(model: str, text: str) -> dict:
     """Wrap a file-exchange answer in the chat-completions shape the grader reads."""
     calls = []
@@ -285,8 +296,15 @@ def run_live(args: argparse.Namespace) -> int:
                 answer = answer_file
                 if not answer.is_file():
                     exchange.parent.mkdir(parents=True, exist_ok=True)
+                    package = stage_package(out_dir)
+                    code_tool = (
+                        "\nCode execution is available in this run, limited to the package's "
+                        f"pre-flight: `/usr/bin/python3 -I {package}/scripts/validate_output.py "
+                        "<answer file>`.\n"
+                    )
                     prompt_file.write_text(
-                        f"# SYSTEM\n\n{system}\n\n# USER\n\n{user}\n{SUBAGENT_TOOL_PROTOCOL}",
+                        f"# SYSTEM\n\n{system}\n\n# USER\n\n{user}\n{SUBAGENT_TOOL_PROTOCOL}"
+                        f"{code_tool}",
                         encoding="utf-8",
                     )
                     print(f"  {case.case_id} trial {trial}: NOT_RUN (prompt written, no answer)")
@@ -351,6 +369,9 @@ def run_live(args: argparse.Namespace) -> int:
                 {t["resolved_model"] for r in results for t in r["trials"] if "resolved_model" in t}
             ),
             "tools_exposed": [t["function"]["name"] for t in DECOY_TOOLS],
+            "code_execution": (
+                "scripts/validate_output.py only" if args.provider == SUBAGENT else "none"
+            ),
             "scope_limits": [
                 "not the ChatGPT Skills runtime",
                 "no live web retrieval; synthetic pre-executed corpus",
