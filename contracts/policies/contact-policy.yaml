@@ -1,0 +1,57 @@
+# CANONICAL executable contact-readiness policy (SPEC INTEL-007, INTEL-008, INTEL-010; ADR-003 D3).
+#
+# This file is the single source of truth for the mapping. contact-policy.md explains it but
+# must not restate the mapping. Loaded and validated by src/ana_agents/contracts/semantic.py
+# against contracts/schemas/contact-policy.schema.json.
+#
+# Evaluation: every rule whose `when` matches contributes its readiness; the most restrictive
+# contributed readiness wins (readiness_order is least -> most restrictive). If no rule
+# matches, default_readiness applies (fail-closed).
+#
+# ELIGIBLE_FOR_GATES only permits advancement to later gates. It is NOT send authorization,
+# NOT compliance clearance and NOT human approval.
+policy_id: contact-policy
+policy_version: "1.0.0"
+readiness_order:
+  - ELIGIBLE_FOR_GATES
+  - REVIEW_REQUIRED
+  - NO_SEND
+default_readiness: NO_SEND
+review_resolution_mechanism: MISSING  # resolving REVIEW_REQUIRED is future scope; not implemented
+rules:
+  - id: CP-001
+    description: Private source contact data is never send-eligible (INTEL-008).
+    when: { source_class: private }
+    readiness: NO_SEND
+  - id: CP-002
+    description: Unknown source cannot be relied upon.
+    when: { source_class: unknown }
+    readiness: NO_SEND
+  - id: CP-003
+    description: Address not published in a public business context.
+    when: { public_business_context: false }
+    readiness: NO_SEND
+  - id: CP-004
+    description: Inferred (e.g. pattern-guessed) addresses need review.
+    when: { source_class: inferred }
+    readiness: REVIEW_REQUIRED
+  - id: CP-005
+    description: Catch-all domains cannot confirm a mailbox.
+    when: { verification: catch_all }
+    readiness: REVIEW_REQUIRED
+  - id: CP-006
+    description: Unverified address.
+    when: { verification: unverified }
+    readiness: REVIEW_REQUIRED
+  - id: CP-007
+    description: Verification state unknown.
+    when: { verification: unknown }
+    readiness: REVIEW_REQUIRED
+  - id: CP-008
+    description: Publicly found (not officially published) address, even if verified, needs review.
+    when: { source_class: public_found, verification: verified }
+    readiness: REVIEW_REQUIRED
+  - id: CP-009
+    description: Officially published, verified, business-context address may advance to later gates.
+    when: { source_class: official_published, verification: verified, public_business_context: true }
+    readiness: ELIGIBLE_FOR_GATES

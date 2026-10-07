@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ana-agents.invalid/contracts/v1/send-receipt.schema.json",
+  "title": "SendReceipt",
+  "description": "Record that a send adapter transmitted exactly the permitted draft. In S1 no mail adapter exists; receipts in this repository are synthetic fixtures. adapter_mode NOT_CONFIGURED means nothing was sent.",
+  "x-ana-kind": "pipeline",
+  "type": "object",
+  "allOf": [{ "$ref": "artifact-envelope.schema.json" }],
+  "properties": {
+    "artifact_type": { "const": "SendReceipt" },
+    "schema_version": { "const": "1.0.0" },
+    "producer": { "properties": { "kind": { "const": "runtime" } } },
+    "send_permission_id": { "$ref": "common.schema.json#/$defs/identifier" },
+    "draft_hash": { "$ref": "common.schema.json#/$defs/draft_hash" },
+    "adapter_mode": { "enum": ["NOT_CONFIGURED", "SYNTHETIC_FIXTURE", "PRODUCTION"] },
+    "sent_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "message_ref": { "$ref": "common.schema.json#/$defs/identifier" }
+  },
+  "required": ["send_permission_id", "draft_hash", "adapter_mode", "sent_at", "message_ref"],
+  "unevaluatedProperties": false
+}

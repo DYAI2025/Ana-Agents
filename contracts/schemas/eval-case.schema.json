@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ana-agents.invalid/contracts/v1/eval-case.schema.json",
+  "title": "EvalCase",
+  "description": "Supporting structure describing one behavioral evaluation case and its last recorded result. A semantic/model eval may only report PASS or FAIL with execution evidence; otherwise BLOCKED_NOT_CONFIGURED or NOT_RUN (EVAL-006, semantic rule).",
+  "x-ana-kind": "supporting",
+  "type": "object",
+  "properties": {
+    "eval_id": { "$ref": "common.schema.json#/$defs/identifier" },
+    "requirement_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "common.schema.json#/$defs/requirement_id" }
+    },
+    "kind": { "enum": ["deterministic", "semantic"] },
+    "description": { "$ref": "common.schema.json#/$defs/non_empty_text" },
+    "input_fixture_ref": { "type": "string" },
+    "expected_outcome": { "$ref": "common.schema.json#/$defs/non_empty_text" },
+    "result": { "$ref": "common.schema.json#/$defs/execution_result" }
+  },
+  "required": [
+    "eval_id",
+    "requirement_ids",
+    "kind",
+    "description",
+    "input_fixture_ref",
+    "expected_outcome",
+    "result"
+  ],
+  "additionalProperties": false
+}

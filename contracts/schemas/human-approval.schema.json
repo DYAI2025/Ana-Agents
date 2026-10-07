@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ana-agents.invalid/contracts/v1/human-approval.schema.json",
+  "title": "HumanApproval",
+  "description": "A human decision about one exact draft. APPROVED binds to approved_draft_hash; any later change to the draft's send_payload invalidates it (OPS-003). producer.kind must be human; a skill cannot approve. In S1 the producer field is data, not proof of identity.",
+  "x-ana-kind": "pipeline",
+  "type": "object",
+  "allOf": [{ "$ref": "artifact-envelope.schema.json" }],
+  "properties": {
+    "artifact_type": { "const": "HumanApproval" },
+    "schema_version": { "const": "1.0.0" },
+    "producer": { "properties": { "kind": { "const": "human" } } },
+    "decision": { "enum": ["APPROVED", "REJECTED", "CHANGES_REQUESTED"] },
+    "approved_draft_hash": {
+      "oneOf": [{ "$ref": "common.schema.json#/$defs/draft_hash" }, { "type": "null" }]
+    },
+    "decided_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "note": { "type": "string" }
+  },
+  "required": ["decision", "approved_draft_hash", "decided_at"],
+  "unevaluatedProperties": false,
+  "if": { "properties": { "decision": { "const": "APPROVED" } } },
+  "then": { "properties": { "approved_draft_hash": { "$ref": "common.schema.json#/$defs/draft_hash" } } }
+}

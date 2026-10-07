@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ana-agents.invalid/contracts/v1/contact-policy.schema.json",
+  "title": "ContactPolicy",
+  "description": "Shape of contracts/policies/contact-policy.yaml.",
+  "x-ana-kind": "policy",
+  "type": "object",
+  "properties": {
+    "policy_id": { "const": "contact-policy" },
+    "policy_version": { "$ref": "common.schema.json#/$defs/semver" },
+    "readiness_order": {
+      "const": ["ELIGIBLE_FOR_GATES", "REVIEW_REQUIRED", "NO_SEND"]
+    },
+    "default_readiness": { "const": "NO_SEND" },
+    "review_resolution_mechanism": { "const": "MISSING" },
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "pattern": "^CP-[0-9]{3}$" },
+          "description": { "$ref": "common.schema.json#/$defs/non_empty_text" },
+          "when": {
+            "type": "object",
+            "minProperties": 1,
+            "properties": {
+              "source_class": { "$ref": "common.schema.json#/$defs/contact_source_class" },
+              "verification": { "$ref": "common.schema.json#/$defs/contact_verification" },
+              "public_business_context": { "type": "boolean" }
+            },
+            "additionalProperties": false
+          },
+          "readiness": { "$ref": "common.schema.json#/$defs/contact_readiness" }
+        },
+        "required": ["id", "description", "when", "readiness"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "policy_id",
+    "policy_version",
+    "readiness_order",
+    "default_readiness",
+    "review_resolution_mechanism",
+    "rules"
+  ],
+  "additionalProperties": false
+}

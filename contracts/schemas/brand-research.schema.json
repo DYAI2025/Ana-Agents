@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ana-agents.invalid/contracts/v1/brand-research.schema.json",
+  "title": "BrandResearch",
+  "description": "Structured Brand research: source records plus classified claims. INSUFFICIENT_EVIDENCE and CONFLICTING_EVIDENCE are successful stop outcomes (SYS-002) and must not lead to a draft.",
+  "x-ana-kind": "pipeline",
+  "type": "object",
+  "allOf": [{ "$ref": "artifact-envelope.schema.json" }],
+  "properties": {
+    "artifact_type": { "const": "BrandResearch" },
+    "schema_version": { "const": "1.0.0" },
+    "brand_id": { "$ref": "common.schema.json#/$defs/identifier" },
+    "sources": { "type": "array", "items": { "$ref": "source-record.schema.json" } },
+    "claims": { "type": "array", "items": { "$ref": "evidence-claim.schema.json" } },
+    "research_outcome": { "enum": ["SUFFICIENT", "INSUFFICIENT_EVIDENCE", "CONFLICTING_EVIDENCE"] },
+    "open_unknowns": {
+      "description": "Questions that remain UNKNOWN. Missing evidence stays here; it is never filled by inference (INTEL-003).",
+      "type": "array",
+      "items": { "$ref": "common.schema.json#/$defs/non_empty_text" }
+    }
+  },
+  "required": ["brand_id", "sources", "claims", "research_outcome", "open_unknowns"],
+  "unevaluatedProperties": false
+}

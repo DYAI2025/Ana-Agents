@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ana-agents.invalid/contracts/v1/lead-triage.schema.json",
+  "title": "LeadTriage",
+  "description": "Entry artifact for one Brand lead. Decides research tier and whether research proceeds. DEFER and REJECT are stop outcomes.",
+  "x-ana-kind": "pipeline",
+  "type": "object",
+  "allOf": [{ "$ref": "artifact-envelope.schema.json" }],
+  "properties": {
+    "artifact_type": { "const": "LeadTriage" },
+    "schema_version": { "const": "1.0.0" },
+    "brand": {
+      "type": "object",
+      "properties": {
+        "brand_id": { "$ref": "common.schema.json#/$defs/identifier" },
+        "name": { "$ref": "common.schema.json#/$defs/non_empty_text" },
+        "website": { "type": "string", "format": "uri" }
+      },
+      "required": ["brand_id", "name"],
+      "additionalProperties": false
+    },
+    "lead_source": { "enum": ["manual", "crm", "inbound_referral", "research_signal"] },
+    "research_tier": { "enum": ["LIGHT", "STANDARD", "DEEP"] },
+    "triage_outcome": { "enum": ["PROCEED", "DEFER", "REJECT"] },
+    "rationale": { "$ref": "common.schema.json#/$defs/non_empty_text" }
+  },
+  "required": ["brand", "lead_source", "research_tier", "triage_outcome", "rationale"],
+  "unevaluatedProperties": false
+}

@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ana-agents.invalid/contracts/v1/email-draft.schema.json",
+  "title": "EmailDraft",
+  "description": "Outbound draft. The send_payload projection (recipient, sender_identity_id, subject, body_text, body_html_light, links) is what approval and SendPermission bind to via draft_hash (ADR-003, send-payload-v1). Any change to a send_payload field changes the hash. claim_usage is the internal evidence map; it is not transmitted. Adding a field to this schema requires classifying it as send_payload or non-payload in src/ana_agents/contracts/hashing.py (a test enforces this) and revisiting the hash version.",
+  "x-ana-kind": "pipeline",
+  "type": "object",
+  "allOf": [{ "$ref": "artifact-envelope.schema.json" }],
+  "properties": {
+    "artifact_type": { "const": "EmailDraft" },
+    "schema_version": { "const": "1.0.0" },
+    "recipient": {
+      "type": "object",
+      "properties": {
+        "contact_id": { "$ref": "common.schema.json#/$defs/identifier" },
+        "email": { "type": "string", "format": "email" }
+      },
+      "required": ["contact_id", "email"],
+      "additionalProperties": false
+    },
+    "sender_identity_id": { "$ref": "common.schema.json#/$defs/identifier" },
+    "subject": { "$ref": "common.schema.json#/$defs/non_empty_text" },
+    "body_text": { "$ref": "common.schema.json#/$defs/non_empty_text" },
+    "body_html_light": { "type": ["string", "null"] },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "url": { "type": "string", "format": "uri" },
+          "label": { "type": "string" }
+        },
+        "required": ["url", "label"],
+        "additionalProperties": false
+      }
+    },
+    "claim_usage": {
+      "description": "Every Brand/Creator claim the draft relies on, with its external framing. ASSERTED is allowed only for FACT; HYPOTHESIS and SUPPORTED_INFERENCE must be HEDGED or QUESTION; UNKNOWN may not be used.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "claim_id": { "$ref": "common.schema.json#/$defs/identifier" },
+          "framing": { "enum": ["ASSERTED", "HEDGED", "QUESTION"] }
+        },
+        "required": ["claim_id", "framing"],
+        "additionalProperties": false
+      }
+    },
+    "hash_algorithm": { "const": "send-payload-v1+sha256" },
+    "draft_hash": { "$ref": "common.schema.json#/$defs/draft_hash" }
+  },
+  "required": [
+    "recipient",
+    "sender_identity_id",
+    "subject",
+    "body_text",
+    "body_html_light",
+    "links",
+    "claim_usage",
+    "hash_algorithm",
+    "draft_hash"
+  ],
+  "unevaluatedProperties": false
+}

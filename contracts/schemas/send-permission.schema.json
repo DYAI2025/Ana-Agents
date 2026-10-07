@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ana-agents.invalid/contracts/v1/send-permission.schema.json",
+  "title": "SendPermission",
+  "description": "DATA CONTRACT ONLY. A JSON object that validates against this schema is NOT send authorization. In S1 there is no trusted issuer, no signature and no runtime issuance; producer.kind=runtime is declared data, not cryptographic proof of origin. Issuance belongs to future trusted deterministic runtime code (ADR-002, ADR-003). This schema and the semantic/chain validators only check that a permission record is internally consistent and bound to the exact draft hash, approval, contact readiness, compliance, suppression, duplicate, freshness and QA state, policy version and expiry.",
+  "x-ana-kind": "pipeline",
+  "type": "object",
+  "allOf": [{ "$ref": "artifact-envelope.schema.json" }],
+  "properties": {
+    "artifact_type": { "const": "SendPermission" },
+    "schema_version": { "const": "1.0.0" },
+    "producer": { "properties": { "kind": { "const": "runtime" } } },
+    "send_authorized": { "type": "boolean" },
+    "bindings": {
+      "type": "object",
+      "properties": {
+        "draft_artifact_id": { "$ref": "common.schema.json#/$defs/identifier" },
+        "draft_hash": { "$ref": "common.schema.json#/$defs/draft_hash" },
+        "approval_artifact_id": { "$ref": "common.schema.json#/$defs/identifier" },
+        "qa_report_artifact_id": { "$ref": "common.schema.json#/$defs/identifier" },
+        "contact_profile_artifact_id": { "$ref": "common.schema.json#/$defs/identifier" },
+        "contact_id": { "$ref": "common.schema.json#/$defs/identifier" }
+      },
+      "required": [
+        "draft_artifact_id",
+        "draft_hash",
+        "approval_artifact_id",
+        "qa_report_artifact_id",
+        "contact_profile_artifact_id",
+        "contact_id"
+      ],
+      "additionalProperties": false
+    },
+    "gates": {
+      "type": "object",
+      "properties": {
+        "approval": { "enum": ["APPROVED", "REJECTED", "CHANGES_REQUESTED"] },
+        "qa": { "enum": ["READY_FOR_HUMAN_REVIEW", "NOT_READY"] },
+        "contact_readiness": { "$ref": "common.schema.json#/$defs/contact_readiness" },
+        "compliance": { "enum": ["CLEARED", "REVIEW_REQUIRED", "BLOCKED", "NOT_CONFIGURED"] },
+        "suppression": {
+          "enum": ["CLEAR", "OPTED_OUT", "DO_NOT_CONTACT", "HARD_BOUNCE", "NOT_EVALUATED"]
+        },
+        "duplicate": { "enum": ["CLEAR", "ACTIVE_SEQUENCE_CONFLICT", "NOT_EVALUATED"] },
+        "freshness": { "enum": ["FRESH", "STALE", "NOT_EVALUATED"] }
+      },
+      "required": [
+        "approval",
+        "qa",
+        "contact_readiness",
+        "compliance",
+        "suppression",
+        "duplicate",
+        "freshness"
+      ],
+      "additionalProperties": false
+    },
+    "policy_version": { "$ref": "common.schema.json#/$defs/semver" },
+    "issued_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "expires_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "block_reasons": {
+      "type": "array",
+      "items": { "$ref": "common.schema.json#/$defs/non_empty_text" }
+    }
+  },
+  "required": [
+    "send_authorized",
+    "bindings",
+    "gates",
+    "policy_version",
+    "issued_at",
+    "expires_at",
+    "block_reasons"
+  ],
+  "unevaluatedProperties": false
+}

@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ana-agents.invalid/contracts/v1/ana-brand-fit.schema.json",
+  "title": "AnaBrandFit",
+  "description": "Multidimensional qualitative Ana/Brand fit (INTEL-005) with the strongest counterargument (INTEL-006). No global numeric score is representable. Dimension names are free text because the canonical dimension taxonomy is MISSING. Contact readiness is deliberately not an input or an outcome here (INTEL-007, INTEL-010).",
+  "x-ana-kind": "pipeline",
+  "type": "object",
+  "allOf": [{ "$ref": "artifact-envelope.schema.json" }],
+  "properties": {
+    "artifact_type": { "const": "AnaBrandFit" },
+    "schema_version": { "const": "1.0.0" },
+    "dimensions": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "properties": {
+          "dimension": { "$ref": "common.schema.json#/$defs/non_empty_text" },
+          "rating": { "$ref": "common.schema.json#/$defs/qualitative_rating" },
+          "rationale": { "$ref": "common.schema.json#/$defs/non_empty_text" },
+          "claim_ids": { "$ref": "common.schema.json#/$defs/identifier_list" }
+        },
+        "required": ["dimension", "rating", "rationale", "claim_ids"],
+        "additionalProperties": false
+      }
+    },
+    "strongest_counterargument": {
+      "type": "object",
+      "properties": {
+        "statement": { "$ref": "common.schema.json#/$defs/non_empty_text" },
+        "claim_ids": { "$ref": "common.schema.json#/$defs/identifier_list" }
+      },
+      "required": ["statement", "claim_ids"],
+      "additionalProperties": false
+    },
+    "fit_outcome": {
+      "enum": ["FIT", "WEAK_FIT", "NO_FIT", "INSUFFICIENT_EVIDENCE", "CONFLICTING_EVIDENCE"]
+    }
+  },
+  "required": ["dimensions", "strongest_counterargument", "fit_outcome"],
+  "unevaluatedProperties": false
+}
