@@ -94,6 +94,21 @@ Stop outcomes — triage `DEFER`/`REJECT`, research `INSUFFICIENT_EVIDENCE`/`CON
 fit `NO_FIT`/`INSUFFICIENT_EVIDENCE`/`CONFLICTING_EVIDENCE`, commercial `NOT_VIABLE`, contact
 `CONTACT_NOT_READY` — may only be followed by an `OutcomeRecord`.
 
+### 5a. Chain identity isolation
+
+`run_id` is the correlation identifier of one materialized outbound evidence chain. All pipeline
+artifacts passed to one `validate_chain()` call must carry the same `run_id`; this includes a
+`CreatorTruthPack`. A reusable creator truth pack may exist outside any chain, but once it is an
+artifact of a chain it is a materialized snapshot input of that run. The chain's run is the unique
+most common `run_id`; every artifact with a different one is reported as `CHAIN_RUN_ID_MISMATCH`.
+Without a unique most common `run_id` every artifact is reported (fail closed).
+
+`LeadTriage.brand.brand_id`, `BrandResearch.brand_id` and `ContactProfile.brand_id` describe the
+same lead's Brand and must agree. `BrandResearch` and `ContactProfile` are checked against the
+`LeadTriage` / `BrandResearch` inputs they consume; a difference is `CHAIN_BRAND_ID_MISMATCH` on the
+consuming artifact. Brand ids are opaque identifiers compared for equality only — there is no Brand
+registry, and fixtures use synthetic ids.
+
 ### 6. Two-axis ContactProfile model (D3)
 
 A contact has independent dimensions `source_class` (`official_published`, `public_found`,
@@ -146,6 +161,13 @@ actual draft hash, approval decision, QA state and contact readiness. An unconsu
 permission is expired when `now >= expires_at`; a consumed one is judged by `SendReceipt.sent_at`
 falling in `[issued_at, expires_at)`.
 
+A `SendReceipt` records that a send adapter transmitted the permitted payload; it exists only if a
+transmission happened. `adapter_mode` is `SYNTHETIC_FIXTURE` or `PRODUCTION`. There is no
+`NOT_CONFIGURED` receipt: without an adapter nothing is sent and no receipt is produced. A send that
+did not happen is represented by `SendPermission(send_authorized=false)` followed by
+`OutcomeRecord(SEND_NOT_AUTHORIZED)`. A `SYNTHETIC_FIXTURE` receipt proves no production
+transmission.
+
 ### 10. JSON Schema vs Python semantic validation
 
 - **JSON Schema** owns shape: types, enums, `required`, closed objects, local conditional presence
@@ -158,7 +180,8 @@ falling in `[issued_at, expires_at)`.
   SendPermission consistency and expiry, reply stop/classification order, producer authority
   (duplicated behind the schema `const` as defense in depth).
 - **Python chain rules** (`evidence/chain.py`) own cross-artifact relations: input graph, cycles,
-  dangling ids, stop outcomes, claim resolution through ancestry, external framing, unresolved
+  dangling ids, run and Brand identity (§5a), stop outcomes, claim resolution through ancestry,
+  external framing, unresolved
   conflicts, Brand grounding, contact/draft/approval/permission/receipt bindings.
 - Semantic and chain content rules run only on schema-valid artifacts. Descendants of a
   schema-invalid artifact, or of an artifact with duplicate ids, skip content checks: the upstream

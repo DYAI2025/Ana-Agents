@@ -8,6 +8,8 @@ any claim is true and it is never send authorization.
 Chain rules:
 
 - artifact ids are unique; every input id resolves; the input graph is acyclic;
+- every artifact carries the chain's single ``run_id``; LeadTriage, BrandResearch and
+  ContactProfile name the same Brand id;
 - input types follow contracts/artifact-input-graph.yaml (allowed, required, one per type);
 - nothing but an OutcomeRecord may follow a stop outcome (NO_FIT, INSUFFICIENT_EVIDENCE,
   CONFLICTING_EVIDENCE, triage DEFER/REJECT, NOT_VIABLE, CONTACT_NOT_READY);
@@ -295,6 +297,55 @@ class _Chain:
         for node in sorted(self.index):
             if node not in order:
                 visit(node)
+
+    # -- identity isolation --------------------------------------------------------------
+
+    def check_run_ids(self) -> None:
+        """One chain = one materialized run: every pipeline artifact shares one ``run_id``.
+
+        The chain's run is the unique most common run id; artifacts carrying any other id
+        are reported. Without a unique most common run id no run is trusted and every
+        artifact is reported (fail closed).
+        """
+        runs = {aid: self.index[aid]["run_id"] for aid in sorted(self.valid)}
+        ranked = Counter(runs.values()).most_common()
+        if len(ranked) <= 1:
+            return
+        expected = ranked[0][0] if ranked[0][1] > ranked[1][1] else None
+        for aid, run_id in runs.items():
+            if expected is None:
+                message = (
+                    f"run_id {run_id!r}; chain mixes runs {sorted(set(runs.values()))} "
+                    "with no unique chain run"
+                )
+            elif run_id != expected:
+                message = f"run_id {run_id!r} differs from the chain's run_id {expected!r}"
+            else:
+                continue
+            self.add(F.CHAIN_RUN_ID_MISMATCH, aid, "/run_id", message)
+
+    @staticmethod
+    def _brand_id(artifact: Mapping[str, Any]) -> str:
+        if artifact["artifact_type"] == "LeadTriage":
+            return artifact["brand"]["brand_id"]
+        return artifact["brand_id"]
+
+    def check_brand_ids(self, aid: str, artifact: Mapping[str, Any]) -> None:
+        """BrandResearch and ContactProfile describe the Brand of the inputs they consume."""
+        own = self._brand_id(artifact)
+        for kind in ("LeadTriage", "BrandResearch"):
+            upstream = self.input_of_type(aid, kind)
+            if upstream is None:
+                continue
+            other = self._brand_id(upstream)
+            if other != own:
+                self.add(
+                    F.CHAIN_BRAND_ID_MISMATCH,
+                    aid,
+                    "/brand_id",
+                    f"brand_id {own!r} differs from {kind} {upstream['artifact_id']!r} "
+                    f"brand_id {other!r}",
+                )
 
     # -- content rules -------------------------------------------------------------------
 
@@ -699,6 +750,7 @@ class _Chain:
 
     def run(self) -> list[Finding]:
         self.check_graph()
+        self.check_run_ids()
         self.check_claim_uniqueness()
         handlers = {
             "ContactProfile": self.check_contact_profile,
@@ -719,6 +771,8 @@ class _Chain:
                 continue
             artifact = self.index[aid]
             self.check_stops(aid)
+            if artifact["artifact_type"] in ("BrandResearch", "ContactProfile"):
+                self.check_brand_ids(aid, artifact)
             handler = handlers.get(artifact["artifact_type"])
             if handler is not None:
                 handler(aid, artifact)

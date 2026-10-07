@@ -522,6 +522,54 @@ cases:
       - { code: CHAIN_ILLEGAL_INPUT_TYPE, artifact: sp-001 }
       - { code: CHAIN_CYCLE, artifact: or-001 }
 
+  # ---------------------------------------------------------------- chain identity (ADR-003 §5a)
+  - id: NEG-ID-001
+    requirement_ids: [SYS-001]
+    description: one artifact (the CreatorTruthPack snapshot) carries another run_id
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: ctp-001, path: /run_id, value: run-other }
+    expect:
+      - { code: CHAIN_RUN_ID_MISMATCH, artifact: ctp-001 }
+
+  - id: NEG-ID-002
+    requirement_ids: [SYS-001, OPS-002]
+    description: the SendReceipt carries another run_id
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: sr-001, path: /run_id, value: run-other }
+    expect:
+      - { code: CHAIN_RUN_ID_MISMATCH, artifact: sr-001 }
+
+  - id: NEG-ID-003
+    requirement_ids: [SYS-001]
+    description: BrandResearch is about another Brand than its LeadTriage (and the ContactProfile built on it)
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: br-001, path: /brand_id, value: brand-fixture-other }
+    expect:
+      - { code: CHAIN_BRAND_ID_MISMATCH, artifact: br-001 }
+      - { code: CHAIN_BRAND_ID_MISMATCH, artifact: cp-001 }
+
+  - id: NEG-ID-004
+    requirement_ids: [SYS-001]
+    description: ContactProfile is about another Brand than its LeadTriage and BrandResearch
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: cp-001, path: /brand_id, value: brand-fixture-other }
+    expect:
+      - { code: CHAIN_BRAND_ID_MISMATCH, artifact: cp-001 }
+
+  - id: POS-ID-004
+    requirement_ids: [SYS-001]
+    description: control - the same Brand id changed consistently on all three artifacts is clean
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: lt-001, path: /brand/brand_id, value: brand-fixture-other }
+      - { op: set, artifact: br-001, path: /brand_id, value: brand-fixture-other }
+      - { op: set, artifact: cp-001, path: /brand_id, value: brand-fixture-other }
+    expect: []
+
   # ---------------------------------------------------------------- draft / QA / approval
   - id: NEG-DRAFT-001
     requirement_ids: [OPS-003]
@@ -809,6 +857,16 @@ cases:
       - { op: set, artifact: sp-001, path: /expires_at, value: "2026-10-02T09:05:00Z" }
     expect:
       - { code: SEM_SEND_PERMISSION_INCONSISTENT, artifact: sp-001 }
+
+  # ---------------------------------------------------------------- send receipt
+  - id: NEG-SR-001
+    requirement_ids: [OPS-002]
+    description: SendReceipt claiming adapter_mode NOT_CONFIGURED (no adapter means no send and no receipt)
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: sr-001, path: /adapter_mode, value: NOT_CONFIGURED }
+    expect:
+      - { code: SCHEMA_INVALID, artifact: sr-001, keyword: enum }
 
   # ---------------------------------------------------------------- reply handling
   - id: NEG-REP-001

@@ -64,6 +64,10 @@ REQUIRED_PROOFS = {
     "draft after stop outcome": ["NEG-STOP-001", "NEG-STOP-002", "NEG-STOP-003"],
     "contact not ready": ["NEG-CON-006"],
     "QA not ready": ["NEG-QA-004"],
+    "artifact from another run in the chain": ["NEG-ID-001", "NEG-ID-002"],
+    "BrandResearch about another Brand than LeadTriage": ["NEG-ID-003"],
+    "ContactProfile about another Brand than BrandResearch": ["NEG-ID-004"],
+    "SendReceipt with adapter_mode NOT_CONFIGURED": ["NEG-SR-001"],
 }
 
 

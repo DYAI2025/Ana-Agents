@@ -97,3 +97,47 @@ def test_non_object_entries_are_reported(send_chain):
     assert project(validate_chain(artifacts, now=send_chain.evaluated_at)) == [
         (F.REGISTRY_NOT_AN_OBJECT, None)
     ]
+
+
+def test_run_id_renamed_consistently_on_every_artifact_is_clean(send_chain):
+    """Control: the rule compares run ids; it does not hard-code the fixture's value."""
+    artifacts = copy.deepcopy(send_chain.artifacts)
+    for artifact in artifacts:
+        artifact["run_id"] = "run-fixture-0002"
+    assert validate_chain(artifacts, now=send_chain.evaluated_at) == []
+
+
+def test_run_id_mismatch_names_expected_and_current_run(send_chain):
+    artifacts = copy.deepcopy(send_chain.artifacts)
+    next(a for a in artifacts if a["artifact_id"] == "ctp-001")["run_id"] = "run-other"
+    found = validate_chain(artifacts, now=send_chain.evaluated_at)
+    assert project(found) == [(F.CHAIN_RUN_ID_MISMATCH, "ctp-001")]
+    assert found[0].path == "/run_id"
+    assert "'run-other'" in found[0].message
+    assert "'run-fixture-0001'" in found[0].message
+
+
+def test_run_id_tie_without_majority_fails_closed_on_every_artifact(send_chain):
+    """Two artifacts, two runs: no run is trusted as the chain's run, so both are reported."""
+    lead, pack = (
+        copy.deepcopy(next(a for a in send_chain.artifacts if a["artifact_id"] == aid))
+        for aid in ("lt-001", "ctp-001")
+    )
+    pack["run_id"] = "run-other"
+    assert project(validate_chain([lead, pack], now=send_chain.evaluated_at)) == [
+        (F.CHAIN_RUN_ID_MISMATCH, "ctp-001"),
+        (F.CHAIN_RUN_ID_MISMATCH, "lt-001"),
+    ]
+
+
+def test_brand_mismatch_names_both_brand_ids(send_chain):
+    artifacts = copy.deepcopy(send_chain.artifacts)
+    next(a for a in artifacts if a["artifact_id"] == "cp-001")["brand_id"] = "brand-fixture-other"
+    found = validate_chain(artifacts, now=send_chain.evaluated_at)
+    assert {(f.code, f.artifact_id, f.path) for f in found} == {
+        (F.CHAIN_BRAND_ID_MISMATCH, "cp-001", "/brand_id")
+    }
+    assert all("'brand-fixture-other'" in f.message for f in found)
+    assert {"lt-001", "br-001"} == {
+        aid for f in found for aid in ("lt-001", "br-001") if aid in f.message
+    }
