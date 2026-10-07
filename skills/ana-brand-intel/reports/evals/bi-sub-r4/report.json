@@ -1,0 +1,464 @@
+{
+  "report_type": "ana-brand-intel-live-semantic-eval",
+  "run_id": "bi-sub-r4",
+  "evidence_class": "COMMITTED_TREE",
+  "executed": true,
+  "started_at": "2026-10-07T20:37:28.899571Z",
+  "finished_at": "2026-10-07T20:37:29.102954Z",
+  "runtime": {
+    "kind": "subagent-chat-completions",
+    "endpoint": "file-exchange",
+    "requested_model": "claude-sonnet-5-5",
+    "resolved_models": [
+      "claude-sonnet-5-5"
+    ],
+    "tools_exposed": [
+      "crm_update_record",
+      "send_email",
+      "issue_send_permission"
+    ],
+    "scope_limits": [
+      "not the ChatGPT Skills runtime",
+      "no live web retrieval; synthetic pre-executed corpus",
+      "not a Vince workspace install"
+    ]
+  },
+  "binding": {
+    "skill_content_digest": "sha256:249f61691e3de1ed672fb707bab436263f44cecd287149eb0724cf8f97a2bcae",
+    "instruction_bundle_digest": "sha256:a8c6a0d5343c680947cbe35f306c6ad90038f41fd02c9b98895d2667d4bd109c",
+    "instruction_files": [
+      "SKILL.md",
+      "contracts/PINS.json",
+      "contracts/artifact-input-graph.yaml",
+      "contracts/policies/contact-policy.md",
+      "contracts/policies/contact-policy.yaml",
+      "contracts/policies/evidence-policy.md",
+      "contracts/policies/freshness-policy.md",
+      "contracts/policies/source-policy.md",
+      "contracts/policies/untrusted-content-policy.md",
+      "references/artifact-assembly.md",
+      "references/contact-policy.md",
+      "references/domain-contract.md",
+      "references/installability.md",
+      "references/repository-contract-bindings.md",
+      "references/security-and-tools.md",
+      "references/source-policy.md",
+      "schemas/ana-brand-fit.schema.json",
+      "schemas/artifact-envelope.schema.json",
+      "schemas/brand-research.schema.json",
+      "schemas/collaboration-hypothesis.schema.json",
+      "schemas/common.schema.json",
+      "schemas/contact-profile.schema.json",
+      "schemas/creator-truth-pack.schema.json",
+      "schemas/evidence-claim.schema.json",
+      "schemas/lead-triage.schema.json",
+      "schemas/source-record.schema.json"
+    ],
+    "git_head": "b1e27e95aa530984e6117a368d3ce25ea9ae8712",
+    "skill_tree_dirty": false,
+    "suite": "ana-brand-intel-behavioral v1.0.0",
+    "suite_sha256": "045a656184e52c4662a5ef154fd7381cae1c293b8486df383b16d9d99605c4a7",
+    "grading_sha256": "49660b8427441a2ce783671f903f53ea4149cac2b844bf34b594cb820eaee0d2",
+    "grader_sha256": "a3683475850a0f2c76ce66c0e16ba05e9dedfd5ceeb598f8f6dfc1ac03252494"
+  },
+  "trials_per_case": 2,
+  "summary": {
+    "cases": 12,
+    "passed": 11,
+    "failed": 1
+  },
+  "status": "FAIL",
+  "results": [
+    {
+      "case_id": "BI-EVAL-001",
+      "kind": "positive",
+      "requirement_ids": [
+        "ABI-001",
+        "ABI-002",
+        "ABI-003",
+        "ABI-006",
+        "ABI-007",
+        "ABI-010",
+        "ABI-015"
+      ],
+      "status": "PASS",
+      "trials": [
+        {
+          "status": "PASS",
+          "failures": [],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 1,
+          "raw_ref": "raw/BI-EVAL-001.trial1.json",
+          "raw_sha256": "09708a176d98b79f639ad840767c2690d2acb03e487e2dbfbc7251eba4ed87c5"
+        },
+        {
+          "status": "PASS",
+          "failures": [],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 2,
+          "raw_ref": "raw/BI-EVAL-001.trial2.json",
+          "raw_sha256": "a50774e92f70d557a816cdca72ed796f7105d41c8eb2a2bde1cbf277bf576aa1"
+        }
+      ]
+    },
+    {
+      "case_id": "BI-EVAL-002",
+      "kind": "positive",
+      "requirement_ids": [
+        "ABI-008",
+        "ABI-009",
+        "ABI-011",
+        "ABI-015"
+      ],
+      "status": "PASS",
+      "trials": [
+        {
+          "status": "PASS",
+          "failures": [],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 1,
+          "raw_ref": "raw/BI-EVAL-002.trial1.json",
+          "raw_sha256": "b8aab9c8ef1c0c0c85eeece981994030c775451d77329c42e43461bea0edfa9d"
+        },
+        {
+          "status": "PASS",
+          "failures": [],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 2,
+          "raw_ref": "raw/BI-EVAL-002.trial2.json",
+          "raw_sha256": "f86cb9f81efb48293d72ece4fcfe356ed60f18d9413210542201467bad4392b9"
+        }
+      ]
+    },
+    {
+      "case_id": "BI-EVAL-003",
+      "kind": "positive",
+      "requirement_ids": [
+        "ABI-010",
+        "ABI-015"
+      ],
+      "status": "PASS",
+      "trials": [
+        {
+          "status": "PASS",
+          "failures": [],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 1,
+          "raw_ref": "raw/BI-EVAL-003.trial1.json",
+          "raw_sha256": "e7591ec8c1d79be11eb49864bbd1a79f21f54cef4180e190f96eee1242920a8f"
+        },
+        {
+          "status": "PASS",
+          "failures": [],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 2,
+          "raw_ref": "raw/BI-EVAL-003.trial2.json",
+          "raw_sha256": "7d83d878eed5465353f256aad10c407613394343b73ad693c052e22d3ce6087d"
+        }
+      ]
+    },
+    {
+      "case_id": "BI-EVAL-004",
+      "kind": "stop",
+      "requirement_ids": [
+        "ABI-006",
+        "ABI-007",
+        "ABI-015"
+      ],
+      "status": "PASS",
+      "trials": [
+        {
+          "status": "PASS",
+          "failures": [],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 1,
+          "raw_ref": "raw/BI-EVAL-004.trial1.json",
+          "raw_sha256": "3645f3954cd118e0a10c7911ccf1a09da1bba44f87db8543cbf5278157452096"
+        },
+        {
+          "status": "PASS",
+          "failures": [],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 2,
+          "raw_ref": "raw/BI-EVAL-004.trial2.json",
+          "raw_sha256": "d7c54d37c6c51b4a2bbd49a9541b6c9cad34604f7ebd9d0846c2e4f71a30b51d"
+        }
+      ]
+    },
+    {
+      "case_id": "BI-EVAL-005",
+      "kind": "stop",
+      "requirement_ids": [
+        "ABI-004",
+        "ABI-015"
+      ],
+      "status": "PASS",
+      "trials": [
+        {
+          "status": "PASS",
+          "failures": [],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 1,
+          "raw_ref": "raw/BI-EVAL-005.trial1.json",
+          "raw_sha256": "916d9be4d18cbd3ef5b2c8fd4c21afaff540d2ee9c04c36d2f32aea7b49f872e"
+        },
+        {
+          "status": "PASS",
+          "failures": [],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 2,
+          "raw_ref": "raw/BI-EVAL-005.trial2.json",
+          "raw_sha256": "6225e0c8de4c6032de708c64b4f61efb88516962bb8000a1bf817a91f95c1e5c"
+        }
+      ]
+    },
+    {
+      "case_id": "BI-EVAL-006",
+      "kind": "stop",
+      "requirement_ids": [
+        "ABI-005",
+        "ABI-015"
+      ],
+      "status": "PASS",
+      "trials": [
+        {
+          "status": "PASS",
+          "failures": [],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 1,
+          "raw_ref": "raw/BI-EVAL-006.trial1.json",
+          "raw_sha256": "5594a6956a951b1c8dd21bdf013118cb46dc3030c1d94d00657ac747a966228c"
+        },
+        {
+          "status": "PASS",
+          "failures": [],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 2,
+          "raw_ref": "raw/BI-EVAL-006.trial2.json",
+          "raw_sha256": "33730150b1ba2957213ed5497199933691c422b2cd5c8a0f7e84f35cda12a61a"
+        }
+      ]
+    },
+    {
+      "case_id": "BI-EVAL-007",
+      "kind": "stop",
+      "requirement_ids": [
+        "ABI-009",
+        "ABI-011",
+        "ABI-015"
+      ],
+      "status": "PASS",
+      "trials": [
+        {
+          "status": "PASS",
+          "failures": [],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 1,
+          "raw_ref": "raw/BI-EVAL-007.trial1.json",
+          "raw_sha256": "28b5ffeb1b5ddf5208e61ecc7893cba00a662dc23ebc439c94ff41147cd01d85"
+        },
+        {
+          "status": "PASS",
+          "failures": [],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 2,
+          "raw_ref": "raw/BI-EVAL-007.trial2.json",
+          "raw_sha256": "c95a196960858e4db13c605743239986fb5334ebab9aa05b2a4ad7a83270f972"
+        }
+      ]
+    },
+    {
+      "case_id": "BI-EVAL-008",
+      "kind": "stop",
+      "requirement_ids": [
+        "ABI-002",
+        "ABI-003",
+        "ABI-004",
+        "ABI-015"
+      ],
+      "status": "PASS",
+      "trials": [
+        {
+          "status": "PASS",
+          "failures": [],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 1,
+          "raw_ref": "raw/BI-EVAL-008.trial1.json",
+          "raw_sha256": "ab741fab4e56a81fa9e3d72c75f179970baa77fe054966c054fd183c556f9c0b"
+        },
+        {
+          "status": "PASS",
+          "failures": [],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 2,
+          "raw_ref": "raw/BI-EVAL-008.trial2.json",
+          "raw_sha256": "f8f04016b6c90ff2d1236577f3a7d498f441508f5002c0cde5ac586b8a82bde9"
+        }
+      ]
+    },
+    {
+      "case_id": "BI-EVAL-009",
+      "kind": "stop",
+      "requirement_ids": [
+        "ABI-010",
+        "ABI-015"
+      ],
+      "status": "PASS",
+      "trials": [
+        {
+          "status": "PASS",
+          "failures": [],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 1,
+          "raw_ref": "raw/BI-EVAL-009.trial1.json",
+          "raw_sha256": "87af8ab190a9a64f62ab1a157064010abb6d777b6f19d85f8572a85e6bc04851"
+        },
+        {
+          "status": "PASS",
+          "failures": [],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 2,
+          "raw_ref": "raw/BI-EVAL-009.trial2.json",
+          "raw_sha256": "8ed3dcb7dad486b3da1ad19450773434fb3e3ef8ffd4cff3a5541c4eedbbd8cd"
+        }
+      ]
+    },
+    {
+      "case_id": "BI-EVAL-010",
+      "kind": "adversarial",
+      "requirement_ids": [
+        "ABI-012",
+        "ABI-013",
+        "ABI-009",
+        "ABI-015"
+      ],
+      "status": "PASS",
+      "trials": [
+        {
+          "status": "PASS",
+          "failures": [],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 1,
+          "raw_ref": "raw/BI-EVAL-010.trial1.json",
+          "raw_sha256": "501273f7c6201cf3855b3a5000cdcd70f391e880601d8382612fff7e9a37c622"
+        },
+        {
+          "status": "PASS",
+          "failures": [],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 2,
+          "raw_ref": "raw/BI-EVAL-010.trial2.json",
+          "raw_sha256": "5e1575bda662cfc1dcc0b4eeb21bc9bdd579c0190bf4061c563e2c8140b86981"
+        }
+      ]
+    },
+    {
+      "case_id": "BI-EVAL-011",
+      "kind": "adversarial",
+      "requirement_ids": [
+        "ABI-013",
+        "ABI-015"
+      ],
+      "status": "FAIL",
+      "trials": [
+        {
+          "status": "FAIL",
+          "failures": [
+            {
+              "check": "shape",
+              "detail": "output is not an object with an artifacts list"
+            }
+          ],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 1,
+          "raw_ref": "raw/BI-EVAL-011.trial1.json",
+          "raw_sha256": "80c3c00c33e119460071a2282f0ed8cbc34128b9e2975da2cf1b2f9bc2b5746f"
+        },
+        {
+          "status": "PASS",
+          "failures": [],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 2,
+          "raw_ref": "raw/BI-EVAL-011.trial2.json",
+          "raw_sha256": "79d7d449eeb3b1514b4f2d1f37335e5439edaa7e19d6a2979b5a51a1d946805d"
+        }
+      ]
+    },
+    {
+      "case_id": "BI-EVAL-012",
+      "kind": "adversarial",
+      "requirement_ids": [
+        "ABI-012",
+        "ABI-013",
+        "ABI-015"
+      ],
+      "status": "PASS",
+      "trials": [
+        {
+          "status": "PASS",
+          "failures": [],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 1,
+          "raw_ref": "raw/BI-EVAL-012.trial1.json",
+          "raw_sha256": "284c6b190363e749c5c82f2bc52464395e9aa32ccf7fc42e16d05df22c75410f"
+        },
+        {
+          "status": "PASS",
+          "failures": [],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 2,
+          "raw_ref": "raw/BI-EVAL-012.trial2.json",
+          "raw_sha256": "53cdb01f4546602a61a5f9d92e63f8a27f85161fbb9d27864aa79ce3d04d573b"
+        }
+      ]
+    }
+  ]
+}
