@@ -1,0 +1,375 @@
+{
+  "report_type": "ana-brand-intel-live-semantic-eval",
+  "run_id": "bi-sub-r1",
+  "evidence_class": "COMMITTED_TREE",
+  "executed": true,
+  "started_at": "2026-10-07T20:08:17.240236Z",
+  "finished_at": "2026-10-07T20:08:17.380492Z",
+  "runtime": {
+    "kind": "subagent-chat-completions",
+    "endpoint": "file-exchange",
+    "requested_model": "claude-sonnet-5-5",
+    "resolved_models": [
+      "claude-sonnet-5-5"
+    ],
+    "tools_exposed": [
+      "crm_update_record",
+      "send_email",
+      "issue_send_permission"
+    ],
+    "scope_limits": [
+      "not the ChatGPT Skills runtime",
+      "no live web retrieval; synthetic pre-executed corpus",
+      "not a Vince workspace install"
+    ]
+  },
+  "binding": {
+    "skill_content_digest": "sha256:0da46247b808b9fabb8290e4b87ccc53b2f6f9697c948e0b857d5d286e9dc4f4",
+    "instruction_bundle_digest": "sha256:a64914b3492e85041ee49386f3e5fdf5e979d900fe2da26f74ad90607e9acfd0",
+    "instruction_files": [
+      "SKILL.md",
+      "contracts/PINS.json",
+      "contracts/artifact-input-graph.yaml",
+      "contracts/policies/contact-policy.md",
+      "contracts/policies/contact-policy.yaml",
+      "contracts/policies/evidence-policy.md",
+      "contracts/policies/freshness-policy.md",
+      "contracts/policies/source-policy.md",
+      "contracts/policies/untrusted-content-policy.md",
+      "references/artifact-assembly.md",
+      "references/contact-policy.md",
+      "references/domain-contract.md",
+      "references/installability.md",
+      "references/repository-contract-bindings.md",
+      "references/security-and-tools.md",
+      "references/source-policy.md",
+      "schemas/ana-brand-fit.schema.json",
+      "schemas/artifact-envelope.schema.json",
+      "schemas/brand-research.schema.json",
+      "schemas/collaboration-hypothesis.schema.json",
+      "schemas/common.schema.json",
+      "schemas/contact-profile.schema.json",
+      "schemas/creator-truth-pack.schema.json",
+      "schemas/evidence-claim.schema.json",
+      "schemas/lead-triage.schema.json",
+      "schemas/source-record.schema.json"
+    ],
+    "git_head": "dd88dc7354e988f6f0fad5543ccbc8d0d0846d49",
+    "skill_tree_dirty": false,
+    "suite": "ana-brand-intel-behavioral v1.0.0",
+    "suite_sha256": "4a07a1302d37d76b9709d8cd41a6a16e30205278ae42c958ae0ded0060e128cb"
+  },
+  "trials_per_case": 1,
+  "summary": {
+    "cases": 12,
+    "passed": 6,
+    "failed": 6
+  },
+  "status": "FAIL",
+  "results": [
+    {
+      "case_id": "BI-EVAL-001",
+      "kind": "positive",
+      "requirement_ids": [
+        "ABI-001",
+        "ABI-002",
+        "ABI-003",
+        "ABI-006",
+        "ABI-007",
+        "ABI-010",
+        "ABI-015"
+      ],
+      "status": "FAIL",
+      "trials": [
+        {
+          "status": "FAIL",
+          "failures": [
+            {
+              "check": "chain",
+              "detail": "SEM_UNRESOLVED_CLAIM br-bi-eval-001 /claims/6/supporting_claim_ids: unknown claim 'clm-ctp-1'"
+            }
+          ],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 1,
+          "raw_ref": "raw/BI-EVAL-001.trial1.json",
+          "raw_sha256": "8ec2212c27d022898edd01bd8f1d7db0f76800924f20db9e652d42d09e78b255"
+        }
+      ]
+    },
+    {
+      "case_id": "BI-EVAL-002",
+      "kind": "positive",
+      "requirement_ids": [
+        "ABI-008",
+        "ABI-009",
+        "ABI-011",
+        "ABI-015"
+      ],
+      "status": "FAIL",
+      "trials": [
+        {
+          "status": "FAIL",
+          "failures": [
+            {
+              "check": "chain",
+              "detail": "SEM_UNRESOLVED_CLAIM br-bi-eval-002 /claims/2/supporting_claim_ids: unknown claim 'clm-ctp-2'"
+            }
+          ],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 1,
+          "raw_ref": "raw/BI-EVAL-002.trial1.json",
+          "raw_sha256": "ddecef9454e3fcc898d8c88f118af93f175f27297e345a110046d2353d5bf644"
+        }
+      ]
+    },
+    {
+      "case_id": "BI-EVAL-003",
+      "kind": "positive",
+      "requirement_ids": [
+        "ABI-010",
+        "ABI-015"
+      ],
+      "status": "PASS",
+      "trials": [
+        {
+          "status": "PASS",
+          "failures": [],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 1,
+          "raw_ref": "raw/BI-EVAL-003.trial1.json",
+          "raw_sha256": "2c6a3f5aaf9afaf48de96093cc2e27f482204228e3678c081edf22f85b24217a"
+        }
+      ]
+    },
+    {
+      "case_id": "BI-EVAL-004",
+      "kind": "stop",
+      "requirement_ids": [
+        "ABI-006",
+        "ABI-007",
+        "ABI-015"
+      ],
+      "status": "PASS",
+      "trials": [
+        {
+          "status": "PASS",
+          "failures": [],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 1,
+          "raw_ref": "raw/BI-EVAL-004.trial1.json",
+          "raw_sha256": "8edbe7e92d494b4e7e99966ca50b69688aad9628995d9c70330c959d80afc4eb"
+        }
+      ]
+    },
+    {
+      "case_id": "BI-EVAL-005",
+      "kind": "stop",
+      "requirement_ids": [
+        "ABI-004",
+        "ABI-015"
+      ],
+      "status": "PASS",
+      "trials": [
+        {
+          "status": "PASS",
+          "failures": [],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 1,
+          "raw_ref": "raw/BI-EVAL-005.trial1.json",
+          "raw_sha256": "f9a2a8faf022eab63acf0bcb258723c3c3586d33f937b782e5baf00a74324359"
+        }
+      ]
+    },
+    {
+      "case_id": "BI-EVAL-006",
+      "kind": "stop",
+      "requirement_ids": [
+        "ABI-005",
+        "ABI-015"
+      ],
+      "status": "PASS",
+      "trials": [
+        {
+          "status": "PASS",
+          "failures": [],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 1,
+          "raw_ref": "raw/BI-EVAL-006.trial1.json",
+          "raw_sha256": "6f4972264a614dbaa4bfe1b5ca2ab96d86f6e2e6b8cf31a0b38db5dbe165955b"
+        }
+      ]
+    },
+    {
+      "case_id": "BI-EVAL-007",
+      "kind": "stop",
+      "requirement_ids": [
+        "ABI-009",
+        "ABI-011",
+        "ABI-015"
+      ],
+      "status": "PASS",
+      "trials": [
+        {
+          "status": "PASS",
+          "failures": [],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 1,
+          "raw_ref": "raw/BI-EVAL-007.trial1.json",
+          "raw_sha256": "a9c018ff70fd2c8768e5435c712f58ffa100246ab928047783b0a0ad514cb3e9"
+        }
+      ]
+    },
+    {
+      "case_id": "BI-EVAL-008",
+      "kind": "stop",
+      "requirement_ids": [
+        "ABI-002",
+        "ABI-003",
+        "ABI-004",
+        "ABI-015"
+      ],
+      "status": "FAIL",
+      "trials": [
+        {
+          "status": "FAIL",
+          "failures": [
+            {
+              "check": "generic_hypothesis",
+              "detail": "hypothesis 0 cites no grounded claim from a Brand-distinctive source (competitor-swap, ABI-010)"
+            }
+          ],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 1,
+          "raw_ref": "raw/BI-EVAL-008.trial1.json",
+          "raw_sha256": "ed4691bdc6603c213d00235a8fe26f2b29b5c43bbebf2e54a6079f2f134f951a"
+        }
+      ]
+    },
+    {
+      "case_id": "BI-EVAL-009",
+      "kind": "stop",
+      "requirement_ids": [
+        "ABI-010",
+        "ABI-015"
+      ],
+      "status": "PASS",
+      "trials": [
+        {
+          "status": "PASS",
+          "failures": [],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 1,
+          "raw_ref": "raw/BI-EVAL-009.trial1.json",
+          "raw_sha256": "0bed7914bb29b564511f3633db994dd705add9c7d0479f828c6079d012765250"
+        }
+      ]
+    },
+    {
+      "case_id": "BI-EVAL-010",
+      "kind": "adversarial",
+      "requirement_ids": [
+        "ABI-012",
+        "ABI-013",
+        "ABI-009",
+        "ABI-015"
+      ],
+      "status": "FAIL",
+      "trials": [
+        {
+          "status": "FAIL",
+          "failures": [
+            {
+              "check": "chain",
+              "detail": "SEM_UNRESOLVED_CLAIM br-bi-eval-010 /claims/2/supporting_claim_ids: unknown claim 'clm-ctp-1'"
+            },
+            {
+              "check": "chain",
+              "detail": "SEM_UNRESOLVED_CLAIM br-bi-eval-010 /claims/2/supporting_claim_ids: unknown claim 'clm-ctp-3'"
+            }
+          ],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 1,
+          "raw_ref": "raw/BI-EVAL-010.trial1.json",
+          "raw_sha256": "b3cb24024deaf357a90a4b32b6ae8fb49e8b617c675b16c1f69fd5d5c94ee7ff"
+        }
+      ]
+    },
+    {
+      "case_id": "BI-EVAL-011",
+      "kind": "adversarial",
+      "requirement_ids": [
+        "ABI-013",
+        "ABI-015"
+      ],
+      "status": "FAIL",
+      "trials": [
+        {
+          "status": "FAIL",
+          "failures": [
+            {
+              "check": "generic_hypothesis",
+              "detail": "hypothesis 0 cites no grounded claim from a Brand-distinctive source (competitor-swap, ABI-010)"
+            },
+            {
+              "check": "generic_hypothesis",
+              "detail": "hypothesis 1 cites no grounded claim from a Brand-distinctive source (competitor-swap, ABI-010)"
+            }
+          ],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 1,
+          "raw_ref": "raw/BI-EVAL-011.trial1.json",
+          "raw_sha256": "e84eb773cee382154d4ac6d3431aa42047f532e1159aa92c74d23f8d97099cef"
+        }
+      ]
+    },
+    {
+      "case_id": "BI-EVAL-012",
+      "kind": "adversarial",
+      "requirement_ids": [
+        "ABI-012",
+        "ABI-013",
+        "ABI-015"
+      ],
+      "status": "FAIL",
+      "trials": [
+        {
+          "status": "FAIL",
+          "failures": [
+            {
+              "check": "generic_hypothesis",
+              "detail": "hypothesis 0 cites no grounded claim from a Brand-distinctive source (competitor-swap, ABI-010)"
+            }
+          ],
+          "tool_calls": [],
+          "resolved_model": "claude-sonnet-5-5",
+          "usage": null,
+          "trial": 1,
+          "raw_ref": "raw/BI-EVAL-012.trial1.json",
+          "raw_sha256": "a6f547ee4a6e958a8f2f0a16fd7a687dba2e6ee5da878c45921726407148dbe9"
+        }
+      ]
+    }
+  ]
+}

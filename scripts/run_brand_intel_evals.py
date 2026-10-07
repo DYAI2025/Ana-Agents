@@ -362,7 +362,7 @@ def run_live(args: argparse.Namespace) -> int:
             "instruction_files": [p.relative_to(SKILL_DIR).as_posix() for p in instruction_files()],
             "git_head": git("rev-parse", "HEAD"),
             "skill_tree_dirty": dirty,
-            "suite": f"{suite['suite_id']}@{suite['suite_version']}",
+            "suite": f"{suite['suite_id']} v{suite['suite_version']}",
             "suite_sha256": sha256_bytes(SUITE.read_bytes()),
         },
         "trials_per_case": args.trials,
