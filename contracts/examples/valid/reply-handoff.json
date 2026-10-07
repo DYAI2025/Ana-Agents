@@ -1,0 +1,24 @@
+{
+  "artifact_id": "rh-001",
+  "artifact_type": "ReplyHandoff",
+  "schema_version": "1.0.0",
+  "contract_version": "1.0.0",
+  "produced_at": "2026-10-04T08:00:05Z",
+  "producer": {
+    "kind": "runtime",
+    "id": "reply-watcher"
+  },
+  "run_id": "run-fixture-0001",
+  "input_artifact_ids": [
+    "sr-001"
+  ],
+  "reply_ref": "reply-fixture-0001",
+  "reply_received_at": "2026-10-04T08:00:00Z",
+  "stop_followups": true,
+  "followups_stopped_at": "2026-10-04T08:00:01Z",
+  "handoff_target": "inbound-operator",
+  "classification": {
+    "label": "INTERESTED",
+    "classified_at": "2026-10-04T08:00:05Z"
+  }
+}

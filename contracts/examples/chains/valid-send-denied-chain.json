@@ -1,0 +1,547 @@
+{
+  "description": "Synthetic chain in the realistic S1 state: compliance is NOT_CONFIGURED, so the permission record denies sending and nothing is sent.",
+  "evaluated_at": "2026-10-05T00:00:00Z",
+  "artifacts": [
+    {
+      "artifact_id": "lt-001",
+      "artifact_type": "LeadTriage",
+      "schema_version": "1.0.0",
+      "contract_version": "1.0.0",
+      "produced_at": "2026-10-01T08:00:00Z",
+      "producer": {
+        "kind": "runtime",
+        "id": "lead-intake"
+      },
+      "run_id": "run-fixture-0001",
+      "input_artifact_ids": [],
+      "brand": {
+        "brand_id": "brand-northwind",
+        "name": "Northwind Outdoor (synthetic)",
+        "website": "https://brand.example.com/"
+      },
+      "lead_source": "manual",
+      "research_tier": "STANDARD",
+      "triage_outcome": "PROCEED",
+      "rationale": "Synthetic lead: outdoor gear brand in the creator's travel niche."
+    },
+    {
+      "artifact_id": "ctp-001",
+      "artifact_type": "CreatorTruthPack",
+      "schema_version": "1.0.0",
+      "contract_version": "1.0.0",
+      "produced_at": "2026-09-15T09:00:00Z",
+      "producer": {
+        "kind": "human",
+        "id": "creator-knowledge-curator"
+      },
+      "run_id": "run-fixture-0001",
+      "input_artifact_ids": [],
+      "creator_id": "creator-synthetic-01",
+      "data_classification": "SYNTHETIC_FIXTURE",
+      "sources": [
+        {
+          "source_id": "src-ctp-1",
+          "url": "https://creator.example.org/media-kit",
+          "title": "Synthetic creator media kit",
+          "source_class": "project_internal",
+          "trust": "PROJECT_INTERNAL",
+          "retrieved_at": "2026-09-15T09:00:00Z",
+          "published_at": null
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "clm-ctp-1",
+          "statement": "The creator publishes long-form outdoor travel videos.",
+          "epistemic_status": "FACT",
+          "source_ids": [
+            "src-ctp-1"
+          ],
+          "supporting_claim_ids": [],
+          "material": true,
+          "volatile": false,
+          "conflict": {
+            "status": "NONE",
+            "conflicting_claim_ids": []
+          }
+        },
+        {
+          "claim_id": "clm-ctp-2",
+          "statement": "Most of the creator's audience is interested in hiking (synthetic metric).",
+          "epistemic_status": "FACT",
+          "source_ids": [
+            "src-ctp-1"
+          ],
+          "supporting_claim_ids": [],
+          "material": true,
+          "volatile": true,
+          "conflict": {
+            "status": "NONE",
+            "conflicting_claim_ids": []
+          },
+          "freshness": {
+            "observed_at": "2026-09-01T00:00:00Z",
+            "verified_at": null
+          }
+        }
+      ],
+      "restrictions": [
+        "No tobacco, gambling or weapons brands."
+      ]
+    },
+    {
+      "artifact_id": "br-001",
+      "artifact_type": "BrandResearch",
+      "schema_version": "1.0.0",
+      "contract_version": "1.0.0",
+      "produced_at": "2026-10-01T09:00:00Z",
+      "producer": {
+        "kind": "skill",
+        "id": "ana-brand-intel"
+      },
+      "run_id": "run-fixture-0001",
+      "input_artifact_ids": [
+        "lt-001"
+      ],
+      "brand_id": "brand-northwind",
+      "sources": [
+        {
+          "source_id": "src-br-1",
+          "url": "https://brand.example.com/sustainability/repair",
+          "title": "Repair program page",
+          "source_class": "official_brand_site",
+          "trust": "UNTRUSTED_EXTERNAL",
+          "retrieved_at": "2026-10-01T08:30:00Z",
+          "published_at": "2026-03-01T00:00:00Z"
+        },
+        {
+          "source_id": "src-br-2",
+          "url": "https://news.example.net/northwind-repair",
+          "title": "Trade press article",
+          "source_class": "press",
+          "trust": "UNTRUSTED_EXTERNAL",
+          "retrieved_at": "2026-10-01T08:35:00Z",
+          "published_at": "2026-03-05T00:00:00Z"
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "clm-br-1",
+          "statement": "The brand launched a gear repair program in 2026.",
+          "epistemic_status": "FACT",
+          "source_ids": [
+            "src-br-1",
+            "src-br-2"
+          ],
+          "supporting_claim_ids": [],
+          "material": true,
+          "volatile": false,
+          "conflict": {
+            "status": "NONE",
+            "conflicting_claim_ids": []
+          }
+        },
+        {
+          "claim_id": "clm-br-2",
+          "statement": "The brand currently prioritizes durability in its messaging.",
+          "epistemic_status": "SUPPORTED_INFERENCE",
+          "source_ids": [],
+          "supporting_claim_ids": [
+            "clm-br-1"
+          ],
+          "material": true,
+          "volatile": false,
+          "conflict": {
+            "status": "NONE",
+            "conflicting_claim_ids": []
+          }
+        },
+        {
+          "claim_id": "clm-br-3",
+          "statement": "The brand may be open to long-form creator content.",
+          "epistemic_status": "HYPOTHESIS",
+          "source_ids": [],
+          "supporting_claim_ids": [],
+          "material": true,
+          "volatile": false,
+          "conflict": {
+            "status": "NONE",
+            "conflicting_claim_ids": []
+          }
+        },
+        {
+          "claim_id": "clm-br-4",
+          "statement": "The brand's creator partnership budget.",
+          "epistemic_status": "UNKNOWN",
+          "source_ids": [],
+          "supporting_claim_ids": [],
+          "material": true,
+          "volatile": false,
+          "conflict": {
+            "status": "NONE",
+            "conflicting_claim_ids": []
+          }
+        }
+      ],
+      "research_outcome": "SUFFICIENT",
+      "open_unknowns": [
+        "Creator partnership budget",
+        "Prior creator collaborations"
+      ]
+    },
+    {
+      "artifact_id": "cp-001",
+      "artifact_type": "ContactProfile",
+      "schema_version": "1.0.0",
+      "contract_version": "1.0.0",
+      "produced_at": "2026-10-01T09:30:00Z",
+      "producer": {
+        "kind": "skill",
+        "id": "ana-brand-intel"
+      },
+      "run_id": "run-fixture-0001",
+      "input_artifact_ids": [
+        "lt-001",
+        "br-001"
+      ],
+      "brand_id": "brand-northwind",
+      "contact_policy_version": "1.0.0",
+      "contacts": [
+        {
+          "contact_id": "contact-1",
+          "role": "Partnerships team (published address)",
+          "email": "partnerships@brand.example.com",
+          "source_class": "official_published",
+          "verification": "verified",
+          "public_business_context": true,
+          "source_ids": [
+            "src-br-1"
+          ],
+          "readiness": "ELIGIBLE_FOR_GATES"
+        },
+        {
+          "contact_id": "contact-2",
+          "role": "Marketing lead (pattern-inferred address)",
+          "email": "marketing.lead@brand.example.com",
+          "source_class": "inferred",
+          "verification": "unverified",
+          "public_business_context": true,
+          "source_ids": [],
+          "readiness": "REVIEW_REQUIRED"
+        }
+      ],
+      "selected_contact_id": "contact-1",
+      "contact_outcome": "READY_FOR_GATES"
+    },
+    {
+      "artifact_id": "fit-001",
+      "artifact_type": "AnaBrandFit",
+      "schema_version": "1.0.0",
+      "contract_version": "1.0.0",
+      "produced_at": "2026-10-01T10:00:00Z",
+      "producer": {
+        "kind": "skill",
+        "id": "ana-brand-intel"
+      },
+      "run_id": "run-fixture-0001",
+      "input_artifact_ids": [
+        "br-001",
+        "ctp-001"
+      ],
+      "dimensions": [
+        {
+          "dimension": "audience overlap",
+          "rating": "medium",
+          "rationale": "Hiking audience overlaps with outdoor gear buyers.",
+          "claim_ids": [
+            "clm-ctp-2"
+          ]
+        },
+        {
+          "dimension": "values alignment",
+          "rating": "strong",
+          "rationale": "Repair and durability match the creator's long-form travel practice.",
+          "claim_ids": [
+            "clm-br-1",
+            "clm-br-2"
+          ]
+        },
+        {
+          "dimension": "content format",
+          "rating": "unknown",
+          "rationale": "Openness to long-form content is only a hypothesis.",
+          "claim_ids": [
+            "clm-ctp-1",
+            "clm-br-3"
+          ]
+        }
+      ],
+      "strongest_counterargument": {
+        "statement": "No evidence of a creator budget or prior creator collaborations; the brand may not fund partnerships.",
+        "claim_ids": [
+          "clm-br-4"
+        ]
+      },
+      "fit_outcome": "FIT"
+    },
+    {
+      "artifact_id": "ch-001",
+      "artifact_type": "CollaborationHypothesis",
+      "schema_version": "1.0.0",
+      "contract_version": "1.0.0",
+      "produced_at": "2026-10-01T10:30:00Z",
+      "producer": {
+        "kind": "skill",
+        "id": "ana-brand-intel"
+      },
+      "run_id": "run-fixture-0001",
+      "input_artifact_ids": [
+        "fit-001",
+        "br-001",
+        "ctp-001"
+      ],
+      "hypotheses": [
+        {
+          "hypothesis_id": "hyp-1",
+          "concept": "A field series following repaired gear on a multi-day trek.",
+          "brand_value": "Shows the repair program in real use instead of a product ad.",
+          "audience_value": "Practical repair and durability knowledge for hikers.",
+          "claim_ids": [
+            "clm-br-1",
+            "clm-ctp-1"
+          ],
+          "risks": [
+            "Brand may prefer short-form content."
+          ],
+          "unknowns": [
+            "Budget",
+            "Timing"
+          ]
+        }
+      ]
+    },
+    {
+      "artifact_id": "cc-001",
+      "artifact_type": "CommercialCheck",
+      "schema_version": "1.0.0",
+      "contract_version": "1.0.0",
+      "produced_at": "2026-10-01T10:45:00Z",
+      "producer": {
+        "kind": "runtime",
+        "id": "commercial-policy-check"
+      },
+      "run_id": "run-fixture-0001",
+      "input_artifact_ids": [
+        "ch-001"
+      ],
+      "commercial_policy": {
+        "status": "MISSING",
+        "policy_id": null,
+        "policy_version": null
+      },
+      "status": "REVIEW",
+      "concerns": [
+        "Commercial policy values are MISSING; no commercial terms may be offered."
+      ]
+    },
+    {
+      "artifact_id": "os-001",
+      "artifact_type": "OutreachStrategy",
+      "schema_version": "1.0.0",
+      "contract_version": "1.0.0",
+      "produced_at": "2026-10-01T11:00:00Z",
+      "producer": {
+        "kind": "skill",
+        "id": "ana-outreach-compose"
+      },
+      "run_id": "run-fixture-0001",
+      "input_artifact_ids": [
+        "ch-001",
+        "cc-001",
+        "cp-001"
+      ],
+      "selected_hypothesis_id": "hyp-1",
+      "target_contact_id": "contact-1",
+      "channel": "email",
+      "approach": "Lead with the repair program and propose one concrete field-series idea; ask about interest.",
+      "key_claim_ids": [
+        "clm-br-1",
+        "clm-br-2"
+      ],
+      "exclusions": [
+        "No rates, usage rights, whitelisting, exclusivity or guarantees."
+      ]
+    },
+    {
+      "artifact_id": "ed-001",
+      "artifact_type": "EmailDraft",
+      "schema_version": "1.0.0",
+      "contract_version": "1.0.0",
+      "produced_at": "2026-10-01T11:30:00Z",
+      "producer": {
+        "kind": "skill",
+        "id": "ana-outreach-compose"
+      },
+      "run_id": "run-fixture-0001",
+      "input_artifact_ids": [
+        "os-001"
+      ],
+      "recipient": {
+        "contact_id": "contact-1",
+        "email": "partnerships@brand.example.com"
+      },
+      "sender_identity_id": "sender-creator-management",
+      "subject": "Field series idea: your repair program on a multi-day trek",
+      "body_text": "Hello Northwind team,\n\nYour new gear repair program caught our attention. It looks like durability is a focus for you right now. Would a field series that follows repaired gear on a multi-day trek be interesting?\n\nBest regards",
+      "body_html_light": "<p>Hello Northwind team,</p><p>Your new gear repair program caught our attention.</p>",
+      "links": [
+        {
+          "url": "https://creator.example.org/portfolio",
+          "label": "Portfolio"
+        }
+      ],
+      "claim_usage": [
+        {
+          "claim_id": "clm-br-1",
+          "framing": "ASSERTED"
+        },
+        {
+          "claim_id": "clm-br-2",
+          "framing": "HEDGED"
+        },
+        {
+          "claim_id": "clm-br-3",
+          "framing": "QUESTION"
+        }
+      ],
+      "hash_algorithm": "send-payload-v1+sha256",
+      "draft_hash": "sha256:fc2f64848db3bfaba92ef279e33512aeb62a33ef693d32a21cce03fb84ace568"
+    },
+    {
+      "artifact_id": "qa-001",
+      "artifact_type": "QAGateReport",
+      "schema_version": "1.0.0",
+      "contract_version": "1.0.0",
+      "produced_at": "2026-10-01T12:00:00Z",
+      "producer": {
+        "kind": "runtime",
+        "id": "qa-gate"
+      },
+      "run_id": "run-fixture-0001",
+      "input_artifact_ids": [
+        "ed-001"
+      ],
+      "draft_hash": "sha256:fc2f64848db3bfaba92ef279e33512aeb62a33ef693d32a21cce03fb84ace568",
+      "hard_checks": [
+        {
+          "check_id": "claim-coverage",
+          "kind": "deterministic",
+          "result": {
+            "status": "PASS",
+            "executed": true,
+            "execution_ref": "run-fixture-0001/claim-coverage",
+            "executed_at": "2026-10-01T11:59:00Z"
+          }
+        },
+        {
+          "check_id": "commercial-overreach-terms",
+          "kind": "deterministic",
+          "result": {
+            "status": "PASS",
+            "executed": true,
+            "execution_ref": "run-fixture-0001/commercial-terms",
+            "executed_at": "2026-10-01T11:59:10Z"
+          }
+        }
+      ],
+      "soft_scores": [
+        {
+          "name": "readability",
+          "score": 0.7
+        }
+      ],
+      "overall": "READY_FOR_HUMAN_REVIEW"
+    },
+    {
+      "artifact_id": "ha-001",
+      "artifact_type": "HumanApproval",
+      "schema_version": "1.0.0",
+      "contract_version": "1.0.0",
+      "produced_at": "2026-10-02T09:00:00Z",
+      "producer": {
+        "kind": "human",
+        "id": "reviewer-role-01"
+      },
+      "run_id": "run-fixture-0001",
+      "input_artifact_ids": [
+        "ed-001",
+        "qa-001"
+      ],
+      "decision": "APPROVED",
+      "approved_draft_hash": "sha256:fc2f64848db3bfaba92ef279e33512aeb62a33ef693d32a21cce03fb84ace568",
+      "decided_at": "2026-10-02T09:00:00Z",
+      "note": "Synthetic approval for contract fixtures."
+    },
+    {
+      "artifact_id": "sp-001",
+      "artifact_type": "SendPermission",
+      "schema_version": "1.0.0",
+      "contract_version": "1.0.0",
+      "produced_at": "2026-10-02T09:05:00Z",
+      "producer": {
+        "kind": "runtime",
+        "id": "send-permission-evaluator"
+      },
+      "run_id": "run-fixture-0001",
+      "input_artifact_ids": [
+        "ed-001",
+        "ha-001",
+        "qa-001",
+        "cp-001"
+      ],
+      "send_authorized": false,
+      "bindings": {
+        "draft_artifact_id": "ed-001",
+        "draft_hash": "sha256:fc2f64848db3bfaba92ef279e33512aeb62a33ef693d32a21cce03fb84ace568",
+        "approval_artifact_id": "ha-001",
+        "qa_report_artifact_id": "qa-001",
+        "contact_profile_artifact_id": "cp-001",
+        "contact_id": "contact-1"
+      },
+      "gates": {
+        "approval": "APPROVED",
+        "qa": "READY_FOR_HUMAN_REVIEW",
+        "contact_readiness": "ELIGIBLE_FOR_GATES",
+        "compliance": "NOT_CONFIGURED",
+        "suppression": "CLEAR",
+        "duplicate": "CLEAR",
+        "freshness": "NOT_EVALUATED"
+      },
+      "policy_version": "1.0.0",
+      "issued_at": "2026-10-02T09:05:00Z",
+      "expires_at": "2026-10-03T09:05:00Z",
+      "block_reasons": [
+        "compliance NOT_CONFIGURED (SRC-LEGAL blocker)",
+        "freshness NOT_EVALUATED"
+      ]
+    },
+    {
+      "artifact_id": "or-001",
+      "artifact_type": "OutcomeRecord",
+      "schema_version": "1.0.0",
+      "contract_version": "1.0.0",
+      "produced_at": "2026-10-02T09:10:00Z",
+      "producer": {
+        "kind": "runtime",
+        "id": "outcome-recorder"
+      },
+      "run_id": "run-fixture-0001",
+      "input_artifact_ids": [
+        "sp-001"
+      ],
+      "outcome": "SEND_NOT_AUTHORIZED",
+      "recorded_at": "2026-10-02T09:10:00Z",
+      "learning_hypotheses": []
+    }
+  ]
+}

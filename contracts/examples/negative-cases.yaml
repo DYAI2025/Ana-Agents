@@ -1,0 +1,874 @@
+# Negative fixtures as mutations of valid synthetic chains (run by
+# src/ana_agents/contracts/examples.py, tests/contracts/test_negative_cases.py and
+# scripts/validate_contracts.py).
+#
+# `expect` is the EXACT set of findings as (code, artifact[, keyword]). A case fails if the
+# validator reports anything else: failing for an unrelated reason is a false green.
+# An empty `expect` marks a positive control next to its negative case.
+#
+# Ops: set / remove / append (JSON pointer `path` inside `artifact`), drop (remove artifact),
+# rehash (recompute an EmailDraft's draft_hash after an edit), set_now (evaluation time).
+cases:
+  # ---------------------------------------------------------------- epistemic model
+  - id: NEG-EPI-001
+    requirement_ids: [INTEL-001]
+    description: invalid epistemic status
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: br-001, path: /claims/0/epistemic_status, value: PROBABLY_TRUE }
+    expect:
+      - { code: SCHEMA_INVALID, artifact: br-001, keyword: enum }
+
+  - id: NEG-EPI-002
+    requirement_ids: [INTEL-002]
+    description: FACT without any source
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: br-001, path: /claims/0/source_ids, value: [] }
+    expect:
+      - { code: SCHEMA_INVALID, artifact: br-001, keyword: minItems }
+
+  - id: NEG-EPI-003
+    requirement_ids: [INTEL-002]
+    description: FACT pointing to a nonexistent source
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: br-001, path: /claims/0/source_ids, value: [src-does-not-exist] }
+    expect:
+      - { code: SEM_UNRESOLVED_SOURCE, artifact: br-001 }
+
+  - id: NEG-EPI-004
+    requirement_ids: [INTEL-003, COMP-003]
+    description: UNKNOWN claim asserted externally in the draft
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: append, artifact: ed-001, path: /claim_usage, value: { claim_id: clm-br-4, framing: ASSERTED } }
+    expect:
+      - { code: CHAIN_ILLEGAL_EXTERNAL_FRAMING, artifact: ed-001 }
+
+  - id: NEG-EPI-005
+    requirement_ids: [INTEL-003]
+    description: UNKNOWN claim used even with hedged framing
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: append, artifact: ed-001, path: /claim_usage, value: { claim_id: clm-br-4, framing: HEDGED } }
+    expect:
+      - { code: CHAIN_ILLEGAL_EXTERNAL_FRAMING, artifact: ed-001 }
+
+  - id: NEG-EPI-006
+    requirement_ids: [INTEL-001, COMP-003]
+    description: HYPOTHESIS framed as an asserted fact
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: ed-001, path: /claim_usage/2/framing, value: ASSERTED }
+    expect:
+      - { code: CHAIN_ILLEGAL_EXTERNAL_FRAMING, artifact: ed-001 }
+
+  - id: NEG-EPI-007
+    requirement_ids: [INTEL-001]
+    description: SUPPORTED_INFERENCE framed as an asserted fact
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: ed-001, path: /claim_usage/1/framing, value: ASSERTED }
+    expect:
+      - { code: CHAIN_ILLEGAL_EXTERNAL_FRAMING, artifact: ed-001 }
+
+  - id: NEG-EPI-008
+    requirement_ids: [INTEL-001]
+    description: SUPPORTED_INFERENCE without any support (structural)
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: br-001, path: /claims/1/supporting_claim_ids, value: [] }
+    expect:
+      - { code: SCHEMA_INVALID, artifact: br-001, keyword: anyOf }
+
+  - id: NEG-EPI-009
+    requirement_ids: [INTEL-001, INTEL-003]
+    description: SUPPORTED_INFERENCE supported only by a HYPOTHESIS (not grounded)
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: br-001, path: /claims/1/supporting_claim_ids, value: [clm-br-3] }
+    expect:
+      - { code: SEM_UNSUPPORTED_INFERENCE, artifact: br-001 }
+
+  - id: NEG-EPI-010
+    requirement_ids: [INTEL-001]
+    description: SUPPORTED_INFERENCE supported by a nonexistent claim
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: br-001, path: /claims/1/supporting_claim_ids, value: [clm-missing] }
+    expect:
+      - { code: SEM_UNRESOLVED_CLAIM, artifact: br-001 }
+      - { code: SEM_UNSUPPORTED_INFERENCE, artifact: br-001 }
+
+  - id: NEG-EPI-011
+    requirement_ids: [INTEL-004]
+    description: used claim carries an unresolved material conflict
+    base: chains/valid-send-chain.json
+    ops:
+      - op: set
+        artifact: br-001
+        path: /claims/0/conflict
+        value: { status: UNRESOLVED, conflicting_claim_ids: [clm-br-3] }
+    expect:
+      - { code: CHAIN_UNRESOLVED_CONFLICT, artifact: ch-001 }
+      - { code: CHAIN_UNRESOLVED_CONFLICT, artifact: os-001 }
+      - { code: CHAIN_UNRESOLVED_CONFLICT, artifact: ed-001 }
+
+  - id: POS-EPI-011
+    requirement_ids: [INTEL-004]
+    description: control - the same conflict, resolved and preserved, does not block
+    base: chains/valid-send-chain.json
+    ops:
+      - op: set
+        artifact: br-001
+        path: /claims/0/conflict
+        value: { status: RESOLVED, conflicting_claim_ids: [clm-br-3], resolution_note: Official page supersedes. }
+    expect: []
+
+  - id: NEG-EPI-012
+    requirement_ids: [INTEL-002]
+    description: hypothesis references a nonexistent claim
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: append, artifact: ch-001, path: /hypotheses/0/claim_ids, value: clm-does-not-exist }
+    expect:
+      - { code: CHAIN_UNRESOLVED_CLAIM, artifact: ch-001 }
+
+  - id: NEG-EPI-013
+    requirement_ids: [DATA-004]
+    description: volatile claim without freshness metadata
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: remove, artifact: ctp-001, path: /claims/1/freshness }
+    expect:
+      - { code: SCHEMA_INVALID, artifact: ctp-001, keyword: required }
+
+  - id: NEG-EPI-014
+    requirement_ids: [INTEL-004]
+    description: conflict marked UNRESOLVED without naming the conflicting claim
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: br-001, path: /claims/0/conflict, value: { status: UNRESOLVED, conflicting_claim_ids: [] } }
+    expect:
+      - { code: SCHEMA_INVALID, artifact: br-001, keyword: minItems }
+
+  - id: NEG-EPI-015
+    requirement_ids: [SEC-001]
+    description: external source declared as trusted project content
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: br-001, path: /sources/0/trust, value: PROJECT_INTERNAL }
+    expect:
+      - { code: SCHEMA_INVALID, artifact: br-001, keyword: const }
+
+  - id: NEG-EPI-016
+    requirement_ids: [INTEL-002]
+    description: duplicate claim id inside one research artifact
+    base: chains/valid-send-chain.json
+    ops:
+      - op: append
+        artifact: br-001
+        path: /claims
+        value:
+          claim_id: clm-br-1
+          statement: Duplicate id.
+          epistemic_status: HYPOTHESIS
+          source_ids: []
+          supporting_claim_ids: []
+          material: false
+          volatile: false
+          conflict: { status: NONE, conflicting_claim_ids: [] }
+    expect:
+      - { code: SEM_DUPLICATE_ID, artifact: br-001 }
+
+  # ---------------------------------------------------------------- fit / hypothesis
+  - id: NEG-FIT-001
+    requirement_ids: [INTEL-005]
+    description: global numeric fit score added
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: fit-001, path: /fit_score, value: 0.82 }
+    expect:
+      - { code: SCHEMA_INVALID, artifact: fit-001, keyword: unevaluatedProperties }
+
+  - id: NEG-FIT-002
+    requirement_ids: [INTEL-005]
+    description: numeric rating instead of qualitative rating
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: fit-001, path: /dimensions/0/rating, value: 0.8 }
+    expect:
+      - { code: SCHEMA_INVALID, artifact: fit-001, keyword: enum }
+
+  - id: NEG-FIT-003
+    requirement_ids: [INTEL-005]
+    description: single fit dimension
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: remove, artifact: fit-001, path: /dimensions/2 }
+      - { op: remove, artifact: fit-001, path: /dimensions/1 }
+    expect:
+      - { code: SCHEMA_INVALID, artifact: fit-001, keyword: minItems }
+
+  - id: NEG-FIT-004
+    requirement_ids: [INTEL-006]
+    description: missing strongest counterargument
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: remove, artifact: fit-001, path: /strongest_counterargument }
+    expect:
+      - { code: SCHEMA_INVALID, artifact: fit-001, keyword: required }
+
+  - id: NEG-FIT-005
+    requirement_ids: [INTEL-007, INTEL-010]
+    description: ContactProfile used as an AnaBrandFit dependency
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: append, artifact: fit-001, path: /input_artifact_ids, value: cp-001 }
+    expect:
+      - { code: CHAIN_ILLEGAL_INPUT_TYPE, artifact: fit-001 }
+
+  - id: NEG-FIT-006
+    requirement_ids: [INTEL-007, INTEL-010]
+    description: CONTACT_NOT_READY is not an AnaBrandFit outcome
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: fit-001, path: /fit_outcome, value: CONTACT_NOT_READY }
+    expect:
+      - { code: SCHEMA_INVALID, artifact: fit-001, keyword: enum }
+
+  - id: NEG-HYP-001
+    requirement_ids: [INTEL-009]
+    description: hypothesis missing brand value
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: remove, artifact: ch-001, path: /hypotheses/0/brand_value }
+    expect:
+      - { code: SCHEMA_INVALID, artifact: ch-001, keyword: required }
+
+  - id: NEG-HYP-002
+    requirement_ids: [INTEL-009]
+    description: hypothesis with blank audience value
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: ch-001, path: /hypotheses/0/audience_value, value: "   " }
+    expect:
+      - { code: SCHEMA_INVALID, artifact: ch-001, keyword: pattern }
+
+  - id: NEG-HYP-003
+    requirement_ids: [INTEL-009]
+    description: hypothesis grounded only in creator claims, not brand-specific evidence
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: ch-001, path: /hypotheses/0/claim_ids, value: [clm-ctp-1] }
+    expect:
+      - { code: CHAIN_HYPOTHESIS_NOT_BRAND_GROUNDED, artifact: ch-001 }
+
+  - id: NEG-HYP-004
+    requirement_ids: [INTEL-003, INTEL-009]
+    description: UNKNOWN claim cited as hypothesis support
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: append, artifact: ch-001, path: /hypotheses/0/claim_ids, value: clm-br-4 }
+    expect:
+      - { code: CHAIN_UNKNOWN_AS_SUPPORT, artifact: ch-001 }
+
+  - id: NEG-HYP-005
+    requirement_ids: [INTEL-009]
+    description: more than three hypotheses
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: append, artifact: ch-001, path: /hypotheses, value: { hypothesis_id: hyp-2, concept: a, brand_value: b, audience_value: c, claim_ids: [clm-br-1], risks: [], unknowns: [] } }
+      - { op: append, artifact: ch-001, path: /hypotheses, value: { hypothesis_id: hyp-3, concept: a, brand_value: b, audience_value: c, claim_ids: [clm-br-1], risks: [], unknowns: [] } }
+      - { op: append, artifact: ch-001, path: /hypotheses, value: { hypothesis_id: hyp-4, concept: a, brand_value: b, audience_value: c, claim_ids: [clm-br-1], risks: [], unknowns: [] } }
+    expect:
+      - { code: SCHEMA_INVALID, artifact: ch-001, keyword: maxItems }
+
+  - id: NEG-COM-001
+    requirement_ids: [COMP-004]
+    description: VIABLE while the commercial policy is MISSING
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: cc-001, path: /status, value: VIABLE }
+    expect:
+      - { code: SEM_COMMERCIAL_VIABLE_WITHOUT_POLICY, artifact: cc-001 }
+
+  - id: NEG-COM-002
+    requirement_ids: [COMP-004]
+    description: invented commercial term field on CommercialCheck
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: cc-001, path: /minimum_fee, value: 1000 }
+    expect:
+      - { code: SCHEMA_INVALID, artifact: cc-001, keyword: unevaluatedProperties }
+
+  # ---------------------------------------------------------------- contact readiness
+  - id: NEG-CON-001
+    requirement_ids: [INTEL-008, INTEL-010]
+    description: private contact overstated as ELIGIBLE_FOR_GATES
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: cp-001, path: /contacts/0/source_class, value: private }
+    expect:
+      - { code: SEM_CONTACT_READINESS_OVERSTATED, artifact: cp-001 }
+      - { code: SEM_CONTACT_OUTCOME_OVERSTATED, artifact: cp-001 }
+      - { code: CHAIN_GATE_MISMATCH, artifact: sp-001 }
+      - { code: CHAIN_CONTACT_NOT_ELIGIBLE, artifact: sp-001 }
+
+  - id: NEG-CON-002
+    requirement_ids: [INTEL-008]
+    description: unknown-source contact overstated as REVIEW_REQUIRED (policy says NO_SEND)
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: cp-001, path: /contacts/1/source_class, value: unknown }
+    expect:
+      - { code: SEM_CONTACT_READINESS_OVERSTATED, artifact: cp-001 }
+
+  - id: NEG-CON-003
+    requirement_ids: [INTEL-008]
+    description: unknown-source contact overstated as ELIGIBLE_FOR_GATES
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: cp-001, path: /contacts/1/source_class, value: unknown }
+      - { op: set, artifact: cp-001, path: /contacts/1/verification, value: verified }
+      - { op: set, artifact: cp-001, path: /contacts/1/readiness, value: ELIGIBLE_FOR_GATES }
+    expect:
+      - { code: SEM_CONTACT_READINESS_OVERSTATED, artifact: cp-001 }
+
+  - id: NEG-CON-004
+    requirement_ids: [INTEL-010]
+    description: public_found + verified promoted to ELIGIBLE_FOR_GATES without a review mechanism
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: cp-001, path: /contacts/0/source_class, value: public_found }
+    expect:
+      - { code: SEM_CONTACT_READINESS_OVERSTATED, artifact: cp-001 }
+      - { code: SEM_CONTACT_OUTCOME_OVERSTATED, artifact: cp-001 }
+      - { code: CHAIN_GATE_MISMATCH, artifact: sp-001 }
+      - { code: CHAIN_CONTACT_NOT_ELIGIBLE, artifact: sp-001 }
+
+  - id: POS-CON-004
+    requirement_ids: [INTEL-007]
+    description: control - declaring a contact more restrictive than the policy is allowed
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: cp-001, path: /contacts/1/readiness, value: NO_SEND }
+    expect: []
+
+  - id: NEG-CON-005
+    requirement_ids: [INTEL-008]
+    description: officially published address outside a public business context
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: cp-001, path: /contacts/0/public_business_context, value: false }
+    expect:
+      - { code: SEM_CONTACT_READINESS_OVERSTATED, artifact: cp-001 }
+      - { code: SEM_CONTACT_OUTCOME_OVERSTATED, artifact: cp-001 }
+      - { code: CHAIN_GATE_MISMATCH, artifact: sp-001 }
+      - { code: CHAIN_CONTACT_NOT_ELIGIBLE, artifact: sp-001 }
+
+  - id: NEG-CON-006
+    requirement_ids: [INTEL-010]
+    description: CONTACT_NOT_READY but strategy and draft continue
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: cp-001, path: /contact_outcome, value: CONTACT_NOT_READY }
+    expect:
+      - { code: CHAIN_CONTACT_NOT_READY, artifact: os-001 }
+      - { code: CHAIN_CONTACT_NOT_READY, artifact: ed-001 }
+      - { code: CHAIN_CONTACT_NOT_READY, artifact: qa-001 }
+      - { code: CHAIN_CONTACT_NOT_READY, artifact: ha-001 }
+      - { code: CHAIN_CONTACT_NOT_READY, artifact: sp-001 }
+      - { code: CHAIN_CONTACT_NOT_READY, artifact: sr-001 }
+      - { code: CHAIN_CONTACT_NOT_READY, artifact: rh-001 }
+
+  - id: NEG-CON-007
+    requirement_ids: [INTEL-002]
+    description: contact cites a source that is not in the input BrandResearch
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: cp-001, path: /contacts/0/source_ids, value: [src-not-in-research] }
+    expect:
+      - { code: CHAIN_UNRESOLVED_SOURCE, artifact: cp-001 }
+
+  - id: NEG-CON-008
+    requirement_ids: [INTEL-007]
+    description: draft recipient address differs from the selected contact
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: ed-001, path: /recipient/email, value: someone.else@brand.example.com }
+      - { op: rehash, artifact: ed-001 }
+    expect:
+      - { code: CHAIN_CONTACT_MISMATCH, artifact: ed-001 }
+      - { code: CHAIN_DRAFT_HASH_MISMATCH, artifact: qa-001 }
+      - { code: CHAIN_DRAFT_HASH_MISMATCH, artifact: ha-001 }
+      - { code: CHAIN_DRAFT_HASH_MISMATCH, artifact: sp-001 }
+
+  # ---------------------------------------------------------------- stop outcomes / graph
+  - id: NEG-STOP-001
+    requirement_ids: [SYS-002]
+    description: drafting continues after NO_FIT
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: fit-001, path: /fit_outcome, value: NO_FIT }
+    expect:
+      - { code: CHAIN_AFTER_STOP_OUTCOME, artifact: ch-001 }
+      - { code: CHAIN_AFTER_STOP_OUTCOME, artifact: cc-001 }
+      - { code: CHAIN_AFTER_STOP_OUTCOME, artifact: os-001 }
+      - { code: CHAIN_AFTER_STOP_OUTCOME, artifact: ed-001 }
+      - { code: CHAIN_AFTER_STOP_OUTCOME, artifact: qa-001 }
+      - { code: CHAIN_AFTER_STOP_OUTCOME, artifact: ha-001 }
+      - { code: CHAIN_AFTER_STOP_OUTCOME, artifact: sp-001 }
+      - { code: CHAIN_AFTER_STOP_OUTCOME, artifact: sr-001 }
+      - { code: CHAIN_AFTER_STOP_OUTCOME, artifact: rh-001 }
+
+  - id: NEG-STOP-002
+    requirement_ids: [SYS-002, INTEL-003]
+    description: drafting continues after INSUFFICIENT_EVIDENCE research
+    base: chains/valid-no-fit-chain.json
+    ops:
+      - { op: set, artifact: br-001, path: /research_outcome, value: INSUFFICIENT_EVIDENCE }
+    expect:
+      - { code: CHAIN_AFTER_STOP_OUTCOME, artifact: fit-001 }
+
+  - id: NEG-STOP-003
+    requirement_ids: [SYS-002]
+    description: chain continues after commercial NOT_VIABLE
+    base: chains/valid-send-denied-chain.json
+    ops:
+      - { op: set, artifact: cc-001, path: /status, value: NOT_VIABLE }
+    expect:
+      - { code: CHAIN_AFTER_STOP_OUTCOME, artifact: os-001 }
+      - { code: CHAIN_AFTER_STOP_OUTCOME, artifact: ed-001 }
+      - { code: CHAIN_AFTER_STOP_OUTCOME, artifact: qa-001 }
+      - { code: CHAIN_AFTER_STOP_OUTCOME, artifact: ha-001 }
+      - { code: CHAIN_AFTER_STOP_OUTCOME, artifact: sp-001 }
+
+  - id: NEG-GRAPH-001
+    requirement_ids: [SYS-001, SEC-002, COMP-002]
+    description: EmailDraft directly depends on raw BrandResearch
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: append, artifact: ed-001, path: /input_artifact_ids, value: br-001 }
+    expect:
+      - { code: CHAIN_ILLEGAL_INPUT_TYPE, artifact: ed-001 }
+
+  - id: NEG-GRAPH-002
+    requirement_ids: [SEC-002]
+    description: EmailDraft references a raw SourceRecord id as input
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: append, artifact: ed-001, path: /input_artifact_ids, value: src-br-1 }
+    expect:
+      - { code: CHAIN_DANGLING_REFERENCE, artifact: ed-001 }
+
+  - id: NEG-GRAPH-003
+    requirement_ids: [SEC-002]
+    description: SendPermission takes raw BrandResearch as input
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: append, artifact: sp-001, path: /input_artifact_ids, value: br-001 }
+    expect:
+      - { code: CHAIN_ILLEGAL_INPUT_TYPE, artifact: sp-001 }
+
+  - id: NEG-GRAPH-004
+    requirement_ids: [SEC-002]
+    description: SendReceipt references a raw SourceRecord id
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: append, artifact: sr-001, path: /input_artifact_ids, value: src-br-1 }
+    expect:
+      - { code: CHAIN_DANGLING_REFERENCE, artifact: sr-001 }
+
+  - id: NEG-GRAPH-005
+    requirement_ids: [SYS-001]
+    description: dangling artifact reference
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: append, artifact: or-001, path: /input_artifact_ids, value: ghost-artifact-999 }
+    expect:
+      - { code: CHAIN_DANGLING_REFERENCE, artifact: or-001 }
+
+  - id: NEG-GRAPH-006
+    requirement_ids: [SYS-001]
+    description: artifact dependency cycle (also an illegal input type, since the type graph is acyclic)
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: append, artifact: lt-001, path: /input_artifact_ids, value: br-001 }
+    expect:
+      - { code: CHAIN_CYCLE, artifact: br-001 }
+      - { code: CHAIN_ILLEGAL_INPUT_TYPE, artifact: lt-001 }
+
+  - id: NEG-GRAPH-007
+    requirement_ids: [COMP-002]
+    description: SendPermission missing a required input
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: remove, artifact: sp-001, path: /input_artifact_ids/3 }
+    expect:
+      - { code: CHAIN_MISSING_REQUIRED_INPUT, artifact: sp-001 }
+      - { code: SEM_SEND_PERMISSION_INCONSISTENT, artifact: sp-001 }
+
+  - id: NEG-GRAPH-008
+    requirement_ids: [OPS-001]
+    description: OutcomeRecord fed back as an input
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: drop, artifact: rh-001 }
+      - { op: set, artifact: or-001, path: /input_artifact_ids, value: [sr-001] }
+      - { op: append, artifact: sp-001, path: /input_artifact_ids, value: or-001 }
+    expect:
+      - { code: CHAIN_ILLEGAL_INPUT_TYPE, artifact: sp-001 }
+      - { code: CHAIN_CYCLE, artifact: or-001 }
+
+  # ---------------------------------------------------------------- draft / QA / approval
+  - id: NEG-DRAFT-001
+    requirement_ids: [OPS-003]
+    description: approved draft whose subject changed after approval (hash recomputed)
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: ed-001, path: /subject, value: Changed subject after approval }
+      - { op: rehash, artifact: ed-001 }
+    expect:
+      - { code: CHAIN_DRAFT_HASH_MISMATCH, artifact: qa-001 }
+      - { code: CHAIN_DRAFT_HASH_MISMATCH, artifact: ha-001 }
+      - { code: CHAIN_DRAFT_HASH_MISMATCH, artifact: sp-001 }
+
+  - id: NEG-DRAFT-002
+    requirement_ids: [OPS-003]
+    description: draft body changed after approval without updating draft_hash
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: ed-001, path: /body_text, value: Edited body after approval. }
+    expect:
+      - { code: SEM_DRAFT_HASH_MISMATCH, artifact: ed-001 }
+      - { code: CHAIN_DRAFT_HASH_MISMATCH, artifact: qa-001 }
+      - { code: CHAIN_DRAFT_HASH_MISMATCH, artifact: ha-001 }
+      - { code: CHAIN_DRAFT_HASH_MISMATCH, artifact: sp-001 }
+
+  - id: POS-DRAFT-002
+    requirement_ids: [OPS-003]
+    description: control - metadata-only change on the draft keeps all bindings valid
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: ed-001, path: /produced_at, value: "2026-10-01T11:45:00Z" }
+      - { op: set, artifact: ed-001, path: /claim_usage/2/framing, value: HEDGED }
+    expect: []
+
+  - id: NEG-QA-001
+    requirement_ids: [COMP-003]
+    description: hard QA FAIL compensated by soft scores
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: qa-001, path: /hard_checks/0/result/status, value: FAIL }
+      - { op: set, artifact: qa-001, path: /soft_scores, value: [{ name: readability, score: 1.0 }, { name: tone, score: 1.0 }] }
+    expect:
+      - { code: SEM_QA_HARD_FAIL_COMPENSATED, artifact: qa-001 }
+
+  - id: NEG-QA-002
+    requirement_ids: [EVAL-006]
+    description: semantic check reported PASS without execution evidence
+    base: chains/valid-send-chain.json
+    ops:
+      - op: append
+        artifact: qa-001
+        path: /hard_checks
+        value:
+          check_id: genericness-competitor-swap
+          kind: semantic
+          result: { status: PASS, executed: false, execution_ref: null, executed_at: null }
+    expect:
+      - { code: SEM_EVAL_PASS_WITHOUT_EXECUTION, artifact: qa-001 }
+
+  - id: NEG-QA-003
+    requirement_ids: [EVAL-006, COMP-003]
+    description: unexecuted semantic check reported honestly but QA still claims READY
+    base: chains/valid-send-chain.json
+    ops:
+      - op: append
+        artifact: qa-001
+        path: /hard_checks
+        value:
+          check_id: genericness-competitor-swap
+          kind: semantic
+          result: { status: BLOCKED_NOT_CONFIGURED, executed: false, execution_ref: null, executed_at: null }
+    expect:
+      - { code: SEM_QA_HARD_FAIL_COMPENSATED, artifact: qa-001 }
+
+  - id: NEG-QA-004
+    requirement_ids: [COMP-003]
+    description: human approves although QA is NOT_READY; permission still authorized
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: qa-001, path: /overall, value: NOT_READY }
+    expect:
+      - { code: CHAIN_QA_NOT_READY, artifact: ha-001 }
+      - { code: CHAIN_QA_NOT_READY, artifact: sp-001 }
+      - { code: CHAIN_GATE_MISMATCH, artifact: sp-001 }
+
+  - id: NEG-APP-001
+    requirement_ids: [OPS-001, OPS-002]
+    description: SendPermission authorized with a rejected approval
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: ha-001, path: /decision, value: REJECTED }
+    expect:
+      - { code: CHAIN_APPROVAL_NOT_APPROVED, artifact: sp-001 }
+      - { code: CHAIN_GATE_MISMATCH, artifact: sp-001 }
+
+  - id: NEG-APP-002
+    requirement_ids: [OPS-002]
+    description: SendPermission authorized while its own approval gate says REJECTED
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: ha-001, path: /decision, value: REJECTED }
+      - { op: set, artifact: sp-001, path: /gates/approval, value: REJECTED }
+    expect:
+      - { code: SEM_SEND_GATE_APPROVAL, artifact: sp-001 }
+      - { code: CHAIN_APPROVAL_NOT_APPROVED, artifact: sp-001 }
+
+  - id: NEG-APP-003
+    requirement_ids: [OPS-001]
+    description: approval produced by a skill
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: ha-001, path: /producer/kind, value: skill }
+    expect:
+      - { code: SCHEMA_INVALID, artifact: ha-001, keyword: const }
+
+  - id: NEG-APP-004
+    requirement_ids: [OPS-003]
+    description: APPROVED without an approved draft hash
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: ha-001, path: /approved_draft_hash, value: null }
+    expect:
+      - { code: SCHEMA_INVALID, artifact: ha-001, keyword: type }
+
+  # ---------------------------------------------------------------- send permission
+  - id: NEG-SP-001
+    requirement_ids: [OPS-001]
+    description: skill declared as SendPermission producer
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: sp-001, path: /producer/kind, value: skill }
+    expect:
+      - { code: SCHEMA_INVALID, artifact: sp-001, keyword: const }
+
+  - id: NEG-SP-002
+    requirement_ids: [OPS-004]
+    description: OPTED_OUT with send_authorized=true
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: sp-001, path: /gates/suppression, value: OPTED_OUT }
+    expect:
+      - { code: SEM_SEND_GATE_SUPPRESSION, artifact: sp-001 }
+
+  - id: NEG-SP-003
+    requirement_ids: [OPS-005]
+    description: DO_NOT_CONTACT with send_authorized=true
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: sp-001, path: /gates/suppression, value: DO_NOT_CONTACT }
+    expect:
+      - { code: SEM_SEND_GATE_SUPPRESSION, artifact: sp-001 }
+
+  - id: NEG-SP-004
+    requirement_ids: [OPS-006]
+    description: HARD_BOUNCE with send_authorized=true
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: sp-001, path: /gates/suppression, value: HARD_BOUNCE }
+    expect:
+      - { code: SEM_SEND_GATE_SUPPRESSION, artifact: sp-001 }
+
+  - id: NEG-SP-005
+    requirement_ids: [OPS-004, OPS-005, OPS-006]
+    description: suppression NOT_EVALUATED with send_authorized=true
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: sp-001, path: /gates/suppression, value: NOT_EVALUATED }
+    expect:
+      - { code: SEM_SEND_GATE_SUPPRESSION, artifact: sp-001 }
+
+  - id: NEG-SP-006
+    requirement_ids: [OPS-007]
+    description: active duplicate sequence with send_authorized=true
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: sp-001, path: /gates/duplicate, value: ACTIVE_SEQUENCE_CONFLICT }
+    expect:
+      - { code: SEM_SEND_GATE_DUPLICATE, artifact: sp-001 }
+
+  - id: NEG-SP-007
+    requirement_ids: [OPS-002]
+    description: compliance NOT_CONFIGURED with send_authorized=true
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: sp-001, path: /gates/compliance, value: NOT_CONFIGURED }
+    expect:
+      - { code: SEM_SEND_GATE_COMPLIANCE, artifact: sp-001 }
+
+  - id: NEG-SP-008
+    requirement_ids: [OPS-002]
+    description: compliance REVIEW_REQUIRED with send_authorized=true
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: sp-001, path: /gates/compliance, value: REVIEW_REQUIRED }
+    expect:
+      - { code: SEM_SEND_GATE_COMPLIANCE, artifact: sp-001 }
+
+  - id: NEG-SP-009
+    requirement_ids: [DATA-004, OPS-002]
+    description: STALE freshness with send_authorized=true
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: sp-001, path: /gates/freshness, value: STALE }
+    expect:
+      - { code: SEM_SEND_GATE_FRESHNESS, artifact: sp-001 }
+
+  - id: NEG-SP-010
+    requirement_ids: [DATA-004, OPS-002]
+    description: freshness NOT_EVALUATED with send_authorized=true
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: sp-001, path: /gates/freshness, value: NOT_EVALUATED }
+    expect:
+      - { code: SEM_SEND_GATE_FRESHNESS, artifact: sp-001 }
+
+  - id: NEG-SP-011
+    requirement_ids: [OPS-002]
+    description: unconsumed SendPermission evaluated after expiry
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: drop, artifact: or-001 }
+      - { op: drop, artifact: rh-001 }
+      - { op: drop, artifact: sr-001 }
+      - { op: set_now, value: "2026-10-03T09:05:00Z" }
+    expect:
+      - { code: SEM_SEND_PERMISSION_EXPIRED, artifact: sp-001 }
+
+  - id: POS-SP-011
+    requirement_ids: [OPS-002]
+    description: control - the same unconsumed permission one second before expiry
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: drop, artifact: or-001 }
+      - { op: drop, artifact: rh-001 }
+      - { op: drop, artifact: sr-001 }
+      - { op: set_now, value: "2026-10-03T09:04:59Z" }
+    expect: []
+
+  - id: NEG-SP-012
+    requirement_ids: [OPS-002]
+    description: send receipt after the permission expired
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: drop, artifact: or-001 }
+      - { op: drop, artifact: rh-001 }
+      - { op: set, artifact: sr-001, path: /sent_at, value: "2026-10-03T10:00:00Z" }
+    expect:
+      - { code: CHAIN_SEND_OUTSIDE_PERMISSION_WINDOW, artifact: sr-001 }
+
+  - id: NEG-SP-013
+    requirement_ids: [OPS-002]
+    description: send receipt for a permission that did not authorize sending
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: sp-001, path: /send_authorized, value: false }
+      - { op: set, artifact: sp-001, path: /block_reasons, value: [compliance NOT_CONFIGURED] }
+    expect:
+      - { code: CHAIN_SEND_WITHOUT_AUTHORIZATION, artifact: sr-001 }
+
+  - id: NEG-SP-014
+    requirement_ids: [OPS-002]
+    description: send_authorized=false without any block reason
+    base: chains/valid-send-denied-chain.json
+    ops:
+      - { op: set, artifact: sp-001, path: /block_reasons, value: [] }
+    expect:
+      - { code: SEM_SEND_PERMISSION_INCONSISTENT, artifact: sp-001 }
+
+  - id: NEG-SP-015
+    requirement_ids: [OPS-002]
+    description: SendPermission bound to the wrong contact
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: sp-001, path: /bindings/contact_id, value: contact-2 }
+    expect:
+      - { code: CHAIN_CONTACT_MISMATCH, artifact: sp-001 }
+      - { code: CHAIN_GATE_MISMATCH, artifact: sp-001 }
+      - { code: CHAIN_CONTACT_NOT_ELIGIBLE, artifact: sp-001 }
+
+  - id: NEG-SP-016
+    requirement_ids: [OPS-002]
+    description: expires_at not after issued_at
+    base: chains/valid-send-denied-chain.json
+    ops:
+      - { op: set, artifact: sp-001, path: /expires_at, value: "2026-10-02T09:05:00Z" }
+    expect:
+      - { code: SEM_SEND_PERMISSION_INCONSISTENT, artifact: sp-001 }
+
+  # ---------------------------------------------------------------- reply handling
+  - id: NEG-REP-001
+    requirement_ids: [OPS-008]
+    description: stop_followups=false after a reply
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: rh-001, path: /stop_followups, value: false }
+    expect:
+      - { code: SCHEMA_INVALID, artifact: rh-001, keyword: const }
+
+  - id: NEG-REP-002
+    requirement_ids: [OPS-008]
+    description: classification timestamp before follow-up stop
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: rh-001, path: /classification/classified_at, value: "2026-10-04T08:00:00Z" }
+    expect:
+      - { code: SEM_REPLY_CLASSIFIED_BEFORE_STOP, artifact: rh-001 }
+
+  - id: POS-REP-002
+    requirement_ids: [OPS-008]
+    description: control - classification may be absent
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: remove, artifact: rh-001, path: /classification }
+    expect: []
+
+  - id: NEG-REP-003
+    requirement_ids: [OPS-008]
+    description: reply received before the message was sent
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: rh-001, path: /reply_received_at, value: "2026-10-02T09:59:00Z" }
+    expect:
+      - { code: CHAIN_TEMPORAL_ORDER, artifact: rh-001 }
+
+  # ---------------------------------------------------------------- timestamps
+  - id: NEG-TIME-001
+    requirement_ids: [DATA-004]
+    description: impossible calendar date
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: lt-001, path: /produced_at, value: "2026-02-30T10:00:00Z" }
+    expect:
+      - { code: SCHEMA_INVALID, artifact: lt-001, keyword: format }
+
+  - id: NEG-TIME-002
+    requirement_ids: [DATA-004]
+    description: timestamp without timezone offset
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: lt-001, path: /produced_at, value: "2026-10-01T08:00:00" }
+    expect:
+      - { code: SCHEMA_INVALID, artifact: lt-001, keyword: format }
+
+  - id: POS-TIME-002
+    requirement_ids: [DATA-004]
+    description: control - non-UTC offsets are valid RFC 3339
+    base: chains/valid-send-chain.json
+    ops:
+      - { op: set, artifact: lt-001, path: /produced_at, value: "2026-10-01T10:00:00+02:00" }
+    expect: []

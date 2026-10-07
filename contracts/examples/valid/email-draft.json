@@ -1,0 +1,45 @@
+{
+  "artifact_id": "ed-001",
+  "artifact_type": "EmailDraft",
+  "schema_version": "1.0.0",
+  "contract_version": "1.0.0",
+  "produced_at": "2026-10-01T11:30:00Z",
+  "producer": {
+    "kind": "skill",
+    "id": "ana-outreach-compose"
+  },
+  "run_id": "run-fixture-0001",
+  "input_artifact_ids": [
+    "os-001"
+  ],
+  "recipient": {
+    "contact_id": "contact-1",
+    "email": "partnerships@brand.example.com"
+  },
+  "sender_identity_id": "sender-creator-management",
+  "subject": "Field series idea: your repair program on a multi-day trek",
+  "body_text": "Hello Northwind team,\n\nYour new gear repair program caught our attention. It looks like durability is a focus for you right now. Would a field series that follows repaired gear on a multi-day trek be interesting?\n\nBest regards",
+  "body_html_light": "<p>Hello Northwind team,</p><p>Your new gear repair program caught our attention.</p>",
+  "links": [
+    {
+      "url": "https://creator.example.org/portfolio",
+      "label": "Portfolio"
+    }
+  ],
+  "claim_usage": [
+    {
+      "claim_id": "clm-br-1",
+      "framing": "ASSERTED"
+    },
+    {
+      "claim_id": "clm-br-2",
+      "framing": "HEDGED"
+    },
+    {
+      "claim_id": "clm-br-3",
+      "framing": "QUESTION"
+    }
+  ],
+  "hash_algorithm": "send-payload-v1+sha256",
+  "draft_hash": "sha256:fc2f64848db3bfaba92ef279e33512aeb62a33ef693d32a21cce03fb84ace568"
+}

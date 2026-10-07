@@ -1,0 +1,15 @@
+{
+  "claim_id": "clm-br-2",
+  "statement": "The brand currently prioritizes durability in its messaging.",
+  "epistemic_status": "SUPPORTED_INFERENCE",
+  "source_ids": [],
+  "supporting_claim_ids": [
+    "clm-br-1"
+  ],
+  "material": true,
+  "volatile": false,
+  "conflict": {
+    "status": "NONE",
+    "conflicting_claim_ids": []
+  }
+}

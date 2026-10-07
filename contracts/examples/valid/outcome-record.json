@@ -1,0 +1,20 @@
+{
+  "artifact_id": "or-001",
+  "artifact_type": "OutcomeRecord",
+  "schema_version": "1.0.0",
+  "contract_version": "1.0.0",
+  "produced_at": "2026-10-04T09:00:00Z",
+  "producer": {
+    "kind": "runtime",
+    "id": "outcome-recorder"
+  },
+  "run_id": "run-fixture-0001",
+  "input_artifact_ids": [
+    "rh-001"
+  ],
+  "outcome": "REPLIED",
+  "recorded_at": "2026-10-04T09:00:00Z",
+  "learning_hypotheses": [
+    "Repair-program angle may resonate; needs more cases before any change."
+  ]
+}

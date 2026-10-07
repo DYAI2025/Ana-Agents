@@ -1,0 +1,28 @@
+{
+  "artifact_id": "os-001",
+  "artifact_type": "OutreachStrategy",
+  "schema_version": "1.0.0",
+  "contract_version": "1.0.0",
+  "produced_at": "2026-10-01T11:00:00Z",
+  "producer": {
+    "kind": "skill",
+    "id": "ana-outreach-compose"
+  },
+  "run_id": "run-fixture-0001",
+  "input_artifact_ids": [
+    "ch-001",
+    "cc-001",
+    "cp-001"
+  ],
+  "selected_hypothesis_id": "hyp-1",
+  "target_contact_id": "contact-1",
+  "channel": "email",
+  "approach": "Lead with the repair program and propose one concrete field-series idea; ask about interest.",
+  "key_claim_ids": [
+    "clm-br-1",
+    "clm-br-2"
+  ],
+  "exclusions": [
+    "No rates, usage rights, whitelisting, exclusivity or guarantees."
+  ]
+}

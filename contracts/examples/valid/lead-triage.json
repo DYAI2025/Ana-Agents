@@ -1,0 +1,22 @@
+{
+  "artifact_id": "lt-001",
+  "artifact_type": "LeadTriage",
+  "schema_version": "1.0.0",
+  "contract_version": "1.0.0",
+  "produced_at": "2026-10-01T08:00:00Z",
+  "producer": {
+    "kind": "runtime",
+    "id": "lead-intake"
+  },
+  "run_id": "run-fixture-0001",
+  "input_artifact_ids": [],
+  "brand": {
+    "brand_id": "brand-northwind",
+    "name": "Northwind Outdoor (synthetic)",
+    "website": "https://brand.example.com/"
+  },
+  "lead_source": "manual",
+  "research_tier": "STANDARD",
+  "triage_outcome": "PROCEED",
+  "rationale": "Synthetic lead: outdoor gear brand in the creator's travel niche."
+}

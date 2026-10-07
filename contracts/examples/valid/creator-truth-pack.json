@@ -1,0 +1,65 @@
+{
+  "artifact_id": "ctp-001",
+  "artifact_type": "CreatorTruthPack",
+  "schema_version": "1.0.0",
+  "contract_version": "1.0.0",
+  "produced_at": "2026-09-15T09:00:00Z",
+  "producer": {
+    "kind": "human",
+    "id": "creator-knowledge-curator"
+  },
+  "run_id": "run-fixture-0001",
+  "input_artifact_ids": [],
+  "creator_id": "creator-synthetic-01",
+  "data_classification": "SYNTHETIC_FIXTURE",
+  "sources": [
+    {
+      "source_id": "src-ctp-1",
+      "url": "https://creator.example.org/media-kit",
+      "title": "Synthetic creator media kit",
+      "source_class": "project_internal",
+      "trust": "PROJECT_INTERNAL",
+      "retrieved_at": "2026-09-15T09:00:00Z",
+      "published_at": null
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "clm-ctp-1",
+      "statement": "The creator publishes long-form outdoor travel videos.",
+      "epistemic_status": "FACT",
+      "source_ids": [
+        "src-ctp-1"
+      ],
+      "supporting_claim_ids": [],
+      "material": true,
+      "volatile": false,
+      "conflict": {
+        "status": "NONE",
+        "conflicting_claim_ids": []
+      }
+    },
+    {
+      "claim_id": "clm-ctp-2",
+      "statement": "Most of the creator's audience is interested in hiking (synthetic metric).",
+      "epistemic_status": "FACT",
+      "source_ids": [
+        "src-ctp-1"
+      ],
+      "supporting_claim_ids": [],
+      "material": true,
+      "volatile": true,
+      "conflict": {
+        "status": "NONE",
+        "conflicting_claim_ids": []
+      },
+      "freshness": {
+        "observed_at": "2026-09-01T00:00:00Z",
+        "verified_at": null
+      }
+    }
+  ],
+  "restrictions": [
+    "No tobacco, gambling or weapons brands."
+  ]
+}

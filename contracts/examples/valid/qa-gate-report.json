@@ -1,0 +1,45 @@
+{
+  "artifact_id": "qa-001",
+  "artifact_type": "QAGateReport",
+  "schema_version": "1.0.0",
+  "contract_version": "1.0.0",
+  "produced_at": "2026-10-01T12:00:00Z",
+  "producer": {
+    "kind": "runtime",
+    "id": "qa-gate"
+  },
+  "run_id": "run-fixture-0001",
+  "input_artifact_ids": [
+    "ed-001"
+  ],
+  "draft_hash": "sha256:fc2f64848db3bfaba92ef279e33512aeb62a33ef693d32a21cce03fb84ace568",
+  "hard_checks": [
+    {
+      "check_id": "claim-coverage",
+      "kind": "deterministic",
+      "result": {
+        "status": "PASS",
+        "executed": true,
+        "execution_ref": "run-fixture-0001/claim-coverage",
+        "executed_at": "2026-10-01T11:59:00Z"
+      }
+    },
+    {
+      "check_id": "commercial-overreach-terms",
+      "kind": "deterministic",
+      "result": {
+        "status": "PASS",
+        "executed": true,
+        "execution_ref": "run-fixture-0001/commercial-terms",
+        "executed_at": "2026-10-01T11:59:10Z"
+      }
+    }
+  ],
+  "soft_scores": [
+    {
+      "name": "readability",
+      "score": 0.7
+    }
+  ],
+  "overall": "READY_FOR_HUMAN_REVIEW"
+}

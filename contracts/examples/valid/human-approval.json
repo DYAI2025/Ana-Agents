@@ -1,0 +1,20 @@
+{
+  "artifact_id": "ha-001",
+  "artifact_type": "HumanApproval",
+  "schema_version": "1.0.0",
+  "contract_version": "1.0.0",
+  "produced_at": "2026-10-02T09:00:00Z",
+  "producer": {
+    "kind": "human",
+    "id": "reviewer-role-01"
+  },
+  "run_id": "run-fixture-0001",
+  "input_artifact_ids": [
+    "ed-001",
+    "qa-001"
+  ],
+  "decision": "APPROVED",
+  "approved_draft_hash": "sha256:fc2f64848db3bfaba92ef279e33512aeb62a33ef693d32a21cce03fb84ace568",
+  "decided_at": "2026-10-02T09:00:00Z",
+  "note": "Synthetic approval for contract fixtures."
+}

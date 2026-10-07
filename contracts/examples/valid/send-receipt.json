@@ -1,0 +1,20 @@
+{
+  "artifact_id": "sr-001",
+  "artifact_type": "SendReceipt",
+  "schema_version": "1.0.0",
+  "contract_version": "1.0.0",
+  "produced_at": "2026-10-02T10:00:00Z",
+  "producer": {
+    "kind": "runtime",
+    "id": "mail-adapter-fixture"
+  },
+  "run_id": "run-fixture-0001",
+  "input_artifact_ids": [
+    "sp-001"
+  ],
+  "send_permission_id": "sp-001",
+  "draft_hash": "sha256:fc2f64848db3bfaba92ef279e33512aeb62a33ef693d32a21cce03fb84ace568",
+  "adapter_mode": "SYNTHETIC_FIXTURE",
+  "sent_at": "2026-10-02T10:00:00Z",
+  "message_ref": "msg-fixture-0001"
+}

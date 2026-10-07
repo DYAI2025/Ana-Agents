@@ -1,0 +1,295 @@
+{
+  "description": "Brand fit exists but no contact is ELIGIBLE_FOR_GATES: CONTACT_NOT_READY stops before strategy and drafting (INTEL-010). Fit and contact readiness stay independent.",
+  "evaluated_at": "2026-10-05T00:00:00Z",
+  "artifacts": [
+    {
+      "artifact_id": "lt-001",
+      "artifact_type": "LeadTriage",
+      "schema_version": "1.0.0",
+      "contract_version": "1.0.0",
+      "produced_at": "2026-10-01T08:00:00Z",
+      "producer": {
+        "kind": "runtime",
+        "id": "lead-intake"
+      },
+      "run_id": "run-fixture-0001",
+      "input_artifact_ids": [],
+      "brand": {
+        "brand_id": "brand-northwind",
+        "name": "Northwind Outdoor (synthetic)",
+        "website": "https://brand.example.com/"
+      },
+      "lead_source": "manual",
+      "research_tier": "STANDARD",
+      "triage_outcome": "PROCEED",
+      "rationale": "Synthetic lead: outdoor gear brand in the creator's travel niche."
+    },
+    {
+      "artifact_id": "ctp-001",
+      "artifact_type": "CreatorTruthPack",
+      "schema_version": "1.0.0",
+      "contract_version": "1.0.0",
+      "produced_at": "2026-09-15T09:00:00Z",
+      "producer": {
+        "kind": "human",
+        "id": "creator-knowledge-curator"
+      },
+      "run_id": "run-fixture-0001",
+      "input_artifact_ids": [],
+      "creator_id": "creator-synthetic-01",
+      "data_classification": "SYNTHETIC_FIXTURE",
+      "sources": [
+        {
+          "source_id": "src-ctp-1",
+          "url": "https://creator.example.org/media-kit",
+          "title": "Synthetic creator media kit",
+          "source_class": "project_internal",
+          "trust": "PROJECT_INTERNAL",
+          "retrieved_at": "2026-09-15T09:00:00Z",
+          "published_at": null
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "clm-ctp-1",
+          "statement": "The creator publishes long-form outdoor travel videos.",
+          "epistemic_status": "FACT",
+          "source_ids": [
+            "src-ctp-1"
+          ],
+          "supporting_claim_ids": [],
+          "material": true,
+          "volatile": false,
+          "conflict": {
+            "status": "NONE",
+            "conflicting_claim_ids": []
+          }
+        },
+        {
+          "claim_id": "clm-ctp-2",
+          "statement": "Most of the creator's audience is interested in hiking (synthetic metric).",
+          "epistemic_status": "FACT",
+          "source_ids": [
+            "src-ctp-1"
+          ],
+          "supporting_claim_ids": [],
+          "material": true,
+          "volatile": true,
+          "conflict": {
+            "status": "NONE",
+            "conflicting_claim_ids": []
+          },
+          "freshness": {
+            "observed_at": "2026-09-01T00:00:00Z",
+            "verified_at": null
+          }
+        }
+      ],
+      "restrictions": [
+        "No tobacco, gambling or weapons brands."
+      ]
+    },
+    {
+      "artifact_id": "br-001",
+      "artifact_type": "BrandResearch",
+      "schema_version": "1.0.0",
+      "contract_version": "1.0.0",
+      "produced_at": "2026-10-01T09:00:00Z",
+      "producer": {
+        "kind": "skill",
+        "id": "ana-brand-intel"
+      },
+      "run_id": "run-fixture-0001",
+      "input_artifact_ids": [
+        "lt-001"
+      ],
+      "brand_id": "brand-northwind",
+      "sources": [
+        {
+          "source_id": "src-br-1",
+          "url": "https://brand.example.com/sustainability/repair",
+          "title": "Repair program page",
+          "source_class": "official_brand_site",
+          "trust": "UNTRUSTED_EXTERNAL",
+          "retrieved_at": "2026-10-01T08:30:00Z",
+          "published_at": "2026-03-01T00:00:00Z"
+        },
+        {
+          "source_id": "src-br-2",
+          "url": "https://news.example.net/northwind-repair",
+          "title": "Trade press article",
+          "source_class": "press",
+          "trust": "UNTRUSTED_EXTERNAL",
+          "retrieved_at": "2026-10-01T08:35:00Z",
+          "published_at": "2026-03-05T00:00:00Z"
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "clm-br-1",
+          "statement": "The brand launched a gear repair program in 2026.",
+          "epistemic_status": "FACT",
+          "source_ids": [
+            "src-br-1",
+            "src-br-2"
+          ],
+          "supporting_claim_ids": [],
+          "material": true,
+          "volatile": false,
+          "conflict": {
+            "status": "NONE",
+            "conflicting_claim_ids": []
+          }
+        },
+        {
+          "claim_id": "clm-br-2",
+          "statement": "The brand currently prioritizes durability in its messaging.",
+          "epistemic_status": "SUPPORTED_INFERENCE",
+          "source_ids": [],
+          "supporting_claim_ids": [
+            "clm-br-1"
+          ],
+          "material": true,
+          "volatile": false,
+          "conflict": {
+            "status": "NONE",
+            "conflicting_claim_ids": []
+          }
+        },
+        {
+          "claim_id": "clm-br-3",
+          "statement": "The brand may be open to long-form creator content.",
+          "epistemic_status": "HYPOTHESIS",
+          "source_ids": [],
+          "supporting_claim_ids": [],
+          "material": true,
+          "volatile": false,
+          "conflict": {
+            "status": "NONE",
+            "conflicting_claim_ids": []
+          }
+        },
+        {
+          "claim_id": "clm-br-4",
+          "statement": "The brand's creator partnership budget.",
+          "epistemic_status": "UNKNOWN",
+          "source_ids": [],
+          "supporting_claim_ids": [],
+          "material": true,
+          "volatile": false,
+          "conflict": {
+            "status": "NONE",
+            "conflicting_claim_ids": []
+          }
+        }
+      ],
+      "research_outcome": "SUFFICIENT",
+      "open_unknowns": [
+        "Creator partnership budget",
+        "Prior creator collaborations"
+      ]
+    },
+    {
+      "artifact_id": "cp-001",
+      "artifact_type": "ContactProfile",
+      "schema_version": "1.0.0",
+      "contract_version": "1.0.0",
+      "produced_at": "2026-10-01T09:30:00Z",
+      "producer": {
+        "kind": "skill",
+        "id": "ana-brand-intel"
+      },
+      "run_id": "run-fixture-0001",
+      "input_artifact_ids": [
+        "lt-001",
+        "br-001"
+      ],
+      "brand_id": "brand-northwind",
+      "contact_policy_version": "1.0.0",
+      "contacts": [
+        {
+          "contact_id": "contact-2",
+          "role": "Marketing lead (pattern-inferred address)",
+          "email": "marketing.lead@brand.example.com",
+          "source_class": "inferred",
+          "verification": "unverified",
+          "public_business_context": true,
+          "source_ids": [],
+          "readiness": "REVIEW_REQUIRED"
+        }
+      ],
+      "selected_contact_id": null,
+      "contact_outcome": "CONTACT_NOT_READY"
+    },
+    {
+      "artifact_id": "fit-001",
+      "artifact_type": "AnaBrandFit",
+      "schema_version": "1.0.0",
+      "contract_version": "1.0.0",
+      "produced_at": "2026-10-01T10:00:00Z",
+      "producer": {
+        "kind": "skill",
+        "id": "ana-brand-intel"
+      },
+      "run_id": "run-fixture-0001",
+      "input_artifact_ids": [
+        "br-001",
+        "ctp-001"
+      ],
+      "dimensions": [
+        {
+          "dimension": "audience overlap",
+          "rating": "medium",
+          "rationale": "Hiking audience overlaps with outdoor gear buyers.",
+          "claim_ids": [
+            "clm-ctp-2"
+          ]
+        },
+        {
+          "dimension": "values alignment",
+          "rating": "strong",
+          "rationale": "Repair and durability match the creator's long-form travel practice.",
+          "claim_ids": [
+            "clm-br-1",
+            "clm-br-2"
+          ]
+        },
+        {
+          "dimension": "content format",
+          "rating": "unknown",
+          "rationale": "Openness to long-form content is only a hypothesis.",
+          "claim_ids": [
+            "clm-ctp-1",
+            "clm-br-3"
+          ]
+        }
+      ],
+      "strongest_counterargument": {
+        "statement": "No evidence of a creator budget or prior creator collaborations; the brand may not fund partnerships.",
+        "claim_ids": [
+          "clm-br-4"
+        ]
+      },
+      "fit_outcome": "FIT"
+    },
+    {
+      "artifact_id": "or-001",
+      "artifact_type": "OutcomeRecord",
+      "schema_version": "1.0.0",
+      "contract_version": "1.0.0",
+      "produced_at": "2026-10-01T10:10:00Z",
+      "producer": {
+        "kind": "runtime",
+        "id": "outcome-recorder"
+      },
+      "run_id": "run-fixture-0001",
+      "input_artifact_ids": [
+        "cp-001",
+        "fit-001"
+      ],
+      "outcome": "CONTACT_NOT_READY",
+      "recorded_at": "2026-10-01T10:10:00Z",
+      "learning_hypotheses": []
+    }
+  ]
+}

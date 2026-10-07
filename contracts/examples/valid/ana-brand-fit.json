@@ -1,0 +1,51 @@
+{
+  "artifact_id": "fit-001",
+  "artifact_type": "AnaBrandFit",
+  "schema_version": "1.0.0",
+  "contract_version": "1.0.0",
+  "produced_at": "2026-10-01T10:00:00Z",
+  "producer": {
+    "kind": "skill",
+    "id": "ana-brand-intel"
+  },
+  "run_id": "run-fixture-0001",
+  "input_artifact_ids": [
+    "br-001",
+    "ctp-001"
+  ],
+  "dimensions": [
+    {
+      "dimension": "audience overlap",
+      "rating": "medium",
+      "rationale": "Hiking audience overlaps with outdoor gear buyers.",
+      "claim_ids": [
+        "clm-ctp-2"
+      ]
+    },
+    {
+      "dimension": "values alignment",
+      "rating": "strong",
+      "rationale": "Repair and durability match the creator's long-form travel practice.",
+      "claim_ids": [
+        "clm-br-1",
+        "clm-br-2"
+      ]
+    },
+    {
+      "dimension": "content format",
+      "rating": "unknown",
+      "rationale": "Openness to long-form content is only a hypothesis.",
+      "claim_ids": [
+        "clm-ctp-1",
+        "clm-br-3"
+      ]
+    }
+  ],
+  "strongest_counterargument": {
+    "statement": "No evidence of a creator budget or prior creator collaborations; the brand may not fund partnerships.",
+    "claim_ids": [
+      "clm-br-4"
+    ]
+  },
+  "fit_outcome": "FIT"
+}
