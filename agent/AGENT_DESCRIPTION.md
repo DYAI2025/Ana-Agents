@@ -1,33 +1,11 @@
 # Ana Brand Partnership CRM Agent
 
-## What it does
+One Agent for Vince's Brand-partnership workflow.
 
-This Agent helps the team turn a brand lead into a well-supported partnership opportunity.
+It combines three Skills:
 
-It researches the brand, keeps facts separate from assumptions, checks whether Ana and the brand genuinely fit, finds or evaluates an appropriate business contact, develops one to three concrete collaboration ideas, and can prepare an outreach draft for review.
+- Vince's existing CRM Orchestrator for CRM context and actions;
+- Ana Brand Intel for Brand research, contact intelligence, fit and collaboration ideas;
+- Ana Outreach Compose for specific outreach strategy and drafting.
 
-It is deliberately not an autonomous cold-email bot.
-
-## What it protects
-
-- evidence and source traceability;
-- honest UNKNOWN states;
-- contact and privacy boundaries;
-- Ana's commercial authority;
-- human approval before first-touch outreach;
-- separation between research, drafting and sending.
-
-## What it uses
-
-- `ana-brand-intel`
-- `ana-outreach-compose`
-- approved CRM/runtime connectors
-- deterministic policy and send controls when available
-
-## What it does not do by itself
-
-- invent a contact address;
-- decide legal compliance;
-- invent rates or deal terms;
-- bypass CRM permissions;
-- authorize or send first-touch outreach without the required gates.
+The result is one workflow from lead to decision to draft without making Vince manually switch between Skills.

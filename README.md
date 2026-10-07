@@ -1,5 +1,17 @@
 # Ana Agents
 
+## Vince: use the Skills now
+
+Direct downloads:
+
+- [ana-brand-intel.zip](downloads/ana-brand-intel.zip)
+- [ana-outreach-compose.zip](downloads/ana-outreach-compose.zip)
+
+Setup with the existing Vince CRM Orchestrator: [docs/VINCE_START_HERE.md](docs/VINCE_START_HERE.md)
+
+Claude-for-Chrome setup prompt: [prompts/CLAUDE_FOR_CHROME_SETUP.md](prompts/CLAUDE_FOR_CHROME_SETUP.md)
+
+
 Repository foundation for the Ana Savu agent ecosystem.
 
 This repository is intended to hold reusable skills, deterministic runtime controls, schemas, policies, evaluations, and agent documentation for the Ana project. The first implemented domain is evidence-grounded brand-partnership outreach.
