@@ -40,15 +40,21 @@ Each new check was seen failing with the check disabled before it was trusted.
 | `bi-sub-r4` | `249f6169…` | FAIL 23/24 (malformed JSON → output pre-flight added) |
 | `bi-sub-r5` | `c0849004…` (final) | 23/24 under the grader of e3c050c; 0/24 malformed answers |
 | `bi-sub-r5-regrade` | `c0849004…` | 24/24 under the grader of 97ea539 (word-set term matching, later reverted) |
-| **`bi-sub-r5-regrade2`** | **`c0849004…`** | **24/24 PASS under the final grader; `EVIDENCE_VALID`; same raw answers as bi-sub-r5** |
+| `bi-sub-r5-regrade2` | `c0849004…` | 24/24 under the grader of 7b05ea5; superseded by grader fixes from evaluator round 3 |
+| **`bi-sub-r5-regrade3`** | **`c0849004…`** | **24/24 PASS under the final grader (6e08b3d); `EVIDENCE_VALID`; same raw answers as bi-sub-r5 (`regrade_of` bound)** |
 
 All runs used Claude Code subagents (`claude-sonnet-5-5`) through a file exchange. Limits: not the ChatGPT Skills runtime and not a GPT model; executor context contained repository CLAUDE.md files; decoy tools offered as a text protocol; fixed synthetic corpus; 2 trials per case.
+
+Further limits found by the round-3 evaluation:
+
+- Some case titles in the shipped `evals/cases.yaml` state the expected behaviour, and the r5 executors had repository access while `evals/ana-brand-intel/grading.yaml` existed. Nothing records that they read either; one r5 trial failed a grading-term check, which is weak evidence against gaming. Vince's smoke tests use brands that are not in the eval cases. Follow-up: neutralise the titles at the next content-digest change.
+- A deterministic grader cannot judge semantics completely (unusually phrased denials, e-mail copy without salutation or sign-off, numbers written as words, subset padding, renamed contact dimensions). The independent evaluators' reading of the raw answers is the semantic check: every final answer they read was substantively correct.
 
 ## Independent evaluation
 
 - Digest `9b4f5f07…`: `CANDIDATE_ACCEPTABLE_WITH_FINDINGS`, six grader false greens, fixed.
-- Digest `c0849004…`: `MERGE_BLOCKED` (stale evidence, grading data in the package, further grader false greens). Fixed in `7b05ea5` with grounded checks; every probe is a regression test.
-- Re-review of the hardened grader: see `reports/release-status.json`.
+- Digest `c0849004…`, round 2: `MERGE_BLOCKED` (stale evidence, grading data in the package, further grader false greens). Fixed in `7b05ea5`; every probe is a regression test.
+- Digest `c0849004…`, round 3 (head `0eee014`): `MERGE_ACCEPTABLE_WITH_NONBLOCKING_FINDINGS`. Structural findings fixed in `6e08b3d`; limits documented above; Vince handoff written.
 
 ## Not done
 
