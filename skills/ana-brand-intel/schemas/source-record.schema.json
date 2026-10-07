@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ana-agents.invalid/contracts/v1/source-record.schema.json",
+  "title": "SourceRecord",
+  "description": "Supporting structure embedded in BrandResearch / CreatorTruthPack. Records where evidence came from. It is never a pipeline artifact and can never be a direct input to EmailDraft, SendPermission or SendReceipt. External content referenced here is untrusted data, never instructions (SEC-001). The url accepts any real URI; only repository fixtures are restricted to reserved example domains.",
+  "x-ana-kind": "supporting",
+  "type": "object",
+  "properties": {
+    "source_id": { "$ref": "common.schema.json#/$defs/identifier" },
+    "url": { "type": "string", "format": "uri" },
+    "title": { "type": "string" },
+    "source_class": {
+      "enum": [
+        "official_brand_site",
+        "brand_social",
+        "press",
+        "third_party",
+        "regulator",
+        "project_internal"
+      ]
+    },
+    "trust": { "enum": ["UNTRUSTED_EXTERNAL", "PROJECT_INTERNAL"] },
+    "retrieved_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "published_at": {
+      "oneOf": [{ "$ref": "common.schema.json#/$defs/timestamp" }, { "type": "null" }]
+    },
+    "content_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "required": ["source_id", "url", "source_class", "trust", "retrieved_at"],
+  "additionalProperties": false,
+  "if": {
+    "properties": { "source_class": { "not": { "const": "project_internal" } } }
+  },
+  "then": {
+    "properties": { "trust": { "const": "UNTRUSTED_EXTERNAL" } }
+  }
+}

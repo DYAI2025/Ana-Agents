@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.2.0",
+  "skill": "ana-brand-intel",
+  "status": "READY_FOR_VINCE_TEST",
+  "implementation_state": "IMPLEMENTATION_COMPLETE",
+  "runtime_validation_state": "VINCE_VALIDATION_PENDING",
+  "release_authorized": false,
+  "content_digest_algorithm": "skill-content-v1",
+  "content_digest": "sha256:c08490043895e138500c6d83d6350d17ea3c4f3eea55880263d783a6816334cd",
+  "source_commit": "e3c050c3419c81003df5319dbf33b2df9815d192",
+  "evaluated_at": "2026-10-07",
+  "status_note": "status is not a canonical contract enum. READY_FOR_VINCE_TEST means every engineering gate this repository can run has passed; release_authorized stays false until Vince reports the ChatGPT workspace smoke test.",
+  "checks": {
+    "build_contract_package_structure": {
+      "status": "PASS",
+      "evidence": "skills/ana-brand-intel/scripts/check_package.py (0 findings); tests/skill_evals/test_brand_intel_package.py"
+    },
+    "canonical_contract_pins": {
+      "status": "PASS",
+      "evidence": "scripts/pin_skill_contracts.py --skill ana-brand-intel --check (17 pins, 0 problems)"
+    },
+    "full_repo_regression": {
+      "status": "PASS",
+      "evidence": "ruff check, ruff format --check, pytest, validate_contracts.py, check_repo_hygiene.py; exact output in PR #4 and ANA-37"
+    },
+    "grader_regression_and_probes": {
+      "status": "PASS",
+      "evidence": "tests/skill_evals/ (gold output, mutations, evaluator probes, canaries); evals/ana-brand-intel/grading.yaml"
+    },
+    "output_preflight": {
+      "status": "PASS",
+      "evidence": "scripts/validate_output.py rejects the recorded malformed answer of bi-sub-r4; tests/skill_evals/test_output_preflight.py"
+    },
+    "live_semantic_eval_secondary_runtime": {
+      "status": "PASS",
+      "evidence": "evals/ana-brand-intel/runs/bi-sub-r5-regrade3: 12 cases x 2 trials, 24/24 PASS on this digest; regrade of bi-sub-r5 (byte-identical raw answers, regrade_of bound) under the final grader of 6e08b3d; scripts/validate_eval_evidence.py: EVIDENCE_VALID. bi-sub-r5 under the grader of e3c050c: 23/24 (one grader false negative). Independent evaluators read the raw answers and judged them substantively correct.",
+      "limits": [
+        "Claude Code subagent runtime (claude-sonnet-5-5), not the ChatGPT Skills runtime and not a GPT model",
+        "executor context contained repository CLAUDE.md files that restate domain invariants",
+        "decoy tools offered as a text protocol, not native function calling",
+        "fixed synthetic corpus; no live retrieval",
+        "2 trials per case; report timestamps are ingest times",
+        "eval case titles in the shipped evals/cases.yaml state expected behaviour, and the executors had repository access while grading data existed; nothing records that they read it (one r5 trial failed a grading-term check, weak evidence against gaming)",
+        "deterministic grading cannot judge semantics fully: denials phrased unusually, e-mail copy without salutation/sign-off, numbers written as words, subset-padding and contact-like fit dimensions with other names can pass the grader; the raw-answer reading by independent evaluators is the semantic check"
+      ]
+    },
+    "live_semantic_eval_target_runtime": {
+      "status": "DELEGATED_TO_VINCE",
+      "evidence": "Product Owner decision 2026-10-07: no GPT/API credit for this session (OpenAI HTTP 429 credit_balance_exhausted; Gemini free-tier quota exhausted). The ChatGPT runtime check is Vince's workspace smoke test."
+    },
+    "candidate_archive": {
+      "status": "PASS",
+      "evidence": "scripts/package_skills.py --mode candidate built twice, byte-identical; scripts/verify_release.py --expect-digest; extracted self-check 0 findings; no grading data in the archive (packager guard)"
+    },
+    "independent_evaluator": {
+      "status": "PASS_WITH_NONBLOCKING_FINDINGS",
+      "evidence": "Round 3 on head 0eee014 (digest sha256:c0849004...): EVALUATOR_VERDICT MERGE_ACCEPTABLE_WITH_NONBLOCKING_FINDINGS. Findings 1, 2, 5 and 7 fixed in 6e08b3d; finding 4 (handoff document) fixed by docs/handoff/ana-brand-intel-vince-test.md; findings 3 and 6 documented as limits. Rounds 1 (9b4f5f07...) and 2 (c0849004..., MERGE_BLOCKED) fixed earlier."
+    },
+    "vince_workspace_smoke": {
+      "status": "NOT_RUN",
+      "evidence": "Human gate owned by Vince: docs/handoff/ana-brand-intel-vince-test.md (tests A-E use brands that are not in evals/cases.yaml)."
+    }
+  },
+  "blockers": [
+    "Vince workspace installation and smoke test (tests A-E) not yet run; release_authorized stays false until reported."
+  ],
+  "follow_ups": [
+    "Neutralise outcome-revealing case titles in evals/cases.yaml at the next content-digest change (requires a new eval run)."
+  ]
+}

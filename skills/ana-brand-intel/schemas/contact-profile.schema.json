@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ana-agents.invalid/contracts/v1/contact-profile.schema.json",
+  "title": "ContactProfile",
+  "description": "Contact intelligence, independent of Brand fit (INTEL-007). Two evidence axes (source_class, verification) plus public_business_context map to readiness via contracts/policies/contact-policy.yaml; the semantic validator rejects any declared readiness less restrictive than the policy result. CONTACT_NOT_READY is a stop outcome for outreach drafting (INTEL-010). ELIGIBLE_FOR_GATES is not send authorization.",
+  "x-ana-kind": "pipeline",
+  "type": "object",
+  "allOf": [{ "$ref": "artifact-envelope.schema.json" }],
+  "properties": {
+    "artifact_type": { "const": "ContactProfile" },
+    "schema_version": { "const": "1.0.0" },
+    "brand_id": { "$ref": "common.schema.json#/$defs/identifier" },
+    "contact_policy_version": { "$ref": "common.schema.json#/$defs/semver" },
+    "contacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "contact_id": { "$ref": "common.schema.json#/$defs/identifier" },
+          "role": { "$ref": "common.schema.json#/$defs/non_empty_text" },
+          "email": { "type": "string", "format": "email" },
+          "source_class": { "$ref": "common.schema.json#/$defs/contact_source_class" },
+          "verification": { "$ref": "common.schema.json#/$defs/contact_verification" },
+          "public_business_context": { "type": "boolean" },
+          "source_ids": { "$ref": "common.schema.json#/$defs/identifier_list" },
+          "readiness": { "$ref": "common.schema.json#/$defs/contact_readiness" }
+        },
+        "required": [
+          "contact_id",
+          "role",
+          "email",
+          "source_class",
+          "verification",
+          "public_business_context",
+          "source_ids",
+          "readiness"
+        ],
+        "additionalProperties": false,
+        "if": {
+          "properties": { "source_class": { "enum": ["official_published", "public_found"] } }
+        },
+        "then": { "properties": { "source_ids": { "minItems": 1 } } }
+      }
+    },
+    "selected_contact_id": {
+      "oneOf": [{ "$ref": "common.schema.json#/$defs/identifier" }, { "type": "null" }]
+    },
+    "contact_outcome": { "enum": ["READY_FOR_GATES", "CONTACT_NOT_READY"] }
+  },
+  "required": [
+    "brand_id",
+    "contact_policy_version",
+    "contacts",
+    "selected_contact_id",
+    "contact_outcome"
+  ],
+  "unevaluatedProperties": false
+}

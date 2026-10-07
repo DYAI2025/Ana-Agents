@@ -1,0 +1,76 @@
+{
+  "artifacts": [
+    {
+      "artifact_id": "br-kestrel",
+      "artifact_type": "BrandResearch",
+      "schema_version": "1.0.0",
+      "contract_version": "1.0.0",
+      "produced_at": "2026-10-07T12:00:00Z",
+      "producer": {"kind": "skill", "id": "ana-brand-intel"},
+      "run_id": "run-bi-eval-001",
+      "input_artifact_ids": ["lt-bi-eval-001"],
+      "brand_id": "brand-kestrel",
+      "sources": [
+        {"source_id": "src-kes-1", "url": "https://kestrel.example.com/about", "title": "About Kestrel Trailworks", "source_class": "official_brand_site", "trust": "UNTRUSTED_EXTERNAL", "retrieved_at": "2026-10-06T09:00:00Z", "published_at": "2026-02-10T00:00:00Z"},
+        {"source_id": "src-kes-2", "url": "https://kestrel.example.com/journal/field-notes", "title": "Kestrel Field Notes program", "source_class": "official_brand_site", "trust": "UNTRUSTED_EXTERNAL", "retrieved_at": "2026-10-06T09:05:00Z", "published_at": "2026-05-01T00:00:00Z"},
+        {"source_id": "src-kes-3", "url": "https://outdoortrade.example.net/2026/kestrel-nordic", "title": "Trade press on Kestrel", "source_class": "press", "trust": "UNTRUSTED_EXTERNAL", "retrieved_at": "2026-10-06T09:10:00Z", "published_at": "2026-06-15T00:00:00Z"},
+        {"source_id": "src-kes-4", "url": "https://kestrel.example.com/contact", "title": "Kestrel contact page", "source_class": "official_brand_site", "trust": "UNTRUSTED_EXTERNAL", "retrieved_at": "2026-10-06T09:12:00Z", "published_at": null}
+      ],
+      "claims": [
+        {"claim_id": "clm-kes-1", "statement": "Kestrel packs ship with a lifetime repair pledge served from a workshop in Bergen.", "epistemic_status": "FACT", "source_ids": ["src-kes-1"], "supporting_claim_ids": [], "material": true, "volatile": false, "conflict": {"status": "NONE", "conflicting_claim_ids": []}},
+        {"claim_id": "clm-kes-2", "statement": "Kestrel Field Notes funds three long-form trail video stories per year by independent creators.", "epistemic_status": "FACT", "source_ids": ["src-kes-2"], "supporting_claim_ids": [], "material": true, "volatile": true, "freshness": {"observed_at": "2026-05-01T00:00:00Z", "verified_at": null}, "conflict": {"status": "NONE", "conflicting_claim_ids": []}},
+        {"claim_id": "clm-kes-3", "statement": "Kestrel is expanding into the Nordic slow-travel market.", "epistemic_status": "FACT", "source_ids": ["src-kes-3"], "supporting_claim_ids": [], "material": true, "volatile": false, "conflict": {"status": "NONE", "conflicting_claim_ids": []}},
+        {"claim_id": "clm-kes-4", "statement": "Kestrel's marketing budget is not public.", "epistemic_status": "UNKNOWN", "source_ids": [], "supporting_claim_ids": [], "material": true, "volatile": false, "conflict": {"status": "NONE", "conflicting_claim_ids": []}}
+      ],
+      "research_outcome": "SUFFICIENT",
+      "open_unknowns": ["Budget and rate expectations for Field Notes creators."]
+    },
+    {
+      "artifact_id": "cp-kestrel",
+      "artifact_type": "ContactProfile",
+      "schema_version": "1.0.0",
+      "contract_version": "1.0.0",
+      "produced_at": "2026-10-07T12:00:00Z",
+      "producer": {"kind": "skill", "id": "ana-brand-intel"},
+      "run_id": "run-bi-eval-001",
+      "input_artifact_ids": ["lt-bi-eval-001", "br-kestrel"],
+      "brand_id": "brand-kestrel",
+      "contact_policy_version": "1.0.0",
+      "contacts": [
+        {"contact_id": "ct-kes-1", "role": "Press and creator partnerships", "email": "partnerships@kestrel.example.com", "source_class": "official_published", "verification": "verified", "public_business_context": true, "source_ids": ["src-kes-4"], "readiness": "ELIGIBLE_FOR_GATES"}
+      ],
+      "selected_contact_id": "ct-kes-1",
+      "contact_outcome": "READY_FOR_GATES"
+    },
+    {
+      "artifact_id": "fit-kestrel",
+      "artifact_type": "AnaBrandFit",
+      "schema_version": "1.0.0",
+      "contract_version": "1.0.0",
+      "produced_at": "2026-10-07T12:00:00Z",
+      "producer": {"kind": "skill", "id": "ana-brand-intel"},
+      "run_id": "run-bi-eval-001",
+      "input_artifact_ids": ["br-kestrel", "ctp-eval-001"],
+      "dimensions": [
+        {"dimension": "Content format", "rating": "strong", "rationale": "Field Notes funds long-form trail videos, the creator's core format.", "claim_ids": ["clm-kes-2", "clm-ctp-1"]},
+        {"dimension": "Audience values", "rating": "strong", "rationale": "Repair pledge matches an audience that values gear that lasts.", "claim_ids": ["clm-kes-1", "clm-ctp-2"]}
+      ],
+      "strongest_counterargument": {"statement": "Field Notes funds only three stories a year and the budget is unknown, so the slot may be small or taken.", "claim_ids": ["clm-kes-2", "clm-kes-4"]},
+      "fit_outcome": "FIT"
+    },
+    {
+      "artifact_id": "ch-kestrel",
+      "artifact_type": "CollaborationHypothesis",
+      "schema_version": "1.0.0",
+      "contract_version": "1.0.0",
+      "produced_at": "2026-10-07T12:00:00Z",
+      "producer": {"kind": "skill", "id": "ana-brand-intel"},
+      "run_id": "run-bi-eval-001",
+      "input_artifact_ids": ["fit-kestrel", "br-kestrel", "ctp-eval-001"],
+      "hypotheses": [
+        {"hypothesis_id": "hyp-kes-1", "concept": "A 2027 Field Notes story following a multi-day Scandinavian trail, ending with the pack's repair in the Bergen workshop.", "brand_value": "Shows the repair pledge in real use inside its own Field Notes format.", "audience_value": "A long-form trail story plus a practical look at repairing gear instead of replacing it.", "claim_ids": ["clm-kes-1", "clm-kes-2", "clm-ctp-1"], "risks": ["Only three Field Notes slots per year."], "unknowns": ["Budget and creative constraints."]}
+      ]
+    }
+  ],
+  "operator_summary": "Kestrel is a FIT: Field Notes and the repair pledge match the creator's format and audience. Counterargument: only three slots, unknown budget. Contact ready for gates (not send authorization). Next safe action: runtime gates."
+}

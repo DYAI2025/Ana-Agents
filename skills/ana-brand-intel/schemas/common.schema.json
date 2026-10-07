@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ana-agents.invalid/contracts/v1/common.schema.json",
+  "title": "Common",
+  "description": "Shared definitions for the Ana outreach contract family (ADR-003). Not an artifact on its own.",
+  "x-ana-kind": "definitions",
+  "$defs": {
+    "identifier": {
+      "description": "Stable identifier. Cross-artifact relationships use identifiers, never embedded copies.",
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "identifier_list": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/identifier" },
+      "uniqueItems": true
+    },
+    "timestamp": {
+      "description": "RFC 3339 date-time with mandatory offset. Checked actively by the registry's FormatChecker.",
+      "type": "string",
+      "format": "date-time"
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+    },
+    "draft_hash": {
+      "description": "sha256 over the canonical send_payload projection of an EmailDraft (ADR-003, algorithm send-payload-v1).",
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "non_empty_text": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "epistemic_status": {
+      "description": "Exactly the four classes of SPEC INTEL-001.",
+      "enum": ["FACT", "SUPPORTED_INFERENCE", "HYPOTHESIS", "UNKNOWN"]
+    },
+    "qualitative_rating": {
+      "description": "Qualitative fit rating. Numeric scores are intentionally not representable (INTEL-005).",
+      "enum": ["strong", "medium", "weak", "unknown"]
+    },
+    "contact_source_class": {
+      "enum": ["official_published", "public_found", "inferred", "private", "unknown"]
+    },
+    "contact_verification": {
+      "enum": ["verified", "unverified", "catch_all", "unknown"]
+    },
+    "contact_readiness": {
+      "description": "ELIGIBLE_FOR_GATES only permits advancement to later gates. It is NOT send authorization, compliance clearance or human approval.",
+      "enum": ["ELIGIBLE_FOR_GATES", "REVIEW_REQUIRED", "NO_SEND"]
+    },
+    "requirement_id": {
+      "type": "string",
+      "pattern": "^(SYS|INTEL|COMP|OPS|SEC|DATA|EVAL)-[0-9]{3}$"
+    },
+    "execution_result": {
+      "description": "Result of a check or eval. PASS/FAIL require execution evidence (EVAL-006); enforced by the semantic validator.",
+      "type": "object",
+      "properties": {
+        "status": { "enum": ["PASS", "FAIL", "NOT_RUN", "BLOCKED_NOT_CONFIGURED"] },
+        "executed": { "type": "boolean" },
+        "execution_ref": {
+          "description": "Reference to the execution trace (run id, log locator). Required for PASS/FAIL.",
+          "type": ["string", "null"]
+        },
+        "executed_at": {
+          "oneOf": [{ "$ref": "#/$defs/timestamp" }, { "type": "null" }]
+        }
+      },
+      "required": ["status", "executed", "execution_ref", "executed_at"],
+      "additionalProperties": false
+    }
+  }
+}

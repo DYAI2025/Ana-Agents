@@ -17,3 +17,7 @@ Do not place credentials, secrets, private production CRM records, private rates
 ## Failure mode
 
 If a required capability is unavailable, stop with `CAPABILITY_MISSING` or an evidence stop. Never claim a read/search happened without execution evidence.
+
+## Enforcement layer
+
+This package restricts tools by instruction only: `agents/openai.yaml` declares no tool allow-list, and no format for one is assumed here. Hard enforcement belongs to the runtime/connector configuration: bind only read-only SEARCH, WEB_READ, CRM_READ and KNOWLEDGE_READ operations to this skill, and keep CRM write, mail send and SendPermission operations out of its tool surface.

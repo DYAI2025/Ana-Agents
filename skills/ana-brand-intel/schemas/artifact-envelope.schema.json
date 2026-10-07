@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ana-agents.invalid/contracts/v1/artifact-envelope.schema.json",
+  "title": "ArtifactEnvelope",
+  "description": "Common envelope composed (allOf) into every pipeline artifact schema (ADR-003). The envelope is metadata only; it carries no authority. A declared producer is data, not proof of origin.",
+  "x-ana-kind": "envelope",
+  "type": "object",
+  "properties": {
+    "artifact_id": { "$ref": "common.schema.json#/$defs/identifier" },
+    "artifact_type": {
+      "description": "Must equal the set of schemas marked x-ana-kind=pipeline (checked by the registry).",
+      "enum": [
+        "LeadTriage",
+        "CreatorTruthPack",
+        "BrandResearch",
+        "ContactProfile",
+        "AnaBrandFit",
+        "CollaborationHypothesis",
+        "CommercialCheck",
+        "OutreachStrategy",
+        "EmailDraft",
+        "QAGateReport",
+        "HumanApproval",
+        "SendPermission",
+        "SendReceipt",
+        "ReplyHandoff",
+        "OutcomeRecord"
+      ]
+    },
+    "schema_version": { "$ref": "common.schema.json#/$defs/semver" },
+    "contract_version": {
+      "description": "Version of the contract family as a whole (envelope, input graph, hash algorithm).",
+      "const": "1.0.0"
+    },
+    "produced_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "producer": {
+      "type": "object",
+      "properties": {
+        "kind": { "enum": ["skill", "runtime", "human"] },
+        "id": { "$ref": "common.schema.json#/$defs/identifier" }
+      },
+      "required": ["kind", "id"],
+      "additionalProperties": false
+    },
+    "run_id": { "$ref": "common.schema.json#/$defs/identifier" },
+    "input_artifact_ids": { "$ref": "common.schema.json#/$defs/identifier_list" }
+  },
+  "required": [
+    "artifact_id",
+    "artifact_type",
+    "schema_version",
+    "contract_version",
+    "produced_at",
+    "producer",
+    "run_id",
+    "input_artifact_ids"
+  ]
+}

@@ -32,7 +32,7 @@ def test_verified_rows_reference_existing_tests_or_cases():
     for req, body, state in rows():
         if state != "VERIFIED":
             continue
-        test_files = re.findall(r"`((?:contracts|evidence|repo)/test_\w+\.py)`", body)
+        test_files = re.findall(r"`((?:contracts|evidence|repo|skill_evals)/test_\w+\.py)`", body)
         cases = expand_case_refs(body)
         assert test_files or cases or "chain `" in body or "all `tests/`" in body, req
         for path in test_files:

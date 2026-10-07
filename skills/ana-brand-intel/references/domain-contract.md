@@ -1,6 +1,6 @@
 # Domain Contract
 
-Pinned repository: `DYAI2025/Ana-Agents@8c898923a6c9d5c31caa60f098f5c0f376fe25e7`.
+Canonical repository: `DYAI2025/Ana-Agents`. The exact pinned contract files and their sha256 digests are listed in `contracts/PINS.json`.
 
 ## Canonical outputs
 
