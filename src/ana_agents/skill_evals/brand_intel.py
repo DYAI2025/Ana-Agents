@@ -147,6 +147,20 @@ def _norm(text: str) -> str:
     return " ".join(text.lower().replace("-", " ").split())
 
 
+def _words(text: str) -> set[str]:
+    """Words of normalised text, a trailing plural 's' dropped from longer words."""
+    words = set()
+    for word in re.findall(r"[a-z0-9]+", text):
+        words.add(word[:-1] if len(word) > 3 and word.endswith("s") else word)
+    return words
+
+
+def _term_named(term: str, idea: str) -> bool:
+    """A distinctive term is named when it occurs verbatim, or when every one of its words
+    occurs in the idea (paraphrase such as 'offline hut-times app' for 'offline app')."""
+    return term in idea or _words(term) <= _words(idea)
+
+
 def _strings(value: Any) -> list[str]:
     """Every string value in a JSON-like structure, newlines intact."""
     if isinstance(value, str):
@@ -289,7 +303,7 @@ def grade(
                 str(hypothesis.get(k, "")) for k in ("concept", "brand_value", "audience_value")
             )
         )
-        if terms and not any(t in idea for t in terms):
+        if terms and not any(_term_named(t, idea) for t in terms):
             failures.append(
                 Failure(
                     "generic_hypothesis",

@@ -363,3 +363,18 @@ def test_distinctive_terms_ignore_hyphenation(cases, gold):
         audience_value="Gear that lasts.",
     )
     assert grade(cases["BI-EVAL-001"], gold) == []
+
+
+def test_distinctive_terms_accept_paraphrase_but_not_swap(cases):
+    # bi-sub-r5 BI-EVAL-011 trial 1 named both Fernway mechanisms in paraphrase and was
+    # failed by literal phrase matching; the swappable idea must still fail.
+    from ana_agents.skill_evals.brand_intel import _norm, _term_named
+
+    terms = [_norm(t) for t in cases["BI-EVAL-011"].grading["distinctive_terms"]]
+    paraphrase = _norm(
+        "A multi-day Scandinavian hut-to-hut hike film planned and navigated with Fernway's "
+        "waterproof trail maps and offline hut-times app."
+    )
+    swappable = _norm("A hiking film where the creator uses a brand's maps and favourite app.")
+    assert any(_term_named(t, paraphrase) for t in terms)
+    assert not any(_term_named(t, swappable) for t in terms)
