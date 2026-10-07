@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ana-agents.invalid/contracts/v1/commercial-check.schema.json",
+  "title": "CommercialCheck",
+  "description": "Commercial viability check against the commercial policy. Real Ana commercial values are MISSING; while the policy is MISSING the status cannot be VIABLE (semantic rule). This artifact never carries fees, usage rights, paid-media, raw-footage, whitelisting, exclusivity or travel terms (COMP-004).",
+  "x-ana-kind": "pipeline",
+  "type": "object",
+  "allOf": [{ "$ref": "artifact-envelope.schema.json" }],
+  "properties": {
+    "artifact_type": { "const": "CommercialCheck" },
+    "schema_version": { "const": "1.0.0" },
+    "commercial_policy": {
+      "type": "object",
+      "properties": {
+        "status": { "enum": ["MISSING", "CONFIGURED"] },
+        "policy_id": { "oneOf": [{ "$ref": "common.schema.json#/$defs/identifier" }, { "type": "null" }] },
+        "policy_version": { "oneOf": [{ "$ref": "common.schema.json#/$defs/semver" }, { "type": "null" }] }
+      },
+      "required": ["status", "policy_id", "policy_version"],
+      "additionalProperties": false
+    },
+    "status": { "enum": ["VIABLE", "REVIEW", "NOT_VIABLE"] },
+    "concerns": {
+      "type": "array",
+      "items": { "$ref": "common.schema.json#/$defs/non_empty_text" }
+    }
+  },
+  "required": ["commercial_policy", "status", "concerns"],
+  "unevaluatedProperties": false
+}

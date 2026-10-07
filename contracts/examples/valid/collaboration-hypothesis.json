@@ -1,0 +1,36 @@
+{
+  "artifact_id": "ch-001",
+  "artifact_type": "CollaborationHypothesis",
+  "schema_version": "1.0.0",
+  "contract_version": "1.0.0",
+  "produced_at": "2026-10-01T10:30:00Z",
+  "producer": {
+    "kind": "skill",
+    "id": "ana-brand-intel"
+  },
+  "run_id": "run-fixture-0001",
+  "input_artifact_ids": [
+    "fit-001",
+    "br-001",
+    "ctp-001"
+  ],
+  "hypotheses": [
+    {
+      "hypothesis_id": "hyp-1",
+      "concept": "A field series following repaired gear on a multi-day trek.",
+      "brand_value": "Shows the repair program in real use instead of a product ad.",
+      "audience_value": "Practical repair and durability knowledge for hikers.",
+      "claim_ids": [
+        "clm-br-1",
+        "clm-ctp-1"
+      ],
+      "risks": [
+        "Brand may prefer short-form content."
+      ],
+      "unknowns": [
+        "Budget",
+        "Timing"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "artifact_id": "sp-001",
+  "artifact_type": "SendPermission",
+  "schema_version": "1.0.0",
+  "contract_version": "1.0.0",
+  "produced_at": "2026-10-02T09:05:00Z",
+  "producer": {
+    "kind": "runtime",
+    "id": "send-permission-evaluator"
+  },
+  "run_id": "run-fixture-0001",
+  "input_artifact_ids": [
+    "ed-001",
+    "ha-001",
+    "qa-001",
+    "cp-001"
+  ],
+  "send_authorized": true,
+  "bindings": {
+    "draft_artifact_id": "ed-001",
+    "draft_hash": "sha256:fc2f64848db3bfaba92ef279e33512aeb62a33ef693d32a21cce03fb84ace568",
+    "approval_artifact_id": "ha-001",
+    "qa_report_artifact_id": "qa-001",
+    "contact_profile_artifact_id": "cp-001",
+    "contact_id": "contact-1"
+  },
+  "gates": {
+    "approval": "APPROVED",
+    "qa": "READY_FOR_HUMAN_REVIEW",
+    "contact_readiness": "ELIGIBLE_FOR_GATES",
+    "compliance": "CLEARED",
+    "suppression": "CLEAR",
+    "duplicate": "CLEAR",
+    "freshness": "FRESH"
+  },
+  "policy_version": "1.0.0",
+  "issued_at": "2026-10-02T09:05:00Z",
+  "expires_at": "2026-10-03T09:05:00Z",
+  "block_reasons": []
+}

@@ -1,0 +1,100 @@
+{
+  "artifact_id": "br-001",
+  "artifact_type": "BrandResearch",
+  "schema_version": "1.0.0",
+  "contract_version": "1.0.0",
+  "produced_at": "2026-10-01T09:00:00Z",
+  "producer": {
+    "kind": "skill",
+    "id": "ana-brand-intel"
+  },
+  "run_id": "run-fixture-0001",
+  "input_artifact_ids": [
+    "lt-001"
+  ],
+  "brand_id": "brand-northwind",
+  "sources": [
+    {
+      "source_id": "src-br-1",
+      "url": "https://brand.example.com/sustainability/repair",
+      "title": "Repair program page",
+      "source_class": "official_brand_site",
+      "trust": "UNTRUSTED_EXTERNAL",
+      "retrieved_at": "2026-10-01T08:30:00Z",
+      "published_at": "2026-03-01T00:00:00Z"
+    },
+    {
+      "source_id": "src-br-2",
+      "url": "https://news.example.net/northwind-repair",
+      "title": "Trade press article",
+      "source_class": "press",
+      "trust": "UNTRUSTED_EXTERNAL",
+      "retrieved_at": "2026-10-01T08:35:00Z",
+      "published_at": "2026-03-05T00:00:00Z"
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "clm-br-1",
+      "statement": "The brand launched a gear repair program in 2026.",
+      "epistemic_status": "FACT",
+      "source_ids": [
+        "src-br-1",
+        "src-br-2"
+      ],
+      "supporting_claim_ids": [],
+      "material": true,
+      "volatile": false,
+      "conflict": {
+        "status": "NONE",
+        "conflicting_claim_ids": []
+      }
+    },
+    {
+      "claim_id": "clm-br-2",
+      "statement": "The brand currently prioritizes durability in its messaging.",
+      "epistemic_status": "SUPPORTED_INFERENCE",
+      "source_ids": [],
+      "supporting_claim_ids": [
+        "clm-br-1"
+      ],
+      "material": true,
+      "volatile": false,
+      "conflict": {
+        "status": "NONE",
+        "conflicting_claim_ids": []
+      }
+    },
+    {
+      "claim_id": "clm-br-3",
+      "statement": "The brand may be open to long-form creator content.",
+      "epistemic_status": "HYPOTHESIS",
+      "source_ids": [],
+      "supporting_claim_ids": [],
+      "material": true,
+      "volatile": false,
+      "conflict": {
+        "status": "NONE",
+        "conflicting_claim_ids": []
+      }
+    },
+    {
+      "claim_id": "clm-br-4",
+      "statement": "The brand's creator partnership budget.",
+      "epistemic_status": "UNKNOWN",
+      "source_ids": [],
+      "supporting_claim_ids": [],
+      "material": true,
+      "volatile": false,
+      "conflict": {
+        "status": "NONE",
+        "conflicting_claim_ids": []
+      }
+    }
+  ],
+  "research_outcome": "SUFFICIENT",
+  "open_unknowns": [
+    "Creator partnership budget",
+    "Prior creator collaborations"
+  ]
+}

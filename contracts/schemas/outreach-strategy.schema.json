@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ana-agents.invalid/contracts/v1/outreach-strategy.schema.json",
+  "title": "OutreachStrategy",
+  "description": "Selected hypothesis, target contact and approach for one outreach. Consumes only validated structured artifacts (COMP-002); never raw research.",
+  "x-ana-kind": "pipeline",
+  "type": "object",
+  "allOf": [{ "$ref": "artifact-envelope.schema.json" }],
+  "properties": {
+    "artifact_type": { "const": "OutreachStrategy" },
+    "schema_version": { "const": "1.0.0" },
+    "selected_hypothesis_id": { "$ref": "common.schema.json#/$defs/identifier" },
+    "target_contact_id": { "$ref": "common.schema.json#/$defs/identifier" },
+    "channel": { "const": "email" },
+    "approach": { "$ref": "common.schema.json#/$defs/non_empty_text" },
+    "key_claim_ids": { "$ref": "common.schema.json#/$defs/identifier_list" },
+    "exclusions": {
+      "description": "Things the draft must not say or promise.",
+      "type": "array",
+      "items": { "$ref": "common.schema.json#/$defs/non_empty_text" }
+    }
+  },
+  "required": [
+    "selected_hypothesis_id",
+    "target_contact_id",
+    "channel",
+    "approach",
+    "key_claim_ids",
+    "exclusions"
+  ],
+  "unevaluatedProperties": false
+}

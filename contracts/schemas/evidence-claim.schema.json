@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ana-agents.invalid/contracts/v1/evidence-claim.schema.json",
+  "title": "EvidenceClaim",
+  "description": "Supporting structure: one material claim with its epistemic status (INTEL-001). The schema enforces local structure (FACT needs at least one source id; SUPPORTED_INFERENCE needs some support; volatile claims need freshness). Whether ids resolve, whether support is real, and how the claim may be framed externally is enforced by the Python semantic / evidence-chain validators. Schema validity is never truth.",
+  "x-ana-kind": "supporting",
+  "type": "object",
+  "properties": {
+    "claim_id": { "$ref": "common.schema.json#/$defs/identifier" },
+    "statement": { "$ref": "common.schema.json#/$defs/non_empty_text" },
+    "epistemic_status": { "$ref": "common.schema.json#/$defs/epistemic_status" },
+    "source_ids": { "$ref": "common.schema.json#/$defs/identifier_list" },
+    "supporting_claim_ids": { "$ref": "common.schema.json#/$defs/identifier_list" },
+    "material": { "type": "boolean" },
+    "volatile": {
+      "description": "True for metrics or states that change over time (DATA-004).",
+      "type": "boolean"
+    },
+    "freshness": {
+      "type": "object",
+      "properties": {
+        "observed_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+        "verified_at": {
+          "oneOf": [{ "$ref": "common.schema.json#/$defs/timestamp" }, { "type": "null" }]
+        }
+      },
+      "required": ["observed_at"],
+      "additionalProperties": false
+    },
+    "conflict": {
+      "type": "object",
+      "properties": {
+        "status": { "enum": ["NONE", "UNRESOLVED", "RESOLVED"] },
+        "conflicting_claim_ids": { "$ref": "common.schema.json#/$defs/identifier_list" },
+        "resolution_note": { "type": "string" }
+      },
+      "required": ["status", "conflicting_claim_ids"],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "claim_id",
+    "statement",
+    "epistemic_status",
+    "source_ids",
+    "supporting_claim_ids",
+    "material",
+    "volatile",
+    "conflict"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": { "properties": { "epistemic_status": { "const": "FACT" } } },
+      "then": { "properties": { "source_ids": { "minItems": 1 } } }
+    },
+    {
+      "if": { "properties": { "epistemic_status": { "const": "SUPPORTED_INFERENCE" } } },
+      "then": {
+        "anyOf": [
+          { "properties": { "source_ids": { "minItems": 1 } } },
+          { "properties": { "supporting_claim_ids": { "minItems": 1 } } }
+        ]
+      }
+    },
+    {
+      "if": { "properties": { "volatile": { "const": true } } },
+      "then": { "required": ["freshness"] }
+    },
+    {
+      "if": {
+        "properties": { "conflict": { "properties": { "status": { "const": "NONE" } } } }
+      },
+      "then": {
+        "properties": { "conflict": { "properties": { "conflicting_claim_ids": { "maxItems": 0 } } } }
+      },
+      "else": {
+        "properties": { "conflict": { "properties": { "conflicting_claim_ids": { "minItems": 1 } } } }
+      }
+    }
+  ]
+}

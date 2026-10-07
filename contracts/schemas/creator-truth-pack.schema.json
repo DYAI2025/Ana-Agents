@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ana-agents.invalid/contracts/v1/creator-truth-pack.schema.json",
+  "title": "CreatorTruthPack",
+  "description": "Approved, evidenced statements about the creator (Ana). Production values live in a protected runtime store; this repository only holds synthetic fixtures. Volatile creator metrics require freshness metadata (DATA-004).",
+  "x-ana-kind": "pipeline",
+  "type": "object",
+  "allOf": [{ "$ref": "artifact-envelope.schema.json" }],
+  "properties": {
+    "artifact_type": { "const": "CreatorTruthPack" },
+    "schema_version": { "const": "1.0.0" },
+    "creator_id": { "$ref": "common.schema.json#/$defs/identifier" },
+    "data_classification": { "enum": ["SYNTHETIC_FIXTURE", "PRODUCTION_PROTECTED"] },
+    "sources": { "type": "array", "items": { "$ref": "source-record.schema.json" } },
+    "claims": { "type": "array", "items": { "$ref": "evidence-claim.schema.json" } },
+    "restrictions": {
+      "description": "Brand categories or topics the creator does not work with.",
+      "type": "array",
+      "items": { "$ref": "common.schema.json#/$defs/non_empty_text" }
+    }
+  },
+  "required": ["creator_id", "data_classification", "sources", "claims", "restrictions"],
+  "unevaluatedProperties": false
+}

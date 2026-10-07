@@ -1,0 +1,24 @@
+{
+  "artifact_id": "cc-001",
+  "artifact_type": "CommercialCheck",
+  "schema_version": "1.0.0",
+  "contract_version": "1.0.0",
+  "produced_at": "2026-10-01T10:45:00Z",
+  "producer": {
+    "kind": "runtime",
+    "id": "commercial-policy-check"
+  },
+  "run_id": "run-fixture-0001",
+  "input_artifact_ids": [
+    "ch-001"
+  ],
+  "commercial_policy": {
+    "status": "MISSING",
+    "policy_id": null,
+    "policy_version": null
+  },
+  "status": "REVIEW",
+  "concerns": [
+    "Commercial policy values are MISSING; no commercial terms may be offered."
+  ]
+}

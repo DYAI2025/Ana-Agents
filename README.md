@@ -53,6 +53,36 @@ Raw research documents should remain outside this public repository unless expli
 
 ## Current status
 
-Repository foundation only. Production integrations, private Ana knowledge, legal operating policy, and live semantic-agent evaluation are not yet implemented.
+Slice S1 — canonical contracts and validation foundation:
+
+- JSON Schema (Draft 2020-12) contracts for every pipeline artifact under `contracts/schemas/`
+- executable contact policy (`contracts/policies/contact-policy.yaml`) and artifact input graph
+  (`contracts/artifact-input-graph.yaml`); decisions in `docs/decisions/ADR-003-canonical-contract-encoding.md`
+- offline schema registry, single-artifact semantic validator, cross-artifact evidence-chain
+  validator and `send-payload-v1` draft hashing (`src/ana_agents/`)
+- synthetic fixtures with valid chains and a negative-case manifest (`contracts/examples/`)
+- requirement mapping in `docs/TRACEABILITY.md`
+
+Not implemented: the `ana-brand-intel` / `ana-outreach-compose` skills, any runtime service
+(state machine, scheduler, suppression, duplicates, SendPermission issuer), Zoho adapters, live
+model evaluations, production commercial/legal policy. **Nothing in this repository grants send
+authority:** a schema-valid `SendPermission` is a data record, not an authorization.
 
 See `SPEC.md` for normative requirements and `ARCHITECTURE.md` for the target design.
+
+## Development
+
+Requires Python >= 3.12 and [uv](https://docs.astral.sh/uv/). Everything runs offline after `uv sync`;
+tests never contact Zoho, model providers or other live services.
+
+```bash
+uv sync                                   # install declared dependencies into .venv
+uv run ruff check .                       # lint
+uv run ruff format --check .              # formatting
+uv run pytest -q                          # tests
+uv run python scripts/validate_contracts.py   # schemas, policies, examples, negative cases
+uv run python scripts/check_repo_hygiene.py   # basic tracked-file hygiene (not a secret scanner)
+```
+
+Negative fixtures are mutations of the valid chains declared in
+`contracts/examples/negative-cases.yaml`; each case lists the exact findings it must produce.

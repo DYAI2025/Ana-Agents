@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ana-agents.invalid/contracts/v1/send-receipt.schema.json",
+  "title": "SendReceipt",
+  "description": "Record that a send adapter transmitted exactly the permitted draft. A receipt exists only if a transmission happened: when no adapter is configured nothing is sent and no SendReceipt is produced (a denied send is SendPermission send_authorized=false followed by OutcomeRecord SEND_NOT_AUTHORIZED). In S1 no mail adapter exists; every receipt in this repository is a SYNTHETIC_FIXTURE and proves no production transmission.",
+  "x-ana-kind": "pipeline",
+  "type": "object",
+  "allOf": [{ "$ref": "artifact-envelope.schema.json" }],
+  "properties": {
+    "artifact_type": { "const": "SendReceipt" },
+    "schema_version": { "const": "1.0.0" },
+    "producer": { "properties": { "kind": { "const": "runtime" } } },
+    "send_permission_id": { "$ref": "common.schema.json#/$defs/identifier" },
+    "draft_hash": { "$ref": "common.schema.json#/$defs/draft_hash" },
+    "adapter_mode": { "enum": ["SYNTHETIC_FIXTURE", "PRODUCTION"] },
+    "sent_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "message_ref": { "$ref": "common.schema.json#/$defs/identifier" }
+  },
+  "required": ["send_permission_id", "draft_hash", "adapter_mode", "sent_at", "message_ref"],
+  "unevaluatedProperties": false
+}

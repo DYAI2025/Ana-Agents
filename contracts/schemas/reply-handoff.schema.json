@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ana-agents.invalid/contracts/v1/reply-handoff.schema.json",
+  "title": "ReplyHandoff",
+  "description": "Any reply stops queued follow-up before classification (OPS-008). stop_followups must be true; classification may be absent; if present, classified_at must not precede followups_stopped_at (semantic rule). Reply content is referenced, never stored here.",
+  "x-ana-kind": "pipeline",
+  "type": "object",
+  "allOf": [{ "$ref": "artifact-envelope.schema.json" }],
+  "properties": {
+    "artifact_type": { "const": "ReplyHandoff" },
+    "schema_version": { "const": "1.0.0" },
+    "reply_ref": { "$ref": "common.schema.json#/$defs/identifier" },
+    "reply_received_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "stop_followups": { "const": true },
+    "followups_stopped_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "handoff_target": { "const": "inbound-operator" },
+    "classification": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "enum": [
+            "INTERESTED",
+            "NOT_INTERESTED",
+            "OUT_OF_OFFICE",
+            "OPT_OUT_REQUEST",
+            "BOUNCE",
+            "OTHER"
+          ]
+        },
+        "classified_at": { "$ref": "common.schema.json#/$defs/timestamp" }
+      },
+      "required": ["label", "classified_at"],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "reply_ref",
+    "reply_received_at",
+    "stop_followups",
+    "followups_stopped_at",
+    "handoff_target"
+  ],
+  "unevaluatedProperties": false
+}

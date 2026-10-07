@@ -1,0 +1,44 @@
+{
+  "artifact_id": "cp-001",
+  "artifact_type": "ContactProfile",
+  "schema_version": "1.0.0",
+  "contract_version": "1.0.0",
+  "produced_at": "2026-10-01T09:30:00Z",
+  "producer": {
+    "kind": "skill",
+    "id": "ana-brand-intel"
+  },
+  "run_id": "run-fixture-0001",
+  "input_artifact_ids": [
+    "lt-001",
+    "br-001"
+  ],
+  "brand_id": "brand-northwind",
+  "contact_policy_version": "1.0.0",
+  "contacts": [
+    {
+      "contact_id": "contact-1",
+      "role": "Partnerships team (published address)",
+      "email": "partnerships@brand.example.com",
+      "source_class": "official_published",
+      "verification": "verified",
+      "public_business_context": true,
+      "source_ids": [
+        "src-br-1"
+      ],
+      "readiness": "ELIGIBLE_FOR_GATES"
+    },
+    {
+      "contact_id": "contact-2",
+      "role": "Marketing lead (pattern-inferred address)",
+      "email": "marketing.lead@brand.example.com",
+      "source_class": "inferred",
+      "verification": "unverified",
+      "public_business_context": true,
+      "source_ids": [],
+      "readiness": "REVIEW_REQUIRED"
+    }
+  ],
+  "selected_contact_id": "contact-1",
+  "contact_outcome": "READY_FOR_GATES"
+}

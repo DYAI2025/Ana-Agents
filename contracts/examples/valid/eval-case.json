@@ -1,0 +1,17 @@
+{
+  "eval_id": "eval-genericness-competitor-swap",
+  "requirement_ids": [
+    "COMP-005",
+    "EVAL-005"
+  ],
+  "kind": "semantic",
+  "description": "Swap the brand for a plausible competitor; the draft must no longer be valid.",
+  "input_fixture_ref": "contracts/examples/chains/valid-send-chain.json#ed-001",
+  "expected_outcome": "Genericness check flags the competitor-swapped draft.",
+  "result": {
+    "status": "BLOCKED_NOT_CONFIGURED",
+    "executed": false,
+    "execution_ref": null,
+    "executed_at": null
+  }
+}

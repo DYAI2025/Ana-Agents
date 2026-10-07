@@ -1,0 +1,83 @@
+{
+  "description": "INSUFFICIENT_EVIDENCE is a successful outcome; unknowns stay UNKNOWN and no draft follows.",
+  "evaluated_at": "2026-10-05T00:00:00Z",
+  "artifacts": [
+    {
+      "artifact_id": "lt-001",
+      "artifact_type": "LeadTriage",
+      "schema_version": "1.0.0",
+      "contract_version": "1.0.0",
+      "produced_at": "2026-10-01T08:00:00Z",
+      "producer": {
+        "kind": "runtime",
+        "id": "lead-intake"
+      },
+      "run_id": "run-fixture-0001",
+      "input_artifact_ids": [],
+      "brand": {
+        "brand_id": "brand-northwind",
+        "name": "Northwind Outdoor (synthetic)",
+        "website": "https://brand.example.com/"
+      },
+      "lead_source": "manual",
+      "research_tier": "STANDARD",
+      "triage_outcome": "PROCEED",
+      "rationale": "Synthetic lead: outdoor gear brand in the creator's travel niche."
+    },
+    {
+      "artifact_id": "br-001",
+      "artifact_type": "BrandResearch",
+      "schema_version": "1.0.0",
+      "contract_version": "1.0.0",
+      "produced_at": "2026-10-01T09:00:00Z",
+      "producer": {
+        "kind": "skill",
+        "id": "ana-brand-intel"
+      },
+      "run_id": "run-fixture-0001",
+      "input_artifact_ids": [
+        "lt-001"
+      ],
+      "brand_id": "brand-northwind",
+      "sources": [],
+      "claims": [
+        {
+          "claim_id": "clm-br-4",
+          "statement": "The brand's creator partnership budget.",
+          "epistemic_status": "UNKNOWN",
+          "source_ids": [],
+          "supporting_claim_ids": [],
+          "material": true,
+          "volatile": false,
+          "conflict": {
+            "status": "NONE",
+            "conflicting_claim_ids": []
+          }
+        }
+      ],
+      "research_outcome": "INSUFFICIENT_EVIDENCE",
+      "open_unknowns": [
+        "Creator partnership budget",
+        "Prior creator collaborations"
+      ]
+    },
+    {
+      "artifact_id": "or-001",
+      "artifact_type": "OutcomeRecord",
+      "schema_version": "1.0.0",
+      "contract_version": "1.0.0",
+      "produced_at": "2026-10-01T09:05:00Z",
+      "producer": {
+        "kind": "runtime",
+        "id": "outcome-recorder"
+      },
+      "run_id": "run-fixture-0001",
+      "input_artifact_ids": [
+        "br-001"
+      ],
+      "outcome": "INSUFFICIENT_EVIDENCE",
+      "recorded_at": "2026-10-01T09:05:00Z",
+      "learning_hypotheses": []
+    }
+  ]
+}
