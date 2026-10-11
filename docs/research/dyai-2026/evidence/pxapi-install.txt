@@ -1,0 +1,4 @@
+error: Failed to download `https://github.com/astral-sh/python-build-standalone/releases/download/20261009/cpython-3.13.16%2B20261009-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz`
+  cause: error sending request for url (https://github.com/astral-sh/python-build-standalone/releases/download/20261009/cpython-3.13.16%2B20261009-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz)
+  cause: client error (Connect)
+  cause: invalid peer certificate: UnknownIssuer

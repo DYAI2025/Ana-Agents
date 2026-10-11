@@ -1,0 +1,276 @@
+{
+  "status": "PARTIAL_EVIDENCE",
+  "as_of": "2026-10-11",
+  "partners": [
+    {
+      "id": "PAR-INOVEX",
+      "priority": "1",
+      "organization": "inovex / Deutschland",
+      "product_and_transaction": "Plumbline / PAID_PILOT",
+      "buyer_and_offer": "Ein agentisch bearbeitetes, nicht vertrauliches Engineering-Arbeitspaket mit bestehendem Review vergleichen. AI-/Engineering-Practice-Leitung, tatsächlicher Budgethalter UNKNOWN",
+      "contact_url": "https://www.inovex.de/de/kontakt/",
+      "sources": [
+        {
+          "url": "https://www.inovex.de/de/leistungen/artificial-intelligence/",
+          "accessed_at": "2026-10-11",
+          "publication_date": "UNKNOWN"
+        },
+        {
+          "url": "https://www.inovex.de/de/kontakt/",
+          "accessed_at": "2026-10-11",
+          "publication_date": "UNKNOWN"
+        }
+      ],
+      "contact_status": "NOT_CONTACTED",
+      "qualification": "B – QUALIFICATION_NEEDED",
+      "confidence": "MEDIUM for offering/contact; LOW for demand",
+      "next_action": "Eigenentwicklung möglich. Nach zuständigem Delivery-Owner fragen; nur synthetische Demo senden",
+      "evidence_as_of": "2026-10-11",
+      "buying_intent": "UNKNOWN",
+      "named_budget_holder": "UNKNOWN"
+    },
+    {
+      "id": "PAR-ITERATEC",
+      "priority": "2",
+      "organization": "iteratec / Deutschland",
+      "product_and_transaction": "ASM / DESIGN_PARTNERSHIP",
+      "buyer_and_offer": "Eine Discovery-to-Delivery-Übergabe in kanonischer Datei evaluieren; Bezahlung separat vereinbaren. Product-/Delivery-Leitung UNKNOWN",
+      "contact_url": "https://www.iteratec.com/de/kontakt",
+      "sources": [
+        {
+          "url": "https://www.iteratec.com/de/",
+          "accessed_at": "2026-10-11",
+          "publication_date": "UNKNOWN"
+        },
+        {
+          "url": "https://www.iteratec.com/de/kontakt",
+          "accessed_at": "2026-10-11",
+          "publication_date": "UNKNOWN"
+        }
+      ],
+      "contact_status": "NOT_CONTACTED",
+      "qualification": "B – QUALIFICATION_NEEDED",
+      "confidence": "MEDIUM for offering/contact; LOW for demand",
+      "next_action": "Neues Tool darf Workshops nicht verlangsamen. Einen bestehenden, anonymisierbaren Ablauf auswählen",
+      "evidence_as_of": "2026-10-11",
+      "buying_intent": "UNKNOWN",
+      "named_budget_holder": "UNKNOWN"
+    },
+    {
+      "id": "PAR-NETLIGHT",
+      "priority": "3",
+      "organization": "Netlight / Europa",
+      "product_and_transaction": "ASM / PAID_PILOT",
+      "buyer_and_offer": "Product-/Engineering-Übergabe mit Ziel-/Bedürfnis-Rückverfolgbarkeit. Engagement Lead / Product Practice UNKNOWN",
+      "contact_url": "https://www.netlight.com/contact",
+      "sources": [
+        {
+          "url": "https://www.netlight.com/",
+          "accessed_at": "2026-10-11",
+          "publication_date": "UNKNOWN"
+        },
+        {
+          "url": "https://www.netlight.com/contact",
+          "accessed_at": "2026-10-11",
+          "publication_date": "UNKNOWN"
+        }
+      ],
+      "contact_status": "NOT_CONTACTED",
+      "qualification": "B – QUALIFICATION_NEEDED",
+      "confidence": "MEDIUM for offering/contact; LOW for demand",
+      "next_action": "Kein bewiesener Bedarf. Qualifizieren, ob Übergabeprobleme überhaupt teuer genug sind",
+      "evidence_as_of": "2026-10-11",
+      "buying_intent": "UNKNOWN",
+      "named_budget_holder": "UNKNOWN"
+    },
+    {
+      "id": "PAR-CODECENTRIC",
+      "priority": "4",
+      "organization": "codecentric / Deutschland",
+      "product_and_transaction": "Plumbline / PAID_PILOT",
+      "buyer_and_offer": "Evidence-Gate ergänzend zu AI-Coding evaluieren. AI-/Engineering-Practice UNKNOWN",
+      "contact_url": "https://www.codecentric.de/kontakt",
+      "sources": [
+        {
+          "url": "https://www.codecentric.de/",
+          "accessed_at": "2026-10-11",
+          "publication_date": "UNKNOWN"
+        },
+        {
+          "url": "https://www.codecentric.de/kontakt",
+          "accessed_at": "2026-10-11",
+          "publication_date": "UNKNOWN"
+        }
+      ],
+      "contact_status": "NOT_CONTACTED",
+      "qualification": "B – QUALIFICATION_NEEDED",
+      "confidence": "MEDIUM for offering/contact; LOW for demand",
+      "next_action": "Eigenes Angebot kann konkurrieren. Vor vertraulichen Details Ergänzung statt Ersatz klären",
+      "evidence_as_of": "2026-10-11",
+      "buying_intent": "UNKNOWN",
+      "named_budget_holder": "UNKNOWN"
+    },
+    {
+      "id": "PAR-MAYFLOWER",
+      "priority": "5",
+      "organization": "Mayflower / Deutschland",
+      "product_and_transaction": "Plumbline / DESIGN_PARTNERSHIP",
+      "buyer_and_offer": "Einen nicht vertraulichen Agent-Workflow gegen explizite Evidenzregeln testen. mAIstack-/Engineering-Verantwortliche UNKNOWN",
+      "contact_url": "https://mayflower.de/#contact",
+      "sources": [
+        {
+          "url": "https://mayflower.de/",
+          "accessed_at": "2026-10-11",
+          "publication_date": "UNKNOWN"
+        },
+        {
+          "url": "https://mayflower.de/#contact",
+          "accessed_at": "2026-10-11",
+          "publication_date": "UNKNOWN"
+        }
+      ],
+      "contact_status": "NOT_CONTACTED",
+      "qualification": "B – QUALIFICATION_NEEDED",
+      "confidence": "MEDIUM for offering/contact; LOW for demand",
+      "next_action": "Eigener Stack und On-Prem-Kompetenz; Buy-vs-build. Interesse an schmalem Gate statt Plattformwechsel prüfen",
+      "evidence_as_of": "2026-10-11",
+      "buying_intent": "UNKNOWN",
+      "named_budget_holder": "UNKNOWN"
+    },
+    {
+      "id": "PAR-VALTECH",
+      "priority": "6, bedingt",
+      "organization": "Valtech / international",
+      "product_and_transaction": "PXAPI / PAID_PILOT",
+      "buyer_and_offer": "Ein autorisierter statischer Homepage-Audit mit nachvollziehbarer Belegkette. Experience-/Commerce-Leitung UNKNOWN",
+      "contact_url": "https://www.valtech.com/contact/",
+      "sources": [
+        {
+          "url": "https://www.valtech.com/offerings/",
+          "accessed_at": "2026-10-11",
+          "publication_date": "UNKNOWN"
+        },
+        {
+          "url": "https://www.valtech.com/contact/",
+          "accessed_at": "2026-10-11",
+          "publication_date": "UNKNOWN"
+        }
+      ],
+      "contact_status": "NOT_CONTACTED",
+      "qualification": "B – QUALIFICATION_NEEDED",
+      "confidence": "MEDIUM for offering/contact; LOW for demand",
+      "next_action": "DEMO_BLOCKER Python-Laufzeit; Konkurrenz zu bestehendem Audit-Stack. Erst nach echter Ausführung anbieten",
+      "evidence_as_of": "2026-10-11",
+      "buying_intent": "UNKNOWN",
+      "named_budget_holder": "UNKNOWN"
+    },
+    {
+      "id": "PAR-ADESSO",
+      "priority": "7",
+      "organization": "adesso / Europa",
+      "product_and_transaction": "Plumbline / STRATEGIC_PARTNERSHIP",
+      "buyer_and_offer": "Nicht vertrauliche Evaluation nachvollziehbarer AI-Delivery-Prüfung. AI-/Software-Engineering-Unit UNKNOWN",
+      "contact_url": "https://www.adesso.de/de/kontakt/index.jsp",
+      "sources": [
+        {
+          "url": "https://www.adesso.de/de/impulse/kuenstliche-intelligenz/index.jsp",
+          "accessed_at": "2026-10-11",
+          "publication_date": "UNKNOWN"
+        },
+        {
+          "url": "https://www.adesso.de/de/kontakt/index.jsp",
+          "accessed_at": "2026-10-11",
+          "publication_date": "UNKNOWN"
+        }
+      ],
+      "contact_status": "NOT_CONTACTED",
+      "qualification": "B – QUALIFICATION_NEEDED",
+      "confidence": "MEDIUM for offering/contact; LOW for demand",
+      "next_action": "Enterprise-Einkauf kann zu früh sein. Erst technisches Routing, keine unterstellte Einkaufsfreigabe",
+      "evidence_as_of": "2026-10-11",
+      "buying_intent": "UNKNOWN",
+      "named_budget_holder": "UNKNOWN"
+    },
+    {
+      "id": "PAR-DICONIUM",
+      "priority": "8",
+      "organization": "diconium / international",
+      "product_and_transaction": "PXAPI / DESIGN_PARTNERSHIP, später ggf. CHANNEL_PARTNERSHIP",
+      "buyer_and_offer": "Evidenzgebundene Website-Diagnose in einen Digital-Commerce-Workflow einpassen. Commerce-/Data-Leitung UNKNOWN",
+      "contact_url": "https://diconium.com/en/contact-us/",
+      "sources": [
+        {
+          "url": "https://diconium.com/en/",
+          "accessed_at": "2026-10-11",
+          "publication_date": "UNKNOWN"
+        },
+        {
+          "url": "https://diconium.com/en/contact-us/",
+          "accessed_at": "2026-10-11",
+          "publication_date": "UNKNOWN"
+        }
+      ],
+      "contact_status": "NOT_CONTACTED",
+      "qualification": "B – QUALIFICATION_NEEDED",
+      "confidence": "MEDIUM for offering/contact; LOW for demand",
+      "next_action": "Laufzeitblocker und bestehende Tools. Kanalmodell erst nach bezahlter, wiederholbarer Nutzung prüfen",
+      "evidence_as_of": "2026-10-11",
+      "buying_intent": "UNKNOWN",
+      "named_budget_holder": "UNKNOWN"
+    },
+    {
+      "id": "PAR-DEPT",
+      "priority": "9",
+      "organization": "DEPT / international",
+      "product_and_transaction": "ASM / DESIGN_PARTNERSHIP",
+      "buyer_and_offer": "Explizite menschliche Freigabe von Produktkontext neben vorhandener Orchestrierung evaluieren. AI-/Product-Leitung UNKNOWN",
+      "contact_url": "https://www.dept.global/contact-us/",
+      "sources": [
+        {
+          "url": "https://www.dept.global/",
+          "accessed_at": "2026-10-11",
+          "publication_date": "UNKNOWN"
+        },
+        {
+          "url": "https://www.dept.global/contact-us/",
+          "accessed_at": "2026-10-11",
+          "publication_date": "UNKNOWN"
+        }
+      ],
+      "contact_status": "NOT_CONTACTED",
+      "qualification": "B – QUALIFICATION_NEEDED",
+      "confidence": "MEDIUM for offering/contact; LOW for demand",
+      "next_action": "Eigene Orchestrierung = Wettbewerbsnähe. Kein vertrauliches Plattformkonzept senden, bevor Abgrenzung geklärt",
+      "evidence_as_of": "2026-10-11",
+      "buying_intent": "UNKNOWN",
+      "named_budget_holder": "UNKNOWN"
+    },
+    {
+      "id": "PAR-THOUGHTWORKS",
+      "priority": "10, zurückgestellt",
+      "organization": "Thoughtworks / international",
+      "product_and_transaction": "Plumbline / STRATEGIC_PARTNERSHIP",
+      "buyer_and_offer": "Vergleichende Evaluation gegen eigene Delivery-Governance, nicht generischer Sales-Pitch. AI-/Engineering-Leitung UNKNOWN",
+      "contact_url": "https://www.thoughtworks.com/en-de/contact-us",
+      "sources": [
+        {
+          "url": "https://www.thoughtworks.com/en-de/what-we-do/ai",
+          "accessed_at": "2026-10-11",
+          "publication_date": "UNKNOWN"
+        },
+        {
+          "url": "https://www.thoughtworks.com/en-de/contact-us",
+          "accessed_at": "2026-10-11",
+          "publication_date": "UNKNOWN"
+        }
+      ],
+      "contact_status": "NOT_CONTACTED",
+      "qualification": "B – QUALIFICATION_NEEDED",
+      "confidence": "MEDIUM for offering/contact; LOW for demand",
+      "next_action": "Starke Überschneidung. Extrahiertes Formular meldet „Marketo Form ID is invalid“; Browserroute SOURCE_NEEDED. Keine HR-Adresse als Ersatz",
+      "evidence_as_of": "2026-10-11",
+      "buying_intent": "UNKNOWN",
+      "named_budget_holder": "UNKNOWN"
+    }
+  ]
+}

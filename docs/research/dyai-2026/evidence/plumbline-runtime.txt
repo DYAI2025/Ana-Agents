@@ -1,0 +1,80 @@
+test_runtime_integrity_layer
+  ok   PRIL context check CLI exists
+  ok   PRIL reality check CLI exists
+  ok   PRIL scope check CLI exists
+  ok   PRIL redact CLI exists
+  ok   Reality evidence schema exists
+  ok   context-pass canvas exists
+  ok   context-pass PRD exists
+  ok   context-pass Vision exists
+  ok   context-pass traceability exists
+  ok   reality fake-only fixture exists
+  ok   reality integration fixture exists
+  ok   reality missing evidence_class fixture exists
+  ok   scope pass changed-files fixture exists
+  ok   scope fail changed-files fixture exists
+  ok   scope missing-source changed-files fixture exists
+  ok   scope traceability-source changed-files fixture exists
+  ok   scope JSON-source changed-files fixture exists
+  ok   redaction safe JSONL fixture exists
+  ok   redaction secret JSONL fixture exists
+  ok   redaction invalid JSONL fixture exists
+  ok   optional pretool guard exists
+  ok   context-pass exits 0
+  ok   context-missing-vision exits 2
+  ok   context-unconfirmed-canvas exits 3
+  ok   missing context names exact artifact
+  ok   unconfirmed context names exact artifact
+  ok   fake-only reality evidence fails
+  ok   integration reality evidence passes
+  ok   integration-fake reality evidence fails documented workflow minimum
+  ok   production-verified reality evidence passes documented workflow minimum
+  ok   real-boundary-smoke reality evidence passes documented workflow minimum
+  ok   invalid JSONL reality evidence fails closed
+  ok   missing reality evidence ledger fails closed
+  ok   missing evidence_class error is actionable
+  ok   fake-only error is actionable
+  ok   scope-pass exits 0
+  ok   scope-fail names out-of-scope file
+  ok   explicit missing scope source fails closed
+  ok   traceability scope source exits 0
+  ok   JSON scope source exits 0
+  ok   broad wildcard scope pattern fails closed
+  ok   broad scope error names the rejected pattern
+  ok   normal scoped canvas still passes after broad-pattern guard
+  ok   broad ?* scope pattern fails closed
+  ok   broad ?* scope error names too-broad pattern
+  ok   broad [a-z]* glob-class scope pattern fails closed
+  ok   broad [a-z]* scope error names too-broad pattern
+  ok   literal-anchored glob-class scope still passes
+  ok   C4: gitignored+untracked dropping is exempted (pass)
+  ok   C4: exemption is visible (NOTE names the dropping)
+  ok   C4: exemption is labeled as tool artifacts, not silent
+  ok   C4: non-ignored out-of-scope file still blocks
+  ok   C4: violation names the real file, not the dropping
+  ok   C4: tracked-but-ignore-matching file is NOT exempted
+  ok   C4: same file back to untracked is exempt again (split, not path, decides)
+  ok   C4: --strict-gitignored re-blocks the dropping
+  ok   redaction safe JSONL check exits 0
+  ok   redaction secret JSONL check fails closed
+  ok   redaction invalid JSONL check fails closed
+  ok   redaction auto mode removes original secret
+  ok   optional pretool guard has valid bash syntax
+  ok   optional pretool guard is not activated in .claude/settings.json
+  ok   /agileteam references plumbline-context-check
+  ok   /agileteam references plumbline-reality-check
+  ok   /agileteam references plumbline-scope-check
+  ok   /agileteam references plumbline-redact
+  ok   /agileteam names PRIL Phase 0.5 context gate
+  ok   /agileteam requires reality before Gate C/D completion
+  ok   Watcher references plumbline-context-check
+  ok   Watcher references plumbline-reality-check
+  ok   Watcher references plumbline-scope-check
+  ok   Watcher references plumbline-redact
+  ok   Watcher blocks pass on PRIL fail
+  ok   Watcher blocks pass on scope/redaction fail
+  ok   True-Line template has PRIL output field
+  ok   True-Line template has scope output field
+  ok   True-Line template has redaction output field
+
+test_runtime_integrity_layer: 77 run, 0 failed

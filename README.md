@@ -98,3 +98,8 @@ uv run python scripts/check_repo_hygiene.py   # basic tracked-file hygiene (not 
 
 Negative fixtures are mutations of the valid chains declared in
 `contracts/examples/negative-cases.yaml`; each case lists the exact findings it must produce.
+
+## DYAI research report 2026
+
+[Read the complete report and download the research package](docs/research/dyai-2026/README.md).
+Status: `PARTIAL_EVIDENCE`; includes investor and partner registers, product assessments, outreach drafts, and technical evidence. No outreach has been sent.
