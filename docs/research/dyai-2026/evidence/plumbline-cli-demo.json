@@ -1,0 +1,14 @@
+[
+  {
+    "fixture": "reality-fake-only",
+    "exit": 3,
+    "stdout": "",
+    "stderr": "ERROR: forbidden non-reality evidence token 'fake-only' in docs/reality/demo.evidence.jsonl line 1\nPRIL_RUNTIME code=PRIL_POLICY_VIOLATION error_class=policy_violation cli=plumbline-reality-check interpreter=python3 exit_code=3\n"
+  },
+  {
+    "fixture": "reality-integration-pass",
+    "exit": 0,
+    "stdout": "PRIL reality check passed for feature 'demo' with minimum evidence 'integration'\n",
+    "stderr": ""
+  }
+]

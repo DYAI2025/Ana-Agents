@@ -1,0 +1,76 @@
+
+> asm-agentic-story-mapping@0.0.1 test
+> vitest run
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/home/user/dyai-research/sources/ASM-Agentic-Story-Mapping[39m
+
+ [32m✓[39m tests/agent/schema-repair.test.ts [2m([22m[2m69 tests[22m[2m)[22m[33m 658[2mms[22m[39m
+ [32m✓[39m tests/agent/live-providers.test.ts [2m([22m[2m60 tests[22m[2m)[22m[33m 1635[2mms[22m[39m
+   [32m✓[39m provider selection from the environment [2m(8)[22m
+     [33m[2m✓[22m[39m a timeout within bounds is used as given[33m 1004[2mms[22m[39m
+ [32m✓[39m tests/agent/live-budget.test.ts [2m([22m[2m60 tests[22m[2m)[22m[33m 692[2mms[22m[39m
+ [32m✓[39m tests/domain/guide.test.ts [2m([22m[2m29 tests[22m[2m)[22m[33m 1430[2mms[22m[39m
+ [32m✓[39m tests/domain/map-patch.test.ts [2m([22m[2m40 tests[22m[2m)[22m[32m 135[2mms[22m[39m
+ [32m✓[39m tests/agent/narrative-builder.test.ts [2m([22m[2m33 tests[22m[2m)[22m[33m 302[2mms[22m[39m
+ [32m✓[39m tests/domain/accept-race.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 430[2mms[22m[39m
+ [32m✓[39m tests/domain/work-state.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 232[2mms[22m[39m
+ [32m✓[39m tests/domain/slices.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 279[2mms[22m[39m
+ [32m✓[39m tests/domain/bootstrap.test.ts [2m([22m[2m24 tests[22m[2m)[22m[33m 489[2mms[22m[39m
+   [32m✓[39m the store creates a first product and never replaces one [2m(6)[22m
+     [33m[2m✓[22m[39m of two creations at the same moment exactly one wins, and the file is whole[33m 385[2mms[22m[39m
+ [32m✓[39m tests/domain/actors.test.ts [2m([22m[2m25 tests[22m[2m)[22m[33m 370[2mms[22m[39m
+ [32m✓[39m tests/agent/secret-containment.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 4126[2mms[22m[39m
+   [32m✓[39m secret containment: no channel, no spelling, no adapter [2m(4)[22m
+     [33m[2m✓[22m[39m output values and keys, recursively, for proposals and reviews[33m 3888[2mms[22m[39m
+ [32m✓[39m tests/domain/proposal-view.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 131[2mms[22m[39m
+ [32m✓[39m tests/domain/review.test.ts [2m([22m[2m22 tests[22m[2m)[22m[33m 318[2mms[22m[39m
+ [32m✓[39m tests/domain/re-entry.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 197[2mms[22m[39m
+ [32m✓[39m tests/domain/reset.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 265[2mms[22m[39m
+ [32m✓[39m tests/agent/live-paid.test.ts [2m([22m[2m18 tests[22m[2m)[22m[33m 381[2mms[22m[39m
+ [32m✓[39m tests/domain/context.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 37[2mms[22m[39m
+ [32m✓[39m tests/domain/persona-check.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 195[2mms[22m[39m
+ [32m✓[39m tests/ui/slice-drawer.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 237[2mms[22m[39m
+ [32m✓[39m tests/ui/guide-panel.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 174[2mms[22m[39m
+ [32m✓[39m tests/ui/proposal-review.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 81[2mms[22m[39m
+ [32m✓[39m tests/agent/actors-in-proposals.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 316[2mms[22m[39m
+ [32m✓[39m tests/agent/first-loop.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 243[2mms[22m[39m
+ [32m✓[39m tests/agent/review.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 221[2mms[22m[39m
+ [32m✓[39m tests/domain/guided-slicing.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 175[2mms[22m[39m
+ [32m✓[39m tests/domain/seed-guard-runner.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 3432[2mms[22m[39m
+   [32m✓[39m the seed guard, run in a disposable copy [2m(4)[22m
+     [33m[2m✓[22m[39m lets a file that writes nowhere near product/ pass[33m 534[2mms[22m[39m
+     [33m[2m✓[22m[39m fails a file whose write into product/ was refused and swallowed[33m 503[2mms[22m[39m
+     [33m[2m✓[22m[39m refuses the late save of a test that outlived its timeout, and leaves the map byte for byte[33m 1901[2mms[22m[39m
+     [33m[2m✓[22m[39m fails the run when product/ changed past the guard[33m 486[2mms[22m[39m
+ [32m✓[39m tests/ui/tutorial.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 91[2mms[22m[39m
+ [32m✓[39m tests/ui/proposal-issues.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 66[2mms[22m[39m
+ [32m✓[39m tests/agent/first-goal-prompt.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m tests/agent/live-ledger-model.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 6683[2mms[22m[39m
+   [32m✓[39m the ledger, against a reference model, over random sequences of what paid runs do [2m(1)[22m
+     [33m[2m✓[22m[39m keeps the model's spend, refusals and stop over 150 seeded sequences of 25 steps[33m 6681[2mms[22m[39m
+ [32m✓[39m tests/agent/live-record.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m tests/domain/same-origin.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 41[2mms[22m[39m
+ [32m✓[39m tests/domain/reset-route.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 180[2mms[22m[39m
+ [32m✓[39m tests/domain/seed-guard.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 238[2mms[22m[39m
+ [32m✓[39m tests/domain/layout.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 157[2mms[22m[39m
+ [32m✓[39m tests/domain/read-routes.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m tests/domain/store.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 109[2mms[22m[39m
+ [32m✓[39m tests/agent/committed-secrets.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 91[2mms[22m[39m
+ [32m✓[39m tests/domain/references.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 146[2mms[22m[39m
+ [32m✓[39m tests/ui/actor-semantics.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m tests/ui/intake.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 71[2mms[22m[39m
+ [32m✓[39m tests/domain/approval.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 106[2mms[22m[39m
+ [32m✓[39m tests/domain/roundtrip.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 168[2mms[22m[39m
+ [32m✓[39m tests/domain/fixture.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 83[2mms[22m[39m
+ [32m✓[39m tests/ui/reset.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 83[2mms[22m[39m
+ [32m✓[39m tests/agent/live-server-env.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m47 passed[39m[22m[90m (47)[39m
+[2m      Tests [22m [1m[32m706 passed[39m[22m[90m (706)[39m
+[2m   Start at [22m 20:32:54
+[2m   Duration [22m 36.76s[2m (tests 79%, import 16%, transform 3%, setup 1%, worker 1%)[22m
+
+[2m    Isolate [22m [33m47 workers spawned[39m[2m · ~88ms startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~4.06s faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+

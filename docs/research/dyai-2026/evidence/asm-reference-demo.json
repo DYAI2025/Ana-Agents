@@ -1,0 +1,9 @@
+{
+  "issues": [
+    {
+      "code": "unknown_persona",
+      "path": "needs[0].personaId",
+      "message": "persona \"nonexistent-research-persona\" does not exist"
+    }
+  ]
+}

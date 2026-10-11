@@ -1,0 +1,5 @@
+Collecting uv
+  Downloading uv-0.13.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (17.9 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 17.9/17.9 MB 87.3 MB/s eta 0:00:00
+Installing collected packages: uv
+Successfully installed uv-0.13.0
