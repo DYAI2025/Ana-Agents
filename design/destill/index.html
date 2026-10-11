@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en" data-depth="on">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Destill — Sculpted Light · design proposal prototype</title>
+  <meta name="description" content="Design proposal prototype for Destill, a local-first video-editing companion. Synthetic demo content only; no analysis or rendering is performed.">
+  <meta name="color-scheme" content="light">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Icon sprite: stroke icons inherit currentColor from .i -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 15V4.5m0 0-4 4m4-4 4 4"/><path d="M4.5 14.5v3.5a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-3.5"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.8v12.4a.6.6 0 0 0 .9.5l9.8-6.2a.6.6 0 0 0 0-1L8.9 5.3a.6.6 0 0 0-.9.5z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M9 6.5v11M15 6.5v11"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3.5H7.5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2V8.5z"/><path d="M14 3.5v5h5"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5.5 12.5 4.2 4.2 8.8-9"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11m0-11-11 11"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5.5" y="10.5" width="13" height="9.5" rx="3"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.8v5"/><path d="M12 15.9v.1"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5"/><path d="M12 8v.1"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3.8 5.5 6.2v5.3c0 4.1 2.8 7.5 6.5 8.7 3.7-1.2 6.5-4.6 6.5-8.7V6.2z"/><path d="m9.2 12 2 2 3.6-3.8"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="11" height="11" rx="2.5"/><path d="M15.5 8.5V6.8a2.3 2.3 0 0 0-2.3-2.3H6.8a2.3 2.3 0 0 0-2.3 2.3v6.4a2.3 2.3 0 0 0 2.3 2.3h1.7"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3"/><path d="M19.5 4.8v3.9h-3.9"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path d="M6.5 12h11"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 6.5v11M6.5 12h11"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h13.5M13 6.5l5.5 5.5-5.5 5.5"/></symbol>
+    <symbol id="i-film" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="3"/><path d="M8 5v14M16 5v14M3.5 9.5H8M3.5 14.5H8M16 9.5h4.5M16 14.5h4.5"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.6V12l3 2"/></symbol>
+  </svg>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="page">
+    <div class="shell" id="shell">
+
+      <!-- ============ TOP BAR ============ -->
+      <header class="topbar">
+        <div class="brand">
+          <span class="mark" aria-hidden="true"></span>
+          <span class="brand-name">Destill</span>
+          <span class="brand-tag">Local-first editing companion</span>
+        </div>
+
+        <nav class="nav" aria-label="Workflow">
+          <div class="track" role="group" aria-label="Analyze steps">
+            <button class="seg" type="button" data-stage="source">Source</button>
+            <button class="seg" type="button" data-stage="analyze">Analyze</button>
+            <button class="seg" type="button" data-stage="refine">Refine</button>
+          </div>
+          <div class="track track-later" role="group" aria-label="Destill, a later capability">
+            <button class="seg" type="button" data-stage="result">
+              <svg class="i i-sm" aria-hidden="true"><use href="#i-lock"/></svg>
+              Destill <span class="later">later</span><span class="sr-only"> — rendering capability, not in this build</span>
+            </button>
+          </div>
+        </nav>
+
+        <p class="pill" id="modePill" role="status" data-tone="none">
+          <span class="dot" aria-hidden="true"></span>
+          <span id="modeText">No video selected</span>
+        </p>
+      </header>
+
+      <main id="main" tabindex="-1">
+
+        <!-- ============ 1 · WELCOME / EMPTY ============ -->
+        <section class="screen" data-screen="welcome" aria-label="Welcome" hidden>
+          <div class="welcome">
+            <p class="eyebrow">Analyze before you cut</p>
+            <h1 class="display" tabindex="-1">Understand the footage before you cut it.</h1>
+            <p class="lede">Choose a raw video. Destill reads its message, claims and story, and shows the evidence behind every suggestion.</p>
+
+            <div class="dropzone recess" id="dropzone">
+              <span class="medallion lg" aria-hidden="true"><svg class="i"><use href="#i-upload"/></svg></span>
+              <p class="dz-title">Drop a video here</p>
+              <p class="dz-sub">MP4, MOV or WebM, read by this browser. This build uploads nothing.</p>
+              <div class="cta-row cta-center">
+                <button class="btn primary" type="button" data-action="pick">Choose video</button>
+                <button class="btn subtle" type="button" data-action="demo">Try the synthetic demo</button>
+              </div>
+            </div>
+
+            <p class="fineprint">The synthetic demo uses invented content for design review. It is not derived from any footage.</p>
+          </div>
+        </section>
+
+        <!-- ============ 2 · SOURCE SELECTED ============ -->
+        <section class="screen" data-screen="source" aria-label="Source" hidden>
+          <div class="split">
+            <div class="col-well">
+              <div class="well" data-well="source">
+                <div class="well-media">
+                  <video class="well-video" muted playsinline preload="metadata" hidden aria-label="Preview of the selected video"></video>
+                  <img class="well-poster" alt="Still frame from the selected video" hidden>
+                  <div class="well-synth" hidden>
+                    <span class="chip chip-demo">Synthetic clip</span>
+                    <div class="synth-foot"><span class="tc num" data-tc>0:00</span><span class="caption">3:42 · no footage shown</span></div>
+                  </div>
+                  <div class="well-empty"><span>No video selected</span></div>
+                </div>
+              </div>
+
+              <div class="transport" data-transport hidden>
+                <button class="medallion" type="button" id="playBtn" aria-label="Play preview">
+                  <svg class="i" aria-hidden="true"><use href="#i-play"/></svg>
+                </button>
+                <span class="tc num" id="tcReal">0:00 / 0:00</span>
+                <input class="scrub grow" type="range" id="scrub" min="0" max="1000" value="0" aria-label="Preview position">
+              </div>
+
+              <dl class="facts">
+                <div><dt>File</dt><dd id="fName">No file selected</dd></div>
+                <div><dt>Size</dt><dd id="fSize">—</dd></div>
+                <div><dt>Type</dt><dd id="fType">—</dd></div>
+                <div><dt>Duration</dt><dd id="fDur">—</dd></div>
+                <div><dt>Frame</dt><dd id="fRes">—</dd></div>
+                <div><dt>Modified</dt><dd id="fMod">—</dd></div>
+              </dl>
+
+              <div class="cta-row">
+                <button class="btn" type="button" data-action="replace">Replace video</button>
+                <button class="btn subtle" type="button" data-action="remove">Remove</button>
+              </div>
+            </div>
+
+            <div class="col-intent">
+              <p class="eyebrow">Step 1 · Source</p>
+              <h1 class="h1" tabindex="-1">Tell Destill what this edit is for.</h1>
+              <p class="body">Your file stays in this browser. Analysis is blocked until an analysis service is connected, and you will see the exact reason before anything is attempted.</p>
+
+              <div class="field">
+                <label class="label" for="intent">What is this edit for?</label>
+                <textarea class="input" id="intent" rows="3" placeholder="For example: a 90-second product explainer for existing customers"></textarea>
+              </div>
+
+              <div class="field">
+                <span class="label" id="lenLabel">Target length</span>
+                <div class="track" role="radiogroup" aria-labelledby="lenLabel" id="lenGroup">
+                  <button class="seg" type="button" role="radio" aria-checked="false" data-len="30">30 s</button>
+                  <button class="seg" type="button" role="radio" aria-checked="false" data-len="60">60 s</button>
+                  <button class="seg" type="button" role="radio" aria-checked="true" data-len="90">90 s</button>
+                </div>
+              </div>
+
+              <div class="cta-row">
+                <button class="btn primary" type="button" data-action="analyze">Analyze video</button>
+                <button class="btn subtle" type="button" data-action="demo">Use synthetic demo instead</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 3 · BLOCKED ============ -->
+        <section class="screen" data-screen="blocked" aria-label="Analysis blocked" hidden>
+          <div class="split">
+            <div class="col-well">
+              <div class="well" data-well="blocked">
+                <div class="well-media">
+                  <img class="well-poster" alt="Still frame from the selected video" hidden>
+                  <div class="well-synth" hidden>
+                    <span class="chip chip-demo">Synthetic clip</span>
+                    <div class="synth-foot"><span class="tc num" data-tc>0:00</span><span class="caption">3:42 · no footage shown</span></div>
+                  </div>
+                  <div class="well-empty"><span>No video selected</span></div>
+                </div>
+              </div>
+              <dl class="facts">
+                <div><dt>File</dt><dd data-fname>No file selected</dd></div>
+                <div><dt>Size</dt><dd data-fsize>—</dd></div>
+              </dl>
+            </div>
+
+            <div class="col-intent">
+              <p class="eyebrow"><span class="chip chip-warn">Blocked · no result</span></p>
+              <h1 class="h1" tabindex="-1">Analysis can’t start in this build.</h1>
+              <p class="body">Destill won’t invent a result. Two things are missing, and one of them is not yours to fix here.</p>
+
+              <ul class="checks">
+                <li class="check">
+                  <span class="medallion sm" aria-hidden="true"><svg class="i"><use href="#i-alert"/></svg></span>
+                  <div>
+                    <p class="check-t">Analysis service</p>
+                    <p class="check-d">No service is connected to this prototype, so nothing reads your video.</p>
+                  </div>
+                  <span class="tag tag-warn">Not connected</span>
+                </li>
+                <li class="check">
+                  <span class="medallion sm" aria-hidden="true"><svg class="i"><use href="#i-shield"/></svg></span>
+                  <div>
+                    <p class="check-t" id="consentLabel">Your consent</p>
+                    <p class="check-d" id="consentDesc">Sending selected frames and audio to an analysis service needs your explicit permission.</p>
+                  </div>
+                  <button class="switch" type="button" role="switch" aria-checked="false" aria-labelledby="consentLabel" aria-describedby="consentDesc" id="consentSwitch"><span class="knob" aria-hidden="true"></span></button>
+                </li>
+                <li class="check">
+                  <span class="medallion sm" aria-hidden="true"><svg class="i"><use href="#i-file"/></svg></span>
+                  <div>
+                    <p class="check-t">Your file</p>
+                    <p class="check-d">Read by this browser. Not uploaded anywhere.</p>
+                  </div>
+                  <span class="tag tag-ok">Available</span>
+                </li>
+              </ul>
+
+              <p class="reason" id="blockReason" role="status">Analyze stays unavailable until a service is connected.</p>
+
+              <div class="cta-row">
+                <button class="btn primary" type="button" data-action="demo">Run synthetic demo instead</button>
+                <button class="btn" type="button" aria-disabled="true" data-action="analyze-blocked" aria-describedby="blockReason">Analyze video</button>
+                <button class="btn subtle" type="button" data-action="to-source">Back to source</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 4 · DEMO PROCESSING ============ -->
+        <section class="screen" data-screen="processing" aria-label="Synthetic demo running" hidden>
+          <div class="split">
+            <div class="col-well">
+              <div class="well" data-well="processing">
+                <div class="well-media">
+                  <div class="well-synth">
+                    <span class="chip chip-demo">Synthetic clip</span>
+                    <div class="synth-foot"><span class="tc num" data-tc>0:00</span><span class="caption">scripted · no footage shown</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-intent">
+              <p class="eyebrow"><span class="chip chip-demo">Synthetic demo</span></p>
+              <h1 class="h1" tabindex="-1">Running a scripted demo.</h1>
+              <p class="body">These steps show the flow only. They are not measured from your footage, no model is running, and the timings are illustrative.</p>
+
+              <ol class="stages" id="stages" aria-label="Scripted steps"></ol>
+              <div class="progress" aria-hidden="true"><span class="sweep"></span></div>
+              <p class="caption" id="procStatus" role="status">Scripted step 1 of 5</p>
+
+              <div class="cta-row">
+                <button class="btn primary" type="button" data-action="see-demo" id="seeDemo" hidden>View demo results</button>
+                <button class="btn" type="button" data-action="cancel" id="cancelBtn">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 5 · UNDERSTANDING ============ -->
+        <section class="screen" data-screen="understanding" aria-label="Understanding, synthetic demo" hidden>
+          <header class="screen-head">
+            <div>
+              <p class="eyebrow"><span class="chip chip-demo">Synthetic demo</span> Analyze · understanding</p>
+              <h1 class="h2" tabindex="-1">What this clip says</h1>
+            </div>
+            <p class="body-sm">Timestamps refer to the scripted 3:42 clip, not to your file.</p>
+          </header>
+
+          <div class="grid-understand">
+            <div class="col-well">
+              <div class="well" data-well="analyze">
+                <div class="well-media">
+                  <div class="well-synth">
+                    <span class="chip chip-demo">Synthetic clip</span>
+                    <div class="synth-foot"><span class="tc num" data-tc>0:00</span><span class="caption">3:42 · no footage shown</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-main">
+              <article class="plane">
+                <p class="eyebrow">Main message</p>
+                <p class="message" id="message"></p>
+                <p class="caption">Summary written for this demo.</p>
+              </article>
+
+              <section class="plane" aria-labelledby="storyHead">
+                <h2 class="h3" id="storyHead">Story structure</h2>
+                <ol class="story" id="storyList"></ol>
+              </section>
+            </div>
+          </div>
+
+          <section class="plane" aria-labelledby="tlHead">
+            <div class="row-between">
+              <h2 class="h3" id="tlHead">Source timeline</h2>
+              <span class="tc num" id="tlReadout">0:00 of 3:42</span>
+            </div>
+            <div class="tl">
+              <div class="tl-bands" id="tlBands" aria-hidden="true"></div>
+              <input class="scrub" type="range" id="playhead" min="0" max="222" step="1" value="0" aria-label="Playhead on the source timeline" aria-valuetext="0:00">
+              <div class="tl-marks" id="tlMarks" aria-hidden="true"></div>
+              <div class="tl-ticks" aria-hidden="true"><span>0:00</span><span>1:00</span><span>2:00</span><span>3:00</span><span>3:42</span></div>
+            </div>
+          </section>
+
+          <div class="notice" id="decisionNotice" hidden>
+            <span class="medallion sm" aria-hidden="true"><svg class="i"><use href="#i-info"/></svg></span>
+            <div class="notice-text">
+              <p class="notice-title">One moment needs your decision</p>
+              <p class="notice-body">Destill found two figures that disagree at 2:10–2:34. It will not choose between them.</p>
+            </div>
+            <button class="btn sm" type="button" data-action="decide">Decide 2:10</button>
+          </div>
+
+          <section class="plane" aria-labelledby="evHead">
+            <div class="row-between wrap">
+              <h2 class="h3" id="evHead">Evidence</h2>
+              <div class="track" role="radiogroup" aria-label="Evidence filter" id="evFilter">
+                <button class="seg" type="button" role="radio" aria-checked="true" data-filter="all">All moments</button>
+                <button class="seg" type="button" role="radio" aria-checked="false" data-filter="near">Near playhead</button>
+              </div>
+            </div>
+            <p class="caption spaced" id="evNote">Observations from the scripted analysis. Feedback stays in this browser session.</p>
+            <div class="ev-grid" id="evidenceList"></div>
+          </section>
+
+          <div class="cta-row">
+            <button class="btn primary" type="button" data-action="to-refine">Review cuts</button>
+            <button class="btn subtle" type="button" data-action="to-source">Back to source</button>
+          </div>
+        </section>
+
+        <!-- ============ 6 · REFINE ============ -->
+        <section class="screen" data-screen="refine" aria-label="Refine, keep change or drop" hidden>
+          <header class="screen-head">
+            <div>
+              <p class="eyebrow"><span class="chip chip-demo">Synthetic demo</span> Refine · decisions</p>
+              <h1 class="h2" tabindex="-1">Keep, change or drop</h1>
+            </div>
+            <p class="body-sm">Suggestions are demo proposals. Nothing is cut from your file.</p>
+          </header>
+
+          <div class="refine">
+            <ol class="segments" id="segmentList" aria-label="Scripted segments"></ol>
+
+            <aside class="summary" aria-labelledby="sumHead">
+              <p class="eyebrow" id="sumHead">Demo cut</p>
+              <p class="big num" id="projected" aria-live="polite">1:22</p>
+              <p class="body-sm" id="targetLine">Target 1:30</p>
+              <div class="cutbar" id="cutBar" aria-hidden="true"></div>
+              <dl class="counts">
+                <div><dt>Kept</dt><dd class="num" id="cKeep">0</dd></div>
+                <div><dt>Changed</dt><dd class="num" id="cChange">0</dd></div>
+                <div><dt>Dropped</dt><dd class="num" id="cDrop">0</dd></div>
+                <div><dt>Open</dt><dd class="num" id="cOpen">0</dd></div>
+              </dl>
+              <p class="caption" id="openNote"></p>
+              <button class="btn primary wide" type="button" data-action="to-result">Preview result concept</button>
+              <button class="btn subtle wide" type="button" data-action="reset-decisions">Reset to suggestions</button>
+            </aside>
+          </div>
+        </section>
+
+        <!-- ============ 7 · RESULT CONCEPT ============ -->
+        <section class="screen" data-screen="result" aria-label="Result concept, not rendered" hidden>
+          <header class="screen-head">
+            <div>
+              <p class="eyebrow"><span class="chip chip-locked"><svg class="i i-sm" aria-hidden="true"><use href="#i-lock"/></svg>Destill · not in this build</span></p>
+              <h1 class="h2" tabindex="-1">Result concept — no MP4 rendered</h1>
+            </div>
+          </header>
+
+          <div class="notice">
+            <span class="medallion sm" aria-hidden="true"><svg class="i"><use href="#i-info"/></svg></span>
+            <div class="notice-text">
+              <p class="notice-title">There is no video file yet.</p>
+              <p class="notice-body">Destill’s render step is not connected in this build, so nothing is cut or played. The panel below shows the layout the preview will use.</p>
+            </div>
+          </div>
+
+          <div class="split">
+            <div class="col-well">
+              <div class="well well-16x9" data-well="result">
+                <div class="well-media preview-empty">
+                  <span class="chip">No render</span>
+                  <div class="preview-copy">
+                    <p class="h3">Preview not rendered</p>
+                    <p class="caption">Future: about 90 s, 16:9, captions in English.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="cutbar" id="resultBar" aria-hidden="true"></div>
+              <button class="btn" type="button" disabled aria-describedby="renderWhy" id="renderBtn">Render MP4 — unavailable</button>
+              <p class="caption" id="renderWhy">Unavailable: the render step is not connected in this build.</p>
+            </div>
+
+            <div class="col-intent">
+              <section class="plane" aria-labelledby="ratHead">
+                <h2 class="h3" id="ratHead">Editing rationale</h2>
+                <p class="caption spaced">Built from the demo decisions. Not generated from your footage.</p>
+                <ul class="rationale" id="rationale"></ul>
+              </section>
+
+              <section class="plane-raised" aria-labelledby="promptHead">
+                <h2 class="h3" id="promptHead">CapCut EditPilot prompt</h2>
+                <p class="caption spaced">English draft from demo decisions. Paste it into your own tool; Destill does not send it anywhere.</p>
+                <textarea class="input mono" id="promptText" rows="9" readonly aria-label="CapCut EditPilot prompt, English draft"></textarea>
+                <div class="cta-row">
+                  <button class="btn primary" type="button" data-action="copy">Copy prompt</button>
+                  <p class="caption" id="copyStatus" role="status"></p>
+                </div>
+              </section>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 8 · ERROR / CANCELLED / NEEDS DECISION ============ -->
+        <section class="screen" data-screen="outcome" aria-label="Outcome" hidden>
+          <div class="outcome">
+            <div class="outcome-card">
+              <span class="medallion lg" id="outIcon" aria-hidden="true"><svg class="i"><use href="#i-alert" id="outIconUse"/></svg></span>
+              <p class="eyebrow" id="outEyebrow">Error</p>
+              <h1 class="h2" id="outTitle" tabindex="-1">Something stopped</h1>
+              <p class="body" id="outBody"></p>
+              <p class="detail" id="outDetail" hidden></p>
+              <fieldset class="choices" id="outChoices" hidden>
+                <legend class="label">Choose one to continue</legend>
+                <label class="choice"><input type="radio" name="decision" value="spoken"><span class="rdot" aria-hidden="true"></span><span>Keep the spoken figure (40%) and verify it before publishing</span></label>
+                <label class="choice"><input type="radio" name="decision" value="onscreen"><span class="rdot" aria-hidden="true"></span><span>Keep the on-screen figure (14%) and leave the spoken claim out</span></label>
+                <label class="choice"><input type="radio" name="decision" value="leave"><span class="rdot" aria-hidden="true"></span><span>Leave this moment out of the demo cut</span></label>
+              </fieldset>
+              <p class="reason" id="outError" role="alert" hidden></p>
+              <div class="cta-row" id="outActions"></div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- ============ REVIEW FOOTER ============ -->
+      <footer class="review">
+        <p class="status-line">
+          <strong>DESIGN PROPOSAL — PRODUCT OWNER REVIEW REQUIRED.</strong>
+          Synthetic demo content only. This build does not analyse, cut or render video.
+        </p>
+        <nav class="review-nav" aria-label="Review every state">
+          <span class="caption">Review states</span>
+          <button class="rv-btn" type="button" data-hash="welcome">1 Welcome</button>
+          <button class="rv-btn" type="button" data-hash="source">2 Source</button>
+          <button class="rv-btn" type="button" data-hash="blocked">3 Blocked</button>
+          <button class="rv-btn" type="button" data-hash="processing">4 Demo running</button>
+          <button class="rv-btn" type="button" data-hash="understanding">5 Understanding</button>
+          <button class="rv-btn" type="button" data-hash="refine">6 Refine</button>
+          <button class="rv-btn" type="button" data-hash="result">7 Result concept</button>
+          <button class="rv-btn" type="button" data-hash="error">8a Error</button>
+          <button class="rv-btn" type="button" data-hash="cancelled">8b Cancelled</button>
+          <button class="rv-btn" type="button" data-hash="decision">8c Needs decision</button>
+        </nav>
+        <div class="depth-toggle">
+          <button class="switch" type="button" role="switch" aria-checked="true" id="depthSwitch" aria-labelledby="depthLabel"><span class="knob" aria-hidden="true"></span></button>
+          <span id="depthLabel" class="caption">Shadows on</span>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <input type="file" id="fileInput" accept="video/*" hidden>
+  <script src="app.js"></script>
+</body>
+</html>
